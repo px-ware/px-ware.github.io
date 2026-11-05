@@ -30,7 +30,9 @@ const SITEMAPS = ['/sitemap.xml', '/safecheck/sitemap.xml', '/networkmaster/site
 // Strony spoza map witryn, do których prowadzą linki (FlashTools ma je poza sitemap.xml).
 const EXTRA_PAGES = ['/flashtools/privacy.html', '/flashtools/terms.html'];
 // Adresy, których nie kopiujemy: licznik kliknięć, prywatny panel, wewnętrzne katalogi.
-const SKIP = /^\/(?:e$|zero(?:\/|$)|includes\/|storage\/|[a-z]+\/e$|[a-z]+\/inc\/)/;
+// Weryfikacja usługi https://px-ware.github.io/ w Google Search Console: plik musi zostać na stronie.
+const GSC_VERIFICATION_FILE = 'googlee4a1a6d7c2cd56a6.html';
+const SKIP =/^\/(?:e$|zero(?:\/|$)|includes\/|storage\/|[a-z]+\/e$|[a-z]+\/inc\/)/;
 
 if (!['backup', 'primary'].includes(MODE)) {
     console.error('Nieznany tryb: ' + MODE);
@@ -183,6 +185,7 @@ const notFound = await fetch(SOURCE + '/nie-ma-takiej-strony-mirror', { headers:
 await writeFile(join(OUT, '404.html'), transformHtml(await notFound.text()));
 await writeFile(join(OUT, 'robots.txt'), robotsTxt());
 await writeFile(join(OUT, '.nojekyll'), '');
+await writeFile(join(OUT, GSC_VERIFICATION_FILE), `google-site-verification: ${GSC_VERIFICATION_FILE}`);
 
 console.log(`Tryb: ${MODE}${EMAIL ? ', e-mail: ' + EMAIL : ''}`);
 console.log(`Zapisano ${saved.length} plików (${[...done].length} stron, ${[...doneAssets].length} plików pomocniczych).`);
