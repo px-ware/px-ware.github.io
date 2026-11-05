@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulamin — NetworkMaster</title>
+<meta name="description" content="Regulamin programu NetworkMaster: zasady korzystania z narzędzia do diagnostyki sieci, skanowania LAN i VPN na Windows, Linux i macOS.">
+<link rel="canonical" href="https://pxware.pl/networkmaster/regulamin">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="NetworkMaster">
+<meta property="og:title" content="Regulamin — NetworkMaster">
+<meta property="og:description" content="Regulamin programu NetworkMaster: zasady korzystania z narzędzia do diagnostyki sieci, skanowania LAN i VPN na Windows, Linux i macOS.">
+<meta property="og:url" content="https://pxware.pl/networkmaster/regulamin">
+<link rel="icon" href="/networkmaster/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/networkmaster/assets/css/doc.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-top">
+    <a class="brand" href="/networkmaster/"><span>Network</span>Master</a>
+    <nav aria-label="Dokumenty">
+            <a href="/networkmaster/dokumentacja">Dokumentacja użytkownika</a>
+            <a href="/networkmaster/dokumentacja-techniczna">Dokumentacja techniczna</a>
+            <a href="/networkmaster/regulamin" aria-current="page">Regulamin</a>
+            <a href="/networkmaster/polityka-prywatnosci">Polityka prywatności</a>
+            <a href="/networkmaster/licencja">Licencja</a>
+          </nav>
+  </header>
+  <main class="prose" id="tresc">
+<h1 id="regulamin-korzystania-z-programu-networkmaster">Regulamin korzystania z programu NetworkMaster</h1>
+<p><strong>To jest szablon przygotowany bez udziału prawnika.</strong> Przed jakimkolwiek komercyjnym
+wykorzystaniem tego dokumentu skonsultuj go z prawnikiem — szczególnie w zakresie zgodności z
+prawem polskim i unijnym (w tym RODO oraz przepisami o ochronie praw konsumenta). Ten dokument
+sam w sobie nie stanowi porady prawnej.</p>
+<p>Wersja Regulaminu: 1.0 · Dotyczy programu: NetworkMaster</p>
+<h2 id="1-definicje">1. Definicje <a class="anchor" href="#1-definicje" aria-label="Link do sekcji">#</a></h2>
+<ul>
+<li><strong>Program</strong> — oprogramowanie NetworkMaster, obejmujące pliki wykonywalne, kod źródłowy (jeśli
+udostępniony), dokumentację i wszelkie materiały towarzyszące.</li>
+<li><strong>Właściciel</strong> — <strong>PX Paweł Mościbrodzki, NIP 5372682524</strong>, podmiot posiadający pełne
+prawa autorskie i majątkowe do Programu.</li>
+<li><strong>Użytkownik</strong> — każda osoba fizyczna lub prawna pobierająca, instalująca lub uruchamiająca
+Program.</li>
+</ul>
+<h2 id="2-status-programu">2. Status Programu <a class="anchor" href="#2-status-programu" aria-label="Link do sekcji">#</a></h2>
+<p>Program jest oprogramowaniem <strong>zamkniętym</strong> (nie open source) — pełne warunki licencyjne znajdują
+się w <a href="/networkmaster/licencja"><code>../LICENSE.md</code></a>. Aktualnie Program jest udostępniany Użytkownikom
+<strong>nieodpłatnie</strong>. Właściciel zastrzega sobie prawo do zmiany tego modelu w przyszłości (patrz §8).</p>
+<h2 id="3-zakres-licencji-użytkowania">3. Zakres licencji użytkowania <a class="anchor" href="#3-zakres-licencji-użytkowania" aria-label="Link do sekcji">#</a></h2>
+<p>Właściciel udziela Użytkownikowi niewyłącznej, nieprzenoszalnej licencji na uruchamianie
+Programu na własny, prywatny lub firmowy użytek. Licencja <strong>nie obejmuje</strong> prawa do:</p>
+<ul>
+<li>dalszej dystrybucji, sprzedaży, podnajmu ani publicznego udostępniania Programu lub jego
+kodu źródłowego osobom trzecim,</li>
+<li>tworzenia i rozpowszechniania utworów pochodnych (zmodyfikowanych wersji, forków),</li>
+<li>dekompilacji, deasemblacji lub innej formy inżynierii wstecznej Programu, poza zakresem,
+w jakim jest to wyraźnie dozwolone bezwzględnie obowiązującymi przepisami prawa (np. art. 75
+ustawy o prawie autorskim i prawach pokrewnych w zakresie interoperacyjności),</li>
+<li>usuwania lub zmiany oznaczeń praw autorskich, niniejszego Regulaminu ani <code>LICENSE.md</code>.</li>
+</ul>
+<h2 id="4-charakter-programu-i-ryzyko-korzystania">4. Charakter Programu i ryzyko korzystania <a class="anchor" href="#4-charakter-programu-i-ryzyko-korzystania" aria-label="Link do sekcji">#</a></h2>
+<p>Program wykonuje operacje na konfiguracji sieciowej urządzenia, plikach systemowych (m.in. plik
+hosts) oraz — w module VPN — na profilach połączeń sieciowych, w tym profilach systemowego VPN.
+Użytkownik korzysta z tych funkcji <strong>na własną odpowiedzialność</strong> i we własnym zakresie ocenia
+skutki ich użycia, w szczególności:</p>
+<ul>
+<li>zmian konfiguracji sieciowej i naprawy/resetu ustawień sieci,</li>
+<li>edycji pliku hosts,</li>
+<li>tworzenia, edycji, usuwania i łączenia z profilami VPN (systemowymi, WireGuard, OpenVPN).</li>
+</ul>
+<h2 id="5-kopie-zapasowe-vpn--jawne-przechowywanie-haseł">5. Kopie zapasowe VPN — jawne przechowywanie haseł <a class="anchor" href="#5-kopie-zapasowe-vpn--jawne-przechowywanie-haseł" aria-label="Link do sekcji">#</a></h2>
+<p>Program celowo zapisuje w plikach kopii zapasowych VPN (<code>.zip</code>) hasła, klucze PSK oraz klucze
+prywatne WireGuard <strong>w postaci jawnej, niezaszyfrowanej</strong> — jest to świadomy wybór projektowy,
+mający zapewnić pełną, kompletną kopię konfiguracji. Użytkownik przyjmuje do wiadomości to
+zachowanie i ponosi pełną odpowiedzialność za bezpieczne przechowywanie i przesyłanie takich
+plików (m.in. unikanie wysyłki niezaszyfrowanym kanałem, przechowywania w niezabezpieczonej
+chmurze itp.).</p>
+<h2 id="6-brak-gwarancji">6. Brak gwarancji <a class="anchor" href="#6-brak-gwarancji" aria-label="Link do sekcji">#</a></h2>
+<p>Program dostarczany jest <strong>„tak jak jest” (AS IS)</strong>, bez jakiejkolwiek gwarancji, wyraźnej lub
+dorozumianej, w tym bez gwarancji przydatności do określonego celu czy nienaruszania praw osób
+trzecich. Właściciel nie ponosi odpowiedzialności za szkody wynikłe z korzystania z Programu, w
+najszerszym zakresie dopuszczalnym przez obowiązujące prawo.</p>
+<h2 id="7-aktualizacje">7. Aktualizacje <a class="anchor" href="#7-aktualizacje" aria-label="Link do sekcji">#</a></h2>
+<p>Program może łączyć się z GitHubem w celu sprawdzenia dostępności nowszej wersji i pobrania opisu
+zmian. Instalacja aktualizacji wymaga każdorazowo świadomej decyzji Użytkownika — Program nie
+aktualizuje się samoczynnie bez zgody.</p>
+<h2 id="8-zmiana-warunków-i-planowana-sprzedaż-programu">8. Zmiana warunków i planowana sprzedaż Programu <a class="anchor" href="#8-zmiana-warunków-i-planowana-sprzedaż-programu" aria-label="Link do sekcji">#</a></h2>
+<p>Właściciel zastrzega sobie prawo do zmiany niniejszego Regulaminu oraz modelu udostępniania
+Programu w przyszłości, w tym do wprowadzenia odpłatności. Właściciel rozważa również odpłatne
+zbycie pełnych praw do Programu — wraz z kodem źródłowym — na rzecz wybranego nabywcy. Taka
+transakcja stanowiłaby sprzedaż całości praw (aktywów), regulowaną odrębną umową między
+Właścicielem a nabywcą, i <strong>nie jest przedmiotem niniejszego Regulaminu</strong> ani nie zmienia
+automatycznie warunków korzystania obowiązujących dotychczasowych Użytkowników w momencie jej
+zawarcia, chyba że nabywca postanowi inaczej i poinformuje o tym Użytkowników.</p>
+<h2 id="9-prawo-właściwe">9. Prawo właściwe <a class="anchor" href="#9-prawo-właściwe" aria-label="Link do sekcji">#</a></h2>
+<p>Niniejszy Regulamin podlega prawu polskiemu. Wszelkie spory będą rozstrzygane przez sąd właściwy
+zgodnie z obowiązującymi przepisami.</p>
+<h2 id="10-kontakt">10. Kontakt <a class="anchor" href="#10-kontakt" aria-label="Link do sekcji">#</a></h2>
+<p>W sprawach dotyczących Programu i niniejszego Regulaminu: <strong>pxware@pxware.pl</strong>.</p>    <p class="doc-source">Źródło dokumentu: <a href="https://github.com/px-ware/networkmaster/blob/main/dokumentacja/Regulamin.md" rel="noopener" target="_blank">GitHub, px-ware/networkmaster/dokumentacja/Regulamin.md</a></p>
+  </main>
+  <footer>
+    <p><a href="/networkmaster/">Strona główna</a> · <a href="https://github.com/px-ware/networkmaster/releases/latest">Pobierz</a> · <a href="mailto:pxware@pxware.pl">Kontakt</a> · <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></p>
+    <p>© 2026 PX Paweł Mościbrodzki (NetworkMaster) · <a href="/">pxware.pl</a>. Wszelkie prawa zastrzeżone.</p>
+  </footer>
+</div>
+<script src="/networkmaster/assets/js/site.js" defer></script>
+</body>
+</html>

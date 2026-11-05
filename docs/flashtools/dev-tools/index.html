@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON formatter, Base64, MD5 i SHA-256 online | FlashTools</title>
+    <meta name="description" content="Formatuj i minifikuj JSON, koduj i dekoduj Base64 (UTF-8), licz skróty MD5 i SHA-256. Szybkie narzędzia dla programistów działające w przeglądarce.">
+    <link rel="canonical" href="https://pxware.pl/flashtools/dev-tools/">
+        <meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o">
+
+    <!-- Podgląd linku w social media / komunikatorach -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="FlashTools">
+    <meta property="og:title" content="JSON formatter, Base64, MD5 i SHA-256 online | FlashTools">
+    <meta property="og:description" content="Formatuj i minifikuj JSON, koduj i dekoduj Base64 (UTF-8), licz skróty MD5 i SHA-256. Szybkie narzędzia dla programistów działające w przeglądarce.">
+    <meta property="og:url" content="https://pxware.pl/flashtools/dev-tools/">
+    <meta property="og:image" content="https://pxware.pl/flashtools/assets/img/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/flashtools/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/flashtools/assets/img/apple-touch-icon.png">
+    <meta name="theme-color" content="#09090b">
+    <link rel="stylesheet" href="/flashtools/assets/css/style.css">
+
+    <!-- Dane strukturalne dla Google -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Narzędzia dla programistów","url":"https://pxware.pl/flashtools/dev-tools/","description":"Formatuj i minifikuj JSON, koduj i dekoduj Base64 (UTF-8), licz skróty MD5 i SHA-256. Szybkie narzędzia dla programistów działające w przeglądarce.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"pl","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"PLN"},"publisher":{"@type":"Organization","name":"FlashTools","url":"https://pxware.pl/flashtools/"}}</script>    </head>
+<body>
+
+    <div class="app-container">
+        <header>
+    <div class="brand">
+        <a class="logo-container" href="/flashtools/" aria-label="FlashTools - strona główna">
+            <svg class="logo-svg" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="20" fill="#09090b"/><path d="M58 10 L26 55 H47 L42 90 L74 44 H53 Z" fill="#00d2ff"/></svg>
+            <div class="logo-text">Flash<span>Tools</span></div>
+        </a>
+    </div>
+
+    <a class="coffee-btn" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+
+    <nav class="top-nav" aria-label="Narzędzia">
+        <a class="nav-link" href="/flashtools/generator-qr/">🔲 Kody QR</a>
+        <a class="nav-link" href="/flashtools/generator-hasel/">🔑 Hasła</a>
+        <a class="nav-link" href="/flashtools/formatowanie-tekstu/">✍️ Tekst</a>
+        <a class="nav-link" href="/flashtools/narzedzia-pdf/">📄 PDF</a>
+        <a class="nav-link" href="/flashtools/dev-tools/">💻 DevTools</a>
+        <a class="nav-link" href="/flashtools/kolory-wcag/">🎨 Kolory</a>
+        <a class="nav-link" href="/flashtools/konwerter-obrazow/">🖼️ Foto</a>
+        <a class="nav-link" href="/flashtools/pomodoro/">⏱️ Czas</a>
+        <a class="nav-link nav-coffee" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Wesprzyj</a>
+    </nav>
+</header>
+
+        <main id="app-root">
+            <!-- 5. DEV TOOLS -->
+<section id="view-dev" class="tool-view">
+    <div class="tool-header"><h1>💻 JSON, Base64, MD5 i SHA-256</h1><p>Formatowanie JSON, kodowanie Base64 i skróty kryptograficzne.</p></div>
+    <div class="panel">
+        <div class="form-group"><label>Tekst lub JSON</label><textarea id="d_in" oninput="procDev()"></textarea></div>
+        <div class="flex-row">
+            <div class="flex-1 form-group">
+                <label>Skrót MD5</label>
+                <div class="input-group"><input type="text" id="d_md5" readonly><button class="btn-secondary copy-btn" onclick="copyTextToClipboard(document.getElementById('d_md5').value, this)">Kopiuj</button></div>
+            </div>
+            <div class="flex-1 form-group">
+                <label>Skrót SHA-256</label>
+                <div class="input-group"><input type="text" id="d_sha" readonly><button class="btn-secondary copy-btn" onclick="copyTextToClipboard(document.getElementById('d_sha').value, this)">Kopiuj</button></div>
+            </div>
+        </div>
+        <div class="flex-row">
+            <div class="flex-1 form-group">
+                <label>Kodowanie Base64 (z obsługą UTF-8)</label>
+                <div class="input-group"><input type="text" id="d_b64e" readonly><button class="btn-secondary copy-btn" onclick="copyTextToClipboard(document.getElementById('d_b64e').value, this)">Kopiuj</button></div>
+            </div>
+            <div class="flex-1 form-group">
+                <label>Dekodowanie Base64</label>
+                <div class="input-group"><input type="text" id="d_b64d" readonly><button class="btn-secondary copy-btn" onclick="copyTextToClipboard(document.getElementById('d_b64d').value, this)">Kopiuj</button></div>
+            </div>
+        </div>
+        <div class="form-group mt-1">
+            <div class="flex-row row-between json-header">
+                <label class="label-inline">Sformatowany JSON</label>
+                <div class="btn-group">
+                    <button class="btn-secondary btn-sm" onclick="procDev(false)">Formatuj</button>
+                    <button class="btn-secondary btn-sm" onclick="procDev(true)">Minifikuj</button>
+                    <button class="btn-primary btn-sm" onclick="copyTextToClipboard(document.getElementById('d_json').value, this)">Kopiuj JSON</button>
+                </div>
+            </div>
+            <textarea id="d_json" readonly></textarea>
+        </div>
+    </div>
+</section>
+
+<article class="panel seo-content">
+    <h2>Formatowanie i walidacja JSON</h2>
+    <p>Wklej JSON, a narzędzie sprawdzi jego poprawność i wyświetli go w czytelnej formie z wcięciami (przycisk „Formatuj”) lub w jednej linii bez zbędnych spacji („Minifikuj”). W przypadku błędu zobaczysz komunikat wskazujący problem.</p>
+
+    <h2>Kodowanie i dekodowanie Base64</h2>
+    <p>Tekst jest kodowany do Base64 z pełną obsługą UTF-8, więc polskie znaki i emoji są zachowane. Jeśli wkleisz tekst w Base64, w polu „Dekodowanie Base64” od razu zobaczysz jego zdekodowaną treść.</p>
+
+    <h2>Skróty MD5 i SHA-256</h2>
+    <p>Dla wpisanego tekstu obliczane są jednocześnie skróty MD5 i SHA-256 – przydatne do porównywania danych i sprawdzania sum kontrolnych. Pamiętaj, że MD5 nie nadaje się do zabezpieczania haseł.</p>
+
+    <p>Wszystkie obliczenia odbywają się lokalnie w przeglądarce – wklejone dane nie są nigdzie wysyłane.</p>
+</article>
+        </main>
+
+        <footer>
+    <nav class="footer-tools" aria-label="Wszystkie narzędzia">
+        <a href="/flashtools/generator-qr/">Generator kodów QR</a>
+        <a href="/flashtools/generator-hasel/">Generator haseł</a>
+        <a href="/flashtools/formatowanie-tekstu/">Licznik znaków</a>
+        <a href="/flashtools/narzedzia-pdf/">Łączenie PDF</a>
+        <a href="/flashtools/dev-tools/">JSON i Base64</a>
+        <a href="/flashtools/kolory-wcag/">Kontrast WCAG</a>
+        <a href="/flashtools/konwerter-obrazow/">Konwerter zdjęć</a>
+        <a href="/flashtools/pomodoro/">Timer Pomodoro</a>
+    </nav>
+    <div class="footer-links">
+        <a href="/flashtools/privacy.html">Polityka prywatności i cookies</a> |
+        <a href="/flashtools/terms.html">Regulamin serwisu</a> |
+        <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+    </div>
+    © <span id="footerYear">2026</span> FlashTools. Wszelkie prawa zastrzeżone.
+</footer>
+    </div>
+
+    <!-- BIBLIOTEKI ZEWNĘTRZNE (lista w inc/routes.php) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+        <!-- LOGIKA JS -->
+    <script src="/flashtools/assets/js/core.js"></script>
+    <script src="/flashtools/assets/js/modules/dev.js"></script>
+    </body>
+</html>

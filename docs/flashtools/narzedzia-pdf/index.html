@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Łączenie PDF, znak wodny i zdjęcia do PDF online | FlashTools</title>
+    <meta name="description" content="Połącz pliki PDF, wyodrębnij strony, dodaj znak wodny, usuń hasło lub zamień zdjęcia na PDF. Pliki nie opuszczają Twojej przeglądarki.">
+    <link rel="canonical" href="https://pxware.pl/flashtools/narzedzia-pdf/">
+        <meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o">
+
+    <!-- Podgląd linku w social media / komunikatorach -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="FlashTools">
+    <meta property="og:title" content="Łączenie PDF, znak wodny i zdjęcia do PDF online | FlashTools">
+    <meta property="og:description" content="Połącz pliki PDF, wyodrębnij strony, dodaj znak wodny, usuń hasło lub zamień zdjęcia na PDF. Pliki nie opuszczają Twojej przeglądarki.">
+    <meta property="og:url" content="https://pxware.pl/flashtools/narzedzia-pdf/">
+    <meta property="og:image" content="https://pxware.pl/flashtools/assets/img/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/flashtools/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/flashtools/assets/img/apple-touch-icon.png">
+    <meta name="theme-color" content="#09090b">
+    <link rel="stylesheet" href="/flashtools/assets/css/style.css">
+
+    <!-- Dane strukturalne dla Google -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Narzędzia PDF online","url":"https://pxware.pl/flashtools/narzedzia-pdf/","description":"Połącz pliki PDF, wyodrębnij strony, dodaj znak wodny, usuń hasło lub zamień zdjęcia na PDF. Pliki nie opuszczają Twojej przeglądarki.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"pl","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"PLN"},"publisher":{"@type":"Organization","name":"FlashTools","url":"https://pxware.pl/flashtools/"}}</script>    </head>
+<body>
+
+    <div class="app-container">
+        <header>
+    <div class="brand">
+        <a class="logo-container" href="/flashtools/" aria-label="FlashTools - strona główna">
+            <svg class="logo-svg" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="20" fill="#09090b"/><path d="M58 10 L26 55 H47 L42 90 L74 44 H53 Z" fill="#00d2ff"/></svg>
+            <div class="logo-text">Flash<span>Tools</span></div>
+        </a>
+    </div>
+
+    <a class="coffee-btn" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+
+    <nav class="top-nav" aria-label="Narzędzia">
+        <a class="nav-link" href="/flashtools/generator-qr/">🔲 Kody QR</a>
+        <a class="nav-link" href="/flashtools/generator-hasel/">🔑 Hasła</a>
+        <a class="nav-link" href="/flashtools/formatowanie-tekstu/">✍️ Tekst</a>
+        <a class="nav-link" href="/flashtools/narzedzia-pdf/">📄 PDF</a>
+        <a class="nav-link" href="/flashtools/dev-tools/">💻 DevTools</a>
+        <a class="nav-link" href="/flashtools/kolory-wcag/">🎨 Kolory</a>
+        <a class="nav-link" href="/flashtools/konwerter-obrazow/">🖼️ Foto</a>
+        <a class="nav-link" href="/flashtools/pomodoro/">⏱️ Czas</a>
+        <a class="nav-link nav-coffee" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Wesprzyj</a>
+    </nav>
+</header>
+
+        <main id="app-root">
+            <!-- 4. PDF -->
+<section id="view-pdf" class="tool-view">
+    <div class="tool-header"><h1>📄 Narzędzia PDF online</h1><p>Łącz pliki, wyodrębniaj strony, dodawaj znak wodny i zdejmuj hasło. Wszystko dzieje się w przeglądarce.</p></div>
+    <div class="panel">
+        <div class="tabs" id="pdfTabs">
+            <div class="tab active" data-target="pdf-merge" onclick="setPdfMode('merge')">🔗 Połącz PDF</div>
+            <div class="tab" data-target="pdf-extract" onclick="setPdfMode('extract')">✂️ Wyodrębnij strony</div>
+            <div class="tab" data-target="pdf-watermark" onclick="setPdfMode('watermark')">©️ Znak wodny</div>
+            <div class="tab" data-target="pdf-unlock" onclick="setPdfMode('unlock')">🔓 Odblokuj</div>
+            <div class="tab" data-target="pdf-img" onclick="setPdfMode('img2pdf')">🖼️ Zdjęcia do PDF</div>
+        </div>
+
+        <div id="pdfDrop" class="drop-zone" onclick="document.getElementById('pdfIn').click()">📂 Kliknij lub upuść pliki tutaj</div>
+        <input type="file" id="pdfIn" class="is-hidden" multiple accept=".pdf" onchange="handlePdf(this.files)">
+        <div id="pdfList"></div>
+
+        <div id="pdfOpt_extract" class="form-group pdf-option is-hidden"><label>Numery stron (np. 1, 3, 5-7):</label><input type="text" id="pdf_extr_val" value="1"></div>
+        <div id="pdfOpt_unlock" class="form-group pdf-option is-hidden"><label>Hasło do pliku (aby zdjąć zabezpieczenie):</label><input type="password" id="pdf_pass_val"></div>
+
+        <div id="pdfOpt_watermark" class="flex-row pdf-option is-hidden">
+            <div class="form-group flex-1"><label>Tekst znaku</label><input type="text" id="pdf_wm_txt" value="POUFNE"></div>
+            <div class="form-group flex-1"><label>Rozmiar czcionki</label><input type="number" id="pdf_wm_sz" value="60"></div>
+            <div class="form-group flex-1"><label>Kolor (HEX)</label><input type="color" id="pdf_wm_col" class="color-input" value="#ff0000"></div>
+        </div>
+
+        <button id="pdfBtn" class="btn-primary btn-success is-hidden" onclick="processPdf()">⚙️ Przetwórz pliki</button>
+    </div>
+</section>
+
+<article class="panel seo-content">
+    <h2>Co możesz zrobić z plikami PDF?</h2>
+    <ul>
+        <li><strong>Połącz PDF</strong> – scal kilka plików PDF w jeden dokument w wybranej kolejności.</li>
+        <li><strong>Wyodrębnij strony</strong> – utwórz nowy PDF tylko z wybranych stron, np. <code>1, 3, 5-7</code>.</li>
+        <li><strong>Znak wodny</strong> – dodaj półprzezroczysty napis (np. „POUFNE”) na każdej stronie. Obsługiwane są polskie znaki.</li>
+        <li><strong>Odblokuj</strong> – usuń zabezpieczenie z pliku, do którego znasz hasło.</li>
+        <li><strong>Zdjęcia do PDF</strong> – zamień zdjęcia JPG i PNG w dokument PDF, jedno zdjęcie na stronę.</li>
+    </ul>
+
+    <h2>Czy moje pliki są bezpieczne?</h2>
+    <p>Tak. Wszystkie operacje odbywają się w pamięci Twojej przeglądarki – pliki PDF nie są wysyłane na żaden serwer. Dzięki temu możesz bezpiecznie przetwarzać również poufne dokumenty.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Jak połączyć kilka plików PDF w jeden?</h3>
+    <p>Wybierz zakładkę „Połącz PDF”, przeciągnij pliki na pole lub kliknij je, aby wybrać z dysku, a następnie kliknij „Przetwórz pliki”. Połączony dokument zostanie pobrany automatycznie.</p>
+    <h3>Dlaczego po odblokowaniu nie mogę zaznaczyć tekstu?</h3>
+    <p>Odblokowanie tworzy nowy dokument ze stronami zapisanymi jako obrazy w wysokiej rozdzielczości. Wygląd pozostaje taki sam, ale tekst nie jest zaznaczalny.</p>
+</article>
+        </main>
+
+        <footer>
+    <nav class="footer-tools" aria-label="Wszystkie narzędzia">
+        <a href="/flashtools/generator-qr/">Generator kodów QR</a>
+        <a href="/flashtools/generator-hasel/">Generator haseł</a>
+        <a href="/flashtools/formatowanie-tekstu/">Licznik znaków</a>
+        <a href="/flashtools/narzedzia-pdf/">Łączenie PDF</a>
+        <a href="/flashtools/dev-tools/">JSON i Base64</a>
+        <a href="/flashtools/kolory-wcag/">Kontrast WCAG</a>
+        <a href="/flashtools/konwerter-obrazow/">Konwerter zdjęć</a>
+        <a href="/flashtools/pomodoro/">Timer Pomodoro</a>
+    </nav>
+    <div class="footer-links">
+        <a href="/flashtools/privacy.html">Polityka prywatności i cookies</a> |
+        <a href="/flashtools/terms.html">Regulamin serwisu</a> |
+        <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+    </div>
+    © <span id="footerYear">2026</span> FlashTools. Wszelkie prawa zastrzeżone.
+</footer>
+    </div>
+
+    <!-- BIBLIOTEKI ZEWNĘTRZNE (lista w inc/routes.php) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+        <!-- LOGIKA JS -->
+    <script src="/flashtools/assets/js/core.js"></script>
+    <script src="/flashtools/assets/js/modules/pdf.js"></script>
+    </body>
+</html>

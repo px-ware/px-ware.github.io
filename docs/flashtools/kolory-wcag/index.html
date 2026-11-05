@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprawdzanie kontrastu kolorów WCAG i pipeta online | FlashTools</title>
+    <meta name="description" content="Sprawdź kontrast kolorów według WCAG, przelicz HEX na RGB, wygeneruj odcienie i pobierz kolor ze zdjęcia pipetą. Za darmo i bez instalacji.">
+    <link rel="canonical" href="https://pxware.pl/flashtools/kolory-wcag/">
+        <meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o">
+
+    <!-- Podgląd linku w social media / komunikatorach -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="FlashTools">
+    <meta property="og:title" content="Sprawdzanie kontrastu kolorów WCAG i pipeta online | FlashTools">
+    <meta property="og:description" content="Sprawdź kontrast kolorów według WCAG, przelicz HEX na RGB, wygeneruj odcienie i pobierz kolor ze zdjęcia pipetą. Za darmo i bez instalacji.">
+    <meta property="og:url" content="https://pxware.pl/flashtools/kolory-wcag/">
+    <meta property="og:image" content="https://pxware.pl/flashtools/assets/img/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/flashtools/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/flashtools/assets/img/apple-touch-icon.png">
+    <meta name="theme-color" content="#09090b">
+    <link rel="stylesheet" href="/flashtools/assets/css/style.css">
+
+    <!-- Dane strukturalne dla Google -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kontrast kolorów WCAG","url":"https://pxware.pl/flashtools/kolory-wcag/","description":"Sprawdź kontrast kolorów według WCAG, przelicz HEX na RGB, wygeneruj odcienie i pobierz kolor ze zdjęcia pipetą. Za darmo i bez instalacji.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"pl","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"PLN"},"publisher":{"@type":"Organization","name":"FlashTools","url":"https://pxware.pl/flashtools/"}}</script>    </head>
+<body>
+
+    <div class="app-container">
+        <header>
+    <div class="brand">
+        <a class="logo-container" href="/flashtools/" aria-label="FlashTools - strona główna">
+            <svg class="logo-svg" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="20" fill="#09090b"/><path d="M58 10 L26 55 H47 L42 90 L74 44 H53 Z" fill="#00d2ff"/></svg>
+            <div class="logo-text">Flash<span>Tools</span></div>
+        </a>
+    </div>
+
+    <a class="coffee-btn" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+
+    <nav class="top-nav" aria-label="Narzędzia">
+        <a class="nav-link" href="/flashtools/generator-qr/">🔲 Kody QR</a>
+        <a class="nav-link" href="/flashtools/generator-hasel/">🔑 Hasła</a>
+        <a class="nav-link" href="/flashtools/formatowanie-tekstu/">✍️ Tekst</a>
+        <a class="nav-link" href="/flashtools/narzedzia-pdf/">📄 PDF</a>
+        <a class="nav-link" href="/flashtools/dev-tools/">💻 DevTools</a>
+        <a class="nav-link" href="/flashtools/kolory-wcag/">🎨 Kolory</a>
+        <a class="nav-link" href="/flashtools/konwerter-obrazow/">🖼️ Foto</a>
+        <a class="nav-link" href="/flashtools/pomodoro/">⏱️ Czas</a>
+        <a class="nav-link nav-coffee" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Wesprzyj</a>
+    </nav>
+</header>
+
+        <main id="app-root">
+            <!-- 6. KOLORY -->
+<section id="view-color" class="tool-view">
+    <div class="tool-header"><h1>🎨 Kontrast kolorów WCAG i pipeta</h1><p>Kontrast tekstu i tła według WCAG, odcienie kolorów i pipeta ze zdjęcia.</p></div>
+    <div class="flex-row">
+        <div class="flex-1 panel">
+            <h3>Kolory i kontrast</h3><br>
+            <div class="flex-row mb-1">
+                <div class="flex-1"><label>Kolor tła</label><input type="color" id="c_bg" class="color-input" value="#18181b" oninput="updColor()"></div>
+                <div class="flex-1"><label>Kolor tekstu</label><input type="color" id="c_fg" class="color-input" value="#00d2ff" oninput="updColor()"></div>
+            </div>
+            <div class="flex-row color-codes">
+                <div class="flex-1">
+                    <div>HEX: <span id="c_h_bg" class="text-accent">#18181b</span></div>
+                    <div>RGB: <span id="c_r_bg">24, 24, 27</span></div>
+                </div>
+                <div class="flex-1">
+                    <div>HEX: <span id="c_h_fg" class="text-accent">#00d2ff</span></div>
+                    <div>RGB: <span id="c_r_fg">0, 210, 255</span></div>
+                </div>
+            </div>
+
+            <div id="c_box">
+                <h2>Podgląd</h2><p>Podgląd kontrastu w praktyce.</p>
+            </div>
+            <div class="contrast-box">
+                Kontrast WCAG: <span id="c_rat">0.00</span> : 1 <br>
+                <span id="c_an">Zwykły tekst: –</span> | <span id="c_al">Duży tekst: –</span>
+            </div>
+
+            <h3 class="mt-2">Paleta (odcienie tła)</h3>
+            <div id="c_pal"></div>
+        </div>
+
+        <div class="flex-1 panel">
+            <h3>Pipeta – kolor ze zdjęcia</h3><p class="panel-hint">Wgraj zdjęcie i kliknij w nie, aby odczytać kolor. Działa bez internetu.</p>
+            <input type="file" class="mb-1" accept="image/*" onchange="loadColorImg(this)">
+            <canvas id="c_cvs" class="canvas-preview is-hidden"></canvas>
+            <div class="picker-result">
+                <div id="c_pick_box"></div>
+                <div>Pobrany kolor: <span id="c_pick_txt"># Brak</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<article class="panel seo-content">
+    <h2>Kontrast kolorów według WCAG</h2>
+    <p>Wytyczne dostępności WCAG określają minimalny kontrast między kolorem tekstu a tłem, aby treść była czytelna również dla osób słabowidzących:</p>
+    <ul>
+        <li><strong>4.5 : 1</strong> – minimum dla zwykłego tekstu (poziom AA),</li>
+        <li><strong>3 : 1</strong> – minimum dla dużego tekstu, np. nagłówków (poziom AA).</li>
+    </ul>
+    <p>Wybierz kolor tła i tekstu, a narzędzie obliczy współczynnik kontrastu i pokaże, czy spełnia wymagania. Podgląd od razu pokazuje, jak wygląda tekst w wybranych kolorach.</p>
+
+    <h2>Konwersja HEX na RGB i paleta odcieni</h2>
+    <p>Dla każdego koloru zobaczysz jego zapis HEX i RGB. Paleta odcieni generuje 5 coraz ciemniejszych wariantów koloru tła – kliknij odcień, aby skopiować jego kod.</p>
+
+    <h2>Pipeta – kolor ze zdjęcia</h2>
+    <p>Wgraj zdjęcie lub zrzut ekranu i kliknij w dowolne miejsce, aby odczytać dokładny kolor. Zdjęcie jest analizowane w przeglądarce i nie jest nigdzie wysyłane.</p>
+</article>
+        </main>
+
+        <footer>
+    <nav class="footer-tools" aria-label="Wszystkie narzędzia">
+        <a href="/flashtools/generator-qr/">Generator kodów QR</a>
+        <a href="/flashtools/generator-hasel/">Generator haseł</a>
+        <a href="/flashtools/formatowanie-tekstu/">Licznik znaków</a>
+        <a href="/flashtools/narzedzia-pdf/">Łączenie PDF</a>
+        <a href="/flashtools/dev-tools/">JSON i Base64</a>
+        <a href="/flashtools/kolory-wcag/">Kontrast WCAG</a>
+        <a href="/flashtools/konwerter-obrazow/">Konwerter zdjęć</a>
+        <a href="/flashtools/pomodoro/">Timer Pomodoro</a>
+    </nav>
+    <div class="footer-links">
+        <a href="/flashtools/privacy.html">Polityka prywatności i cookies</a> |
+        <a href="/flashtools/terms.html">Regulamin serwisu</a> |
+        <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+    </div>
+    © <span id="footerYear">2026</span> FlashTools. Wszelkie prawa zastrzeżone.
+</footer>
+    </div>
+
+    <!-- BIBLIOTEKI ZEWNĘTRZNE (lista w inc/routes.php) -->
+        <!-- LOGIKA JS -->
+    <script src="/flashtools/assets/js/core.js"></script>
+    <script src="/flashtools/assets/js/modules/color.js"></script>
+    </body>
+</html>

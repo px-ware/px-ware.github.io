@@ -1,0 +1,1981 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dokumentacja techniczna – SafeCheck</title>
+  <meta name="description" content="Dokumentacja techniczna SafeCheck: architektura, komponenty, sekwencja alarmowa, uprawnienia, publikacja w Google Play i znany dług techniczny.">
+  <link rel="canonical" href="https://pxware.pl/safecheck/dokumentacja-techniczna">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2e7d32">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:site_name" content="SafeCheck">
+  <meta property="og:title" content="Dokumentacja techniczna – SafeCheck">
+  <meta property="og:description" content="Dokumentacja techniczna SafeCheck: architektura, komponenty, sekwencja alarmowa, uprawnienia, publikacja w Google Play i znany dług techniczny.">
+  <meta property="og:url" content="https://pxware.pl/safecheck/dokumentacja-techniczna">
+  <meta property="og:image" content="https://pxware.pl/safecheck/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/safecheck/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/safecheck/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/safecheck/apple-touch-icon.png">
+  <link rel="manifest" href="/safecheck/site.webmanifest">
+  <link rel="stylesheet" href="/safecheck/assets/css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SafeCheck","item":"https://pxware.pl/safecheck/"},{"@type":"ListItem","position":2,"name":"Dokumentacja techniczna","item":"https://pxware.pl/safecheck/dokumentacja-techniczna"}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#tresc">Przejdź do treści</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/safecheck/" aria-label="SafeCheck – strona główna">
+        <img src="/safecheck/assets/img/logo.svg" alt="" width="32" height="32">
+        SafeCheck
+      </a>
+      <nav class="nav" aria-label="Główna nawigacja">
+        <a href="/safecheck/#jak-dziala">Jak działa</a>
+        <a href="/safecheck/#funkcje">Funkcje</a>
+        <a href="/safecheck/#pobierz">Pobierz</a>
+        <a href="/safecheck/#dokumenty">Dokumenty</a>
+      </nav>
+      <a class="btn btn-primary btn-sm header-cta" href="/safecheck/#sprzedaz">
+        <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-sell"/></svg>
+        Kup projekt
+      </a>
+    </div>
+  </header>
+
+  <div class="wrap doc-layout">
+    <nav class="doc-nav" aria-label="Dokumenty">
+            <a href="/safecheck/instrukcja">Instrukcja obsługi</a>
+            <a href="/safecheck/dokumentacja-techniczna" aria-current="page">Dokumentacja techniczna</a>
+            <a href="/safecheck/regulamin">Regulamin</a>
+            <a href="/safecheck/polityka-prywatnosci">Polityka prywatności</a>
+            <a href="/safecheck/licencja">Licencja</a>
+          </nav>
+    <main id="tresc" class="prose">
+<h1 id="safecheck--dokumentacja-techniczna">SafeCheck – dokumentacja techniczna</h1>
+<div class="table-wrap"><table>
+
+<tbody>
+<tr>
+<td><strong>Produkt</strong></td>
+<td>SafeCheck – aplikacja bezpieczeństwa typu <em>dead man's switch</em> dla systemu Android</td>
+</tr>
+<tr>
+<td><strong>Wersja kodu</strong></td>
+<td>2.5.5 (versionCode 21)</td>
+</tr>
+<tr>
+<td><strong>Platforma</strong></td>
+<td>Android 7.0+ (minSdk 24), target Android 15 (targetSdk 35)</td>
+</tr>
+<tr>
+<td><strong>Język / UI</strong></td>
+<td>Kotlin 1.9.22, Jetpack Compose (Material 3)</td>
+</tr>
+<tr>
+<td><strong>Backend</strong></td>
+<td>brak – aplikacja działa w 100% lokalnie na urządzeniu</td>
+</tr>
+<tr>
+<td><strong>Monetyzacja</strong></td>
+<td>reklamy Google AdMob (baner + reklama pełnoekranowa)</td>
+</tr>
+<tr>
+<td><strong>Dystrybucja</strong></td>
+<td>plik APK linkowany ze strony projektu (GitHub Releases repozytorium <code>px-ware/safecheck</code>). Aplikacja <strong>nie jest publikowana w Google Play</strong></td>
+</tr>
+<tr>
+<td><strong>Języki interfejsu</strong></td>
+<td>angielski (domyślny), polski, niemiecki, francuski</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="spis-treści">Spis treści <a class="anchor" href="#spis-treści" aria-label="Link do sekcji">#</a></h2>
+<ol>
+<li><a href="#1-opis-produktu">Opis produktu</a></li>
+<li><a href="#2-stos-technologiczny">Stos technologiczny</a></li>
+<li><a href="#3-uruchomienie-i-budowanie">Uruchomienie i budowanie</a></li>
+<li><a href="#4-konfiguracja-dane-do-podmiany">Konfiguracja (dane do podmiany)</a></li>
+<li><a href="#5-struktura-projektu">Struktura projektu</a></li>
+<li><a href="#6-architektura">Architektura</a></li>
+<li><a href="#7-opis-komponentów">Opis komponentów</a></li>
+<li><a href="#8-sekwencja-alarmowa">Sekwencja alarmowa</a></li>
+<li><a href="#9-planowanie-alarmów">Planowanie alarmów</a></li>
+<li><a href="#10-model-danych-i-przechowywanie">Model danych i przechowywanie</a></li>
+<li><a href="#11-kontrakt-komunikacji-intenty-broadcasty">Kontrakt komunikacji (Intenty, broadcasty)</a></li>
+<li><a href="#12-powiadomienia">Powiadomienia</a></li>
+<li><a href="#13-uprawnienia">Uprawnienia</a></li>
+<li><a href="#14-obsługa-numerów-telefonów">Obsługa numerów telefonów</a></li>
+<li><a href="#15-reklamy-admob">Reklamy (AdMob)</a></li>
+<li><a href="#16-internacjonalizacja">Internacjonalizacja</a></li>
+<li><a href="#17-bezpieczeństwo-i-prywatność">Bezpieczeństwo i prywatność</a></li>
+<li><a href="#18-testowanie">Testowanie</a></li>
+<li><a href="#19-wydanie-i-dystrybucja">Wydanie i dystrybucja</a></li>
+<li><a href="#20-znane-ograniczenia-i-dług-techniczny">Znane ograniczenia i dług techniczny</a></li>
+<li><a href="#21-proponowany-rozwój-roadmapa">Proponowany rozwój (roadmapa)</a></li>
+<li><a href="#22-słownik-pojęć">Słownik pojęć</a></li>
+</ol>
+<hr />
+<h2 id="1-opis-produktu">1. Opis produktu <a class="anchor" href="#1-opis-produktu" aria-label="Link do sekcji">#</a></h2>
+<p>SafeCheck jest dla osób mieszkających samotnie: seniorów, osób przewlekle chorych, osób pracujących lub podróżujących w pojedynkę. Gdy użytkownik przez dłuższy czas nie daje znaku życia, aplikacja automatycznie powiadamia jego bliskich.</p>
+<p><strong>Zasada działania:</strong></p>
+<ol>
+<li>Użytkownik ustawia długość licznika (domyślnie <strong>48 godzin</strong>) i podaje numery telefonów <strong>opiekunów</strong>.</li>
+<li>Co jakiś czas naciska duży przycisk <strong>„ŻYJĘ!”</strong>, który zeruje licznik i rozpoczyna odliczanie od nowa.</li>
+<li>Gdy licznik dojdzie do zera, telefon włącza <strong>głośny alarm</strong>, również na zablokowanym ekranie.</li>
+<li>Jeśli użytkownik nie zareaguje przez około <strong>2,5 minuty</strong>, aplikacja wysyła do każdego opiekuna <strong>SMS z lokalizacją GPS</strong> (linki do Google Maps i Apple Maps).</li>
+<li>Jeśli użytkownik potwierdzi później, że wszystko w porządku, opiekunowie dostają SMS „fałszywy alarm”.</li>
+</ol>
+<p><strong>Cechy wyróżniające:</strong></p>
+<ul>
+<li>Brak konta, rejestracji i serwera. Dane nie opuszczają telefonu, z wyjątkiem SMS-ów wysyłanych do opiekunów.</li>
+<li>SMS-y idą przez sieć komórkową użytkownika, więc nie trzeba internetu ani aplikacji po stronie opiekuna.</li>
+<li>Alarm działa przy zamkniętej aplikacji, w trybie oszczędzania energii i po restarcie telefonu.</li>
+<li>Ostrzeżenia o ustawieniach producentów (Xiaomi, Huawei, Oppo, Vivo), które agresywnie zamykają aplikacje w tle.</li>
+<li>Dystrybucja bez sklepu: plik APK ze strony projektu. Kod jest przygotowany także do ewentualnej publikacji w Google Play przez nabywcę (rozdz. 19.6).</li>
+</ul>
+<hr />
+<h2 id="2-stos-technologiczny">2. Stos technologiczny <a class="anchor" href="#2-stos-technologiczny" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Obszar</th>
+<th>Technologia</th>
+<th>Wersja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Język</td>
+<td>Kotlin</td>
+<td>1.9.22</td>
+</tr>
+<tr>
+<td>Kompilator Compose</td>
+<td><code>kotlinCompilerExtensionVersion</code></td>
+<td>1.5.10</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Gradle (wrapper) / Android Gradle Plugin</td>
+<td>8.5 / 8.2.2</td>
+</tr>
+<tr>
+<td>JDK do budowania</td>
+<td>Java</td>
+<td>17</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Jetpack Compose BOM</td>
+<td>2023.08.00 (UI 1.5.0, Material 3 1.1.1)</td>
+</tr>
+<tr>
+<td>Ikony</td>
+<td><code>material-icons-extended</code></td>
+<td>z BOM</td>
+</tr>
+<tr>
+<td>AndroidX</td>
+<td>core-ktx / appcompat / lifecycle-runtime-ktx / activity-compose</td>
+<td>1.15.0 / 1.6.1 / 2.8.7 / 1.10.1</td>
+</tr>
+<tr>
+<td>Reklamy</td>
+<td>Google Mobile Ads SDK (<code>play-services-ads</code>)</td>
+<td>23.0.0</td>
+</tr>
+<tr>
+<td>Lokalizacja</td>
+<td><code>play-services-location</code> (FusedLocationProvider)</td>
+<td>21.0.1</td>
+</tr>
+<tr>
+<td>Numery telefonów</td>
+<td><code>io.michaelrocks:libphonenumber-android</code></td>
+<td>8.13.35</td>
+</tr>
+<tr>
+<td>Współbieżność</td>
+<td>Kotlin Coroutines (przez Compose / lifecycle)</td>
+<td>1.7.3</td>
+</tr>
+</tbody>
+</table></div>
+<p>Aplikacja nie korzysta z bibliotek DI (Hilt/Koin), Navigation, Room ani Retrofit. Jest to świadomie prosta architektura „single-activity + Compose”, opisana w <a href="#6-architektura">rozdziale 6</a>.</p>
+<hr />
+<h2 id="3-uruchomienie-i-budowanie">3. Uruchomienie i budowanie <a class="anchor" href="#3-uruchomienie-i-budowanie" aria-label="Link do sekcji">#</a></h2>
+<h3 id="31-wymagania">3.1 Wymagania <a class="anchor" href="#31-wymagania" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li>Android Studio Hedgehog (2023.1) lub nowsze. Zalecane jest najnowsze stabilne wydanie.</li>
+<li>JDK 17 (wbudowany w Android Studio).</li>
+<li>Android SDK Platform 35.</li>
+</ul>
+<h3 id="32-pierwsze-uruchomienie">3.2 Pierwsze uruchomienie <a class="anchor" href="#32-pierwsze-uruchomienie" aria-label="Link do sekcji">#</a></h3>
+<ol>
+<li><em>File → Open</em> i wskaż katalog <code>SafeCheck-kotlin</code>.</li>
+<li>Poczekaj na <em>Gradle Sync</em>.</li>
+<li>Wybierz konfigurację <code>app</code> i urządzenie (fizyczne albo emulator z Google Play Services) → <strong>Run</strong>.</li>
+</ol>
+<blockquote>
+<p>AdMob i FusedLocationProvider wymagają <strong>Google Play Services</strong>. Na emulatorze wybierz obraz systemu z oznaczeniem <em>Google APIs</em> lub <em>Google Play</em>.</p>
+</blockquote>
+<h3 id="33-linia-poleceń">3.3 Linia poleceń <a class="anchor" href="#33-linia-poleceń" aria-label="Link do sekcji">#</a></h3>
+<pre><code class="language-bash">./gradlew assembleDebug        # APK testowy: app/build/outputs/apk/debug/app-debug.apk
+./gradlew installDebug         # instalacja na podłączonym urządzeniu
+./gradlew assembleRelease      # APK produkcyjny (wymaga podpisu, patrz rozdz. 19)
+./gradlew bundleRelease        # AAB (tylko przy ewentualnej publikacji w Google Play)
+./gradlew lint                 # analiza statyczna</code></pre>
+<h3 id="34-warianty-budowania">3.4 Warianty budowania <a class="anchor" href="#34-warianty-budowania" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Wariant</th>
+<th>Minifikacja</th>
+<th>Podpis</th>
+<th>Zastosowanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>debug</code></td>
+<td>nie</td>
+<td>klucz debug Android Studio</td>
+<td>rozwój i testy</td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td>nie (<code>isMinifyEnabled = false</code>)</td>
+<td>trzeba skonfigurować</td>
+<td>publikacja</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="4-konfiguracja-dane-do-podmiany">4. Konfiguracja (dane do podmiany) <a class="anchor" href="#4-konfiguracja-dane-do-podmiany" aria-label="Link do sekcji">#</a></h2>
+<p>Wszystkie dane zależne od właściciela aplikacji są w jednym miejscu: <strong><code>gradle.properties</code></strong>, w sekcji „KONFIGURACJA APLIKACJI”. Plik <code>app/build.gradle.kts</code> odczytuje je funkcją <code>config()</code>. Brak klucza przerywa budowanie czytelnym komunikatem.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Klucz</th>
+<th>Opis</th>
+<th>Trafia do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>safecheck.applicationId</code></td>
+<td>identyfikator aplikacji (pakiet Androida). Zmiana oznacza dla systemu <strong>inną aplikację</strong> – nie zainstaluje się jako aktualizacja istniejącej</td>
+<td><code>defaultConfig.applicationId</code></td>
+</tr>
+<tr>
+<td><code>safecheck.admobAppId</code></td>
+<td>ID aplikacji AdMob, format <code>ca-app-pub-XXXXXXXX~YYYYYYYY</code></td>
+<td><code>AndroidManifest.xml</code> przez <code>manifestPlaceholders["admobAppId"]</code></td>
+</tr>
+<tr>
+<td><code>safecheck.admobBannerId</code></td>
+<td>ID jednostki banera, format <code>ca-app-pub-XXXX/YYYY</code></td>
+<td><code>BuildConfig.ADMOB_BANNER_ID</code></td>
+</tr>
+<tr>
+<td><code>safecheck.admobInterstitialId</code></td>
+<td>ID jednostki reklamy pełnoekranowej</td>
+<td><code>BuildConfig.ADMOB_INTERSTITIAL_ID</code></td>
+</tr>
+<tr>
+<td><code>safecheck.manualUrl</code></td>
+<td>link do instrukcji obsługi</td>
+<td><code>BuildConfig.MANUAL_URL</code></td>
+</tr>
+<tr>
+<td><code>safecheck.privacyUrl</code></td>
+<td>link do polityki prywatności</td>
+<td><code>BuildConfig.PRIVACY_URL</code></td>
+</tr>
+<tr>
+<td><code>safecheck.termsUrl</code></td>
+<td>link do regulaminu</td>
+<td><code>BuildConfig.TERMS_URL</code></td>
+</tr>
+<tr>
+<td><code>safecheck.downloadUrl</code></td>
+<td>strona pobierania aplikacji – link w SMS-ie „Zaproś znajomych”</td>
+<td><code>BuildConfig.DOWNLOAD_URL</code></td>
+</tr>
+<tr>
+<td><code>safecheck.companyName</code></td>
+<td>nazwa firmy w podpisie „Powered by …” (ekran startowy, konfiguracja, menu, górny pasek)</td>
+<td>zasób <code>R.string.powered_by</code> (<code>resValue</code>)</td>
+</tr>
+<tr>
+<td><code>safecheck.umpTestDeviceIds</code></td>
+<td>(opcjonalnie) urządzenia testowe formularza zgody UMP, tylko build debug</td>
+<td><code>BuildConfig.UMP_TEST_DEVICE_IDS</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Wartości domyślne</strong> w repozytorium:</p>
+<ul>
+<li>Reklamy: <strong>oficjalne testowe ID Google</strong>. Działają od razu, wyświetlają reklamy z napisem „Test Ad” i nie generują przychodu.</li>
+<li>Linki do dokumentów i strona pobierania: publiczne repozytorium <code>https://github.com/px-ware/safecheck</code> (dokumenty <code>.md</code> i wydania APK), niezależne od domeny strony projektu <code>https://pxware.pl/safecheck</code>. Nabywca podmienia je na własną stronę – gotowe dokumenty do opublikowania są w katalogu <code>docs/strona/</code> (kopie: <a href="/safecheck/instrukcja">instrukcja</a>, <a href="/safecheck/regulamin">regulamin</a>, <a href="/safecheck/polityka-prywatnosci">polityka prywatności</a>), patrz <a href="#195-hosting-dokumentów-instrukcja-regulamin-polityka">rozdział 19.5</a>.</li>
+</ul>
+<p><strong>Pozostałe elementy marki:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Lokalizacja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Podpis „Powered by …”</td>
+<td>string <code>powered_by</code> w <code>res/values*/strings.xml</code> (4 pliki)</td>
+</tr>
+<tr>
+<td>Ikona aplikacji</td>
+<td><code>res/mipmap-*/ic_launcher*.webp</code>, <code>res/mipmap-anydpi-v26/*.xml</code>, <code>res/drawable/ic_launcher_foreground.xml</code>, kolor <code>ic_launcher_background</code></td>
+</tr>
+<tr>
+<td>Logo w aplikacji</td>
+<td><code>res/drawable/ic_safecheck_symbol.xml</code> (wektor)</td>
+</tr>
+<tr>
+<td>Kolory interfejsu</td>
+<td><code>SafeGreen</code>, <code>DangerRed</code>, <code>BgColor</code> na początku <code>MainActivity.kt</code></td>
+</tr>
+<tr>
+<td>Nazwa aplikacji</td>
+<td>string <code>app_name</code></td>
+</tr>
+<tr>
+<td>Pakiet kodu</td>
+<td><code>com.example.safecheck</code>: <code>namespace</code> w <code>app/build.gradle.kts</code> + katalog źródeł (<em>Refactor → Rename</em> w Android Studio)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="5-struktura-projektu">5. Struktura projektu <a class="anchor" href="#5-struktura-projektu" aria-label="Link do sekcji">#</a></h2>
+<pre><code>SafeCheck-kotlin/
+├── README.md                       – skrócony opis i szybki start
+├── LICENSE.md                      – licencja (kod poufny, wszelkie prawa zastrzeżone)
+├── docs/
+│   ├── DOKUMENTACJA_TECHNICZNA.md  – ten dokument
+│   └── strona/                     – dokumenty dla użytkowników (do hostowania)
+│       ├── docs.html               – przeglądarka plików .md (?file=...)
+│       ├── instrukcja.md
+│       ├── regulamin.md
+│       └── polityka-prywatnosci.md
+├── gradle.properties               – KONFIGURACJA APLIKACJI
+├── settings.gradle.kts / build.gradle.kts
+├── gradle/wrapper/                 – Gradle Wrapper 8.5
+└── app/
+    ├── build.gradle.kts            – konfiguracja modułu, zależności, BuildConfig
+    ├── proguard-rules.pro
+    └── src/main/
+        ├── AndroidManifest.xml
+        ├── java/com/example/safecheck/
+        │   ├── MainActivity.kt     – UI (wszystkie ekrany), ustawienia, uprawnienia
+        │   ├── AdsConsentManager.kt – zgoda na reklamy (Google UMP, RODO)
+        │   ├── AlarmService.kt     – usługa pierwszoplanowa: alarm, dźwięk, GPS, SMS
+        │   ├── AlarmScheduler.kt   – planowanie alarmu w AlarmManager
+        │   ├── AlarmReceiver.kt    – odbiorca alarmu systemowego
+        │   ├── BootReceiver.kt     – przywracanie alarmu po restarcie
+        │   └── AlarmActivity.kt    – pełnoekranowy ekran alarmu
+        └── res/
+            ├── values/ values-pl/ values-de/ values-fr/   – teksty
+            ├── drawable/ mipmap-*/                        – grafiki i ikony
+            └── xml/                                       – reguły kopii zapasowej</code></pre>
+<h3 id="51-organizacja-mainactivitykt">5.1 Organizacja <code>MainActivity.kt</code> <a class="anchor" href="#51-organizacja-mainactivitykt" aria-label="Link do sekcji">#</a></h3>
+<p>Plik ma około 2600 linii i jest podzielony na ponumerowane sekcje, oznaczone w kodzie komentarzami <code>// N. NAZWA</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Sekcja</th>
+<th>Zawartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>stałe (<code>MANUAL_URL</code>…), kolory, klasy danych <code>LanguageOption</code>, <code>IntroStep</code>, <code>PhoneContact</code>, <code>Country</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>ContextUtils</code> – wymuszenie języka aplikacji</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>LocalPrefs</code> – dostęp do SharedPreferences, <code>Modifier.safeClick</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>MainActivity</code> – punkt wejścia, motyw, nawigacja, reklama pełnoekranowa</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ekrany konfiguracji: <code>SplashScreen</code>, <code>LanguageSelectionScreen</code>, <code>LanguageChangeDialog</code>, <code>NameEntryScreen</code>, <code>SetupScreen</code>, <code>IntroScreen</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>MainDashboard</code> – ekran główny, menu boczne, baner</td>
+</tr>
+<tr>
+<td>7</td>
+<td>okna dialogowe: <code>AboutAppDialog</code>, <code>AccountManagementDialog</code>, <code>EditNameDialog</code>, <code>InviteFriendsDialog</code>, <code>TimeEditDialog</code>, <code>SmallTimeInput</code>, <code>DrawerMenuItem</code>, <code>TimeSegment</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>uprawnienia: <code>Check…UI()</code>, <code>PermissionAlertDialog</code>, <code>openSettings</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>numer telefonu: <code>getFlagEmoji</code>, <code>getAllCountries</code>, <code>AdvancedPhoneInput</code>, <code>GhostMaskTransformation</code></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>Rekomendacja: przy dalszym rozwoju warto rozbić plik na pakiety <code>ui/screens</code>, <code>ui/dialogs</code>, <code>permissions</code>, <code>data</code> (patrz <a href="#21-proponowany-rozwój-roadmapa">rozdział 21</a>).</p>
+</blockquote>
+<hr />
+<h2 id="6-architektura">6. Architektura <a class="anchor" href="#6-architektura" aria-label="Link do sekcji">#</a></h2>
+<h3 id="61-widok-ogólny">6.1 Widok ogólny <a class="anchor" href="#61-widok-ogólny" aria-label="Link do sekcji">#</a></h3>
+<pre class="mermaid">flowchart LR
+    subgraph UI["Warstwa UI (Compose)"]
+        MA[MainActivity&lt;br/&gt;ekrany + nawigacja]
+        AA[AlarmActivity&lt;br/&gt;ekran alarmu]
+    end
+    subgraph BG["Warstwa tła"]
+        AS[AlarmService&lt;br/&gt;foreground service]
+        AR[AlarmReceiver]
+        BR[BootReceiver]
+        SCH[AlarmScheduler]
+    end
+    subgraph DATA["Dane"]
+        SP[(SharedPreferences&lt;br/&gt;safecheck_local_db)]
+    end
+    subgraph SYS["System / zewnętrzne"]
+        AM[AlarmManager]
+        SMS[SmsManager → operator]
+        GPS[FusedLocationProvider]
+        ADS[Google AdMob]
+    end
+
+    MA -- LocalPrefs --&gt; SP
+    MA -- scheduleAlarm --&gt; SCH
+    MA -- Intent I_AM_ALIVE / ALARM_TRIGGER --&gt; AS
+    MA -- reklamy --&gt; ADS
+    SCH --&gt; AM
+    AM -- alarm --&gt; AR
+    AR -- START_SEQUENCE --&gt; AS
+    AR --&gt; AA
+    BR -- po restarcie --&gt; SCH
+    BR -- termin minął --&gt; AS
+    AS -- odczyt --&gt; SP
+    AS -- broadcast UPDATE_ALARM_UI --&gt; AA
+    AA -- I_AM_ALIVE --&gt; AS
+    AS --&gt; GPS
+    AS --&gt; SMS</pre>
+<h3 id="62-założenia-architektoniczne">6.2 Założenia architektoniczne <a class="anchor" href="#62-założenia-architektoniczne" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><strong>Single Activity + Compose.</strong> Wszystkie ekrany konfiguracji i ekran główny działają w <code>MainActivity</code>. Osobną aktywnością jest tylko <code>AlarmActivity</code>, bo musi się pokazywać na ekranie blokady.</li>
+<li><strong>Nawigacja oparta na stanie.</strong> Zamiast biblioteki Navigation blok <code>when</code> w <code>MainActivity.onCreate()</code> wybiera ekran na podstawie flag (<code>isLanguageSet</code>, <code>isNameSet</code>, <code>isConfigured</code>, <code>isIntroSeen</code>).</li>
+<li><strong>Stan UI</strong> trzymany jest w <code>remember { mutableStateOf(...) }</code> wewnątrz composable. Aplikacja nie ma ViewModeli. Trwałe dane trafiają do <code>LocalPrefs</code> (SharedPreferences).</li>
+<li><strong>Źródło prawdy o terminie</strong> to klucz <code>alarm_target</code> (timestamp w ms). Czytają go UI (<code>MainDashboard</code>), <code>AlarmService</code> i <code>BootReceiver</code>.</li>
+<li>
+<p><strong>Podwójne zabezpieczenie wyzwolenia alarmu:</strong></p>
+<ol>
+<li>alarm systemowy w <code>AlarmManager</code>, który działa przy zamkniętej aplikacji,</li>
+<li>pętla w <code>MainDashboard</code>, która sprawdza czas co 100 ms, gdy ekran jest widoczny.</li>
+</ol>
+<p>Duplikację startu sekwencji blokuje warunek <code>currentStage == 0</code> w <code>AlarmService</code>.</p>
+</li>
+</ul>
+<h3 id="63-przepływ-ekranów">6.3 Przepływ ekranów <a class="anchor" href="#63-przepływ-ekranów" aria-label="Link do sekcji">#</a></h3>
+<pre class="mermaid">flowchart TD
+    S[SplashScreen&lt;br/&gt;2 s] --&gt; L{isLanguageSet?}
+    L -- nie --&gt; LS[LanguageSelectionScreen] --&gt;|recreate| S
+    L -- tak --&gt; N{isNameSet?}
+    N -- nie --&gt; NE[NameEntryScreen&lt;br/&gt;imię + zgoda na regulamin]
+    N -- tak --&gt; C{isConfigured?&lt;br/&gt;są opiekunowie}
+    NE --&gt; C
+    C -- nie --&gt; SE[SetupScreen&lt;br/&gt;numery opiekunów]
+    C -- tak --&gt; I{isIntroSeen?}
+    SE --&gt; I
+    I -- nie --&gt; IN[IntroScreen&lt;br/&gt;7 plansz]
+    I -- tak --&gt; D[MainDashboard]
+    IN --&gt; D
+    D -- "Usuń konto" --&gt; CLR[prefs.clear + recreate] --&gt; S</pre>
+<p>Od momentu wyjścia ze <code>SplashScreen</code> aktywne są też komponenty <code>Check…UI()</code>, które w razie braku uprawnień nakładają okna z prośbą o ich nadanie.</p>
+<hr />
+<h2 id="7-opis-komponentów">7. Opis komponentów <a class="anchor" href="#7-opis-komponentów" aria-label="Link do sekcji">#</a></h2>
+<h3 id="71-mainactivity-mainactivitykt-sekcja-4">7.1 <code>MainActivity</code> (<code>MainActivity.kt</code>, sekcja 4) <a class="anchor" href="#71-mainactivity-mainactivitykt-sekcja-4" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>attachBaseContext()</code></td>
+<td>odczytuje <code>language_code</code> i opakowuje kontekst przez <code>ContextUtils.updateLocale()</code>, żeby wymusić język aplikacji</td>
+</tr>
+<tr>
+<td><code>onCreate()</code></td>
+<td><code>enableEdgeToEdge()</code>, <code>AdsConsentManager.gatherConsent()</code> (zgoda → inicjalizacja AdMob → wczytanie reklamy pełnoekranowej), <code>setContent { MaterialTheme { … } }</code></td>
+</tr>
+<tr>
+<td><code>loadInterstitialAd()</code></td>
+<td>ładuje <code>InterstitialAd</code> (ID z <code>BuildConfig</code>). Nic nie robi, dopóki <code>AdsConsentManager.adsReady</code> jest <code>false</code></td>
+</tr>
+<tr>
+<td><code>showInterstitial()</code></td>
+<td>pokazuje gotową reklamę i od razu ładuje kolejną. Wywoływana z <code>MainDashboard</code> po „ŻYJĘ!”</td>
+</tr>
+</tbody>
+</table></div>
+<p>Motyw: <code>MaterialTheme.colorScheme.copy(primary = SafeGreen, background = BgColor)</code>.</p>
+<h3 id="72-localprefs">7.2 <code>LocalPrefs</code> <a class="anchor" href="#72-localprefs" aria-label="Link do sekcji">#</a></h3>
+<p>Jedyny punkt dostępu do zapisanych danych – korzystają z niego UI, <code>AlarmService</code> i <code>BootReceiver</code>. Dane są w <strong>dwóch plikach</strong> (patrz <a href="#10-model-danych-i-przechowywanie">rozdział 10</a>):</p>
+<ul>
+<li><code>safecheck_local_db</code> – ustawienia użytkownika, objęte kopią zapasową Androida,</li>
+<li><code>safecheck_device_state</code> – termin licznika na tym urządzeniu, <strong>wyłączony</strong> z kopii zapasowej.</li>
+</ul>
+<p>Nazwy plików i kluczy są stałymi w <code>LocalPrefs.Companion</code>. Ustawienia zapisywane są asynchronicznie (<code>apply()</code>), termin licznika synchronicznie (<code>commit()</code>), bo odczytują go też procesy w tle.</p>
+<p>Dodatkowo:</p>
+<ul>
+<li><code>isRestoredWithoutTimer</code> – <code>true</code>, gdy aplikacja jest skonfigurowana (imię + opiekunowie), ale na urządzeniu nie ma terminu, czyli ustawienia przywrócono z kopii zapasowej. <code>MainDashboard</code> uruchamia wtedy licznik od nowa i pokazuje komunikat <code>restored_from_backup</code>,</li>
+<li>migracja w <code>init</code>: termin zapisany w pliku ustawień (starszy układ danych) jest jednorazowo przenoszony do pliku stanu urządzenia.</li>
+</ul>
+<h3 id="73-ekrany-konfiguracji">7.3 Ekrany konfiguracji <a class="anchor" href="#73-ekrany-konfiguracji" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Composable</th>
+<th>Odpowiedzialność</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SplashScreen</code></td>
+<td>logo, wersja (<code>PackageManager</code>), podpis <code>powered_by</code></td>
+</tr>
+<tr>
+<td><code>LanguageSelectionScreen</code></td>
+<td>lista 4 języków. Wybór zapisuje <code>language_code</code>, ustawia <code>is_lang_set_v2</code> i wywołuje <code>recreate()</code></td>
+</tr>
+<tr>
+<td><code>LanguageChangeDialog</code></td>
+<td>to samo jako okno (z menu lub ikony globusa)</td>
+</tr>
+<tr>
+<td><code>NameEntryScreen</code></td>
+<td>imię (pole tekstowe) + checkbox zgody. Linki do regulaminu i polityki prywatności są w <code>ClickableText</code> z adnotacjami <code>TERMS</code> i <code>PRIVACY</code></td>
+</tr>
+<tr>
+<td><code>SetupScreen</code></td>
+<td>lista opiekunów (dodawanie, usuwanie), walidacja numeru przez <code>AdvancedPhoneInput</code>, limit 100 numerów. Zapis ustawia pierwszy termin i planuje alarm</td>
+</tr>
+<tr>
+<td><code>IntroScreen</code></td>
+<td>7 plansz z ikonami, wskaźnik postępu, na końcu linki do dokumentów. „Start!” ustawia <code>is_intro_seen</code> i uruchamia <code>AlarmService</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="74-maindashboard-sekcja-6">7.4 <code>MainDashboard</code> (sekcja 6) <a class="anchor" href="#74-maindashboard-sekcja-6" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><strong>Stan:</strong> <code>targetTime</code>, <code>timeLeftMs</code>, <code>duration</code>, <code>progress</code> (0..1) i <code>isAlarmTriggered</code>.</li>
+<li><strong>Pętla licznika:</strong> <code>LaunchedEffect(targetTime, duration)</code>.
+<ul>
+<li>Przy starcie planuje alarm (<code>AlarmScheduler.scheduleAlarm</code>).</li>
+<li>Co 100 ms przelicza pozostały czas.</li>
+<li>Synchronizuje się z <code>prefs.alarmTargetTime</code>, bo termin może zmienić <code>AlarmService</code> po akcji z powiadomienia.</li>
+<li>Po dojściu do zera wysyła <code>ALARM_TRIGGER</code> do <code>AlarmService</code>.</li>
+</ul></li>
+<li><strong>Przycisk „ŻYJĘ!”:</strong>
+<ul>
+<li>nowy termin = teraz + <code>timerDuration</code>,</li>
+<li><code>I_AM_ALIVE</code> do <code>AlarmService</code>,</li>
+<li>reklama pełnoekranowa.</li>
+</ul></li>
+<li><strong>Licznik dd:hh:mm:ss:</strong> kliknięcie otwiera <code>TimeEditDialog</code>.</li>
+<li><strong>Menu boczne (<code>ModalNavigationDrawer</code>):</strong>
+<ul>
+<li>opiekunowie (okno edycji listy),</li>
+<li>zaproszenia (najpierw prośba o <code>READ_CONTACTS</code>),</li>
+<li>zarządzanie kontem,</li>
+<li>język,</li>
+<li>o aplikacji,</li>
+<li>przycisk „Sprawdź uprawnienia” (<code>openSettings</code>),</li>
+<li>„Usuń konto”: anulowanie alarmów, zatrzymanie usługi, <code>prefs.clear()</code>, <code>recreate()</code>.</li>
+</ul></li>
+<li><strong>Baner AdMob:</strong> <code>AndroidView { AdView(...) }</code>, rozmiar <code>AdSize.BANNER</code>.</li>
+</ul>
+<h3 id="75-okna-dialogowe-sekcja-7">7.5 Okna dialogowe (sekcja 7) <a class="anchor" href="#75-okna-dialogowe-sekcja-7" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Okno</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AboutAppDialog</code></td>
+<td>wersja + przyciski do instrukcji, regulaminu i polityki</td>
+</tr>
+<tr>
+<td><code>AccountManagementDialog</code></td>
+<td>podgląd imienia, przejście do <code>EditNameDialog</code>, usunięcie danych</td>
+</tr>
+<tr>
+<td><code>EditNameDialog</code></td>
+<td>edycja imienia (maks. 30 znaków)</td>
+</tr>
+<tr>
+<td><code>InviteFriendsDialog</code></td>
+<td>odczyt kontaktów (<code>ContactsContract</code>, wątek IO, deduplikacja po numerze). Przycisk „Zaproś” wysyła SMS z linkiem do strony pobierania (<code>invite_sms_body</code> + <code>BuildConfig.DOWNLOAD_URL</code>). Gdy bezpośrednia wysyłka się nie uda, otwiera aplikację SMS (<code>ACTION_VIEW sms:</code>)</td>
+</tr>
+<tr>
+<td><code>TimeEditDialog</code></td>
+<td>4 pola (D/H/M/S). Minimalny licznik to 10 s. Zapis: nowa długość i nowy termin liczony od teraz</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="76-alarmservice-alarmservicekt">7.6 <code>AlarmService</code> (<code>AlarmService.kt</code>) <a class="anchor" href="#76-alarmservice-alarmservicekt" aria-label="Link do sekcji">#</a></h3>
+<p>Usługa pierwszoplanowa (<code>foregroundServiceType="specialUse|location"</code>), uruchamiana jako <code>START_REDELIVER_INTENT</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metoda</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onStartCommand</code></td>
+<td>tworzy kanał powiadomień, przechodzi na pierwszy plan, rozdziela akcje (patrz <a href="#11-kontrakt-komunikacji-intenty-broadcasty">rozdział 11</a>)</td>
+</tr>
+<tr>
+<td><code>startStage(n)</code></td>
+<td>ustawia etap, gra lub wycisza dźwięk, aktualizuje powiadomienie i UI, uruchamia <code>CountDownTimer</code> 30 s do następnego etapu</td>
+</tr>
+<tr>
+<td><code>fetchLocationAndSendSMS(nr)</code></td>
+<td><code>getCurrentLocation(PRIORITY_HIGH_ACCURACY)</code> → SMS z linkami do map. Bez uprawnienia, bez pozycji lub przy błędzie wysyła wariant bez lokalizacji</td>
+</tr>
+<tr>
+<td><code>sendMultipartSMS</code></td>
+<td><code>SmsManager.divideMessage</code> + <code>sendMultipartTextMessage</code> (obsługa długich wiadomości i znaków spoza GSM-7)</td>
+</tr>
+<tr>
+<td><code>handleIAmAlive</code></td>
+<td>zatrzymuje timer i dźwięk. Jeśli SMS alarmowy był wysłany, wysyła SMS „fałszywy alarm”. Zeruje etap, ustawia nowy termin i planuje alarm</td>
+</tr>
+<tr>
+<td><code>updateNotificationAndUI</code></td>
+<td>broadcast <code>UPDATE_ALARM_UI</code> + powiadomienie z <code>fullScreenIntent</code> i akcją „ŻYJĘ!”</td>
+</tr>
+<tr>
+<td><code>showMonitoringNotification</code></td>
+<td>ciche, stałe powiadomienie „SafeCheck Aktywny” z akcją „ZRESETUJ ZEGAR”</td>
+</tr>
+<tr>
+<td><code>playSound</code> / <code>stopSound</code></td>
+<td><code>MediaPlayer</code> z dźwiękiem alarmu systemowego (lub dzwonka), <code>USAGE_ALARM</code>, w pętli</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="77-adsconsentmanager">7.7 <code>AdsConsentManager</code> <a class="anchor" href="#77-adsconsentmanager" aria-label="Link do sekcji">#</a></h3>
+<p>Obiekt obsługujący zgodę na reklamy przez <strong>Google UMP 2.2.0</strong>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gatherConsent(activity, onAdsAllowed)</code></td>
+<td><code>requestConsentInfoUpdate</code> → <code>loadAndShowConsentFormIfRequired</code>. Gdy <code>canRequestAds()</code>, wywołuje jednorazowo <code>MobileAds.initialize</code> i <code>onAdsAllowed</code>. Przy zgodzie z poprzedniej sesji reklamy startują od razu</td>
+</tr>
+<tr>
+<td><code>adsReady</code></td>
+<td><code>mutableStateOf&lt;Boolean&gt;</code> obserwowany przez Compose. Baner w <code>MainDashboard</code> renderuje się tylko przy <code>true</code></td>
+</tr>
+<tr>
+<td><code>isPrivacyOptionsRequired</code></td>
+<td><code>true</code> w regionach objętych regulacjami. Wtedy w „O aplikacji” widać przycisk „Ustawienia prywatności reklam”</td>
+</tr>
+<tr>
+<td><code>showPrivacyOptionsForm(activity)</code></td>
+<td>ponowne otwarcie formularza (zmiana lub cofnięcie zgody)</td>
+</tr>
+</tbody>
+</table></div>
+<p>W buildach <strong>debug</strong> region jest wymuszany na EOG (<code>DEBUG_GEOGRAPHY_EEA</code>), więc formularz pojawia się przy każdej czystej instalacji. Fizyczne urządzenia testowe dodaje się w <code>safecheck.umpTestDeviceIds</code>. Wersja release korzysta z rzeczywistej lokalizacji użytkownika.</p>
+<h3 id="78-alarmscheduler">7.8 <code>AlarmScheduler</code> <a class="anchor" href="#78-alarmscheduler" aria-label="Link do sekcji">#</a></h3>
+<p>Opis w <a href="#9-planowanie-alarmów">rozdziale 9</a>.</p>
+<h3 id="79-alarmreceiver">7.9 <code>AlarmReceiver</code> <a class="anchor" href="#79-alarmreceiver" aria-label="Link do sekcji">#</a></h3>
+<p>Odbiera alarm z <code>AlarmManager</code>. Uruchamia <code>AlarmService</code> z akcją <code>START_SEQUENCE</code> (<code>startForegroundService</code> na API 26+) oraz <code>AlarmActivity</code> z flagami <code>NEW_TASK | CLEAR_TOP</code>.</p>
+<h3 id="710-bootreceiver">7.10 <code>BootReceiver</code> <a class="anchor" href="#710-bootreceiver" aria-label="Link do sekcji">#</a></h3>
+<p>Nasłuchuje <code>BOOT_COMPLETED</code>, <code>QUICKBOOT_POWERON</code> i <code>USER_PRESENT</code>, ale reaguje tylko na <code>BOOT_COMPLETED</code>, bo tak sprawdza akcję w kodzie.</p>
+<ul>
+<li>Termin w przyszłości → ponowne zaplanowanie alarmu.</li>
+<li>Termin minął (telefon był wyłączony) → natychmiastowy <code>ALARM_TRIGGER</code>.</li>
+</ul>
+<h3 id="711-alarmactivity">7.11 <code>AlarmActivity</code> <a class="anchor" href="#711-alarmactivity" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li>Pokazuje się nad ekranem blokady i włącza wyświetlacz: <code>setShowWhenLocked</code>, <code>setTurnScreenOn</code>, <code>requestDismissKeyguard</code> na API 27+, flagi okna na starszych.</li>
+<li>Composable <code>AlarmScreen</code> rejestruje odbiornik <code>UPDATE_ALARM_UI</code> (<code>RECEIVER_NOT_EXPORTED</code>) i wyświetla:
+<ul>
+<li>tytuł i treść etapu,</li>
+<li>pierścień odliczania 30 s,</li>
+<li>przycisk „ŻYJĘ!” (260 dp).</li>
+</ul></li>
+<li>Kolory: czerwone tło podczas alarmu, żółte podczas przerwy.</li>
+</ul>
+<hr />
+<h2 id="8-sekwencja-alarmowa">8. Sekwencja alarmowa <a class="anchor" href="#8-sekwencja-alarmowa" aria-label="Link do sekcji">#</a></h2>
+<h3 id="81-etapy">8.1 Etapy <a class="anchor" href="#81-etapy" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Etap</th>
+<th>Tytuł</th>
+<th>Komunikat</th>
+<th>Dźwięk</th>
+<th>Czas</th>
+<th>Następny</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ALARM</td>
+<td>Potwierdź że żyjesz!</td>
+<td>✔</td>
+<td>30 s</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OCZEKIWANIE</td>
+<td>Następny alarm za chwilę...</td>
+<td>✖</td>
+<td>30 s</td>
+<td>3</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ALARM</td>
+<td>Nie potwierdziłeś że żyjesz!</td>
+<td>✔</td>
+<td>30 s</td>
+<td>4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>OCZEKIWANIE</td>
+<td>Ostatnie ostrzeżenie...</td>
+<td>✖</td>
+<td>30 s</td>
+<td>5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ALARM</td>
+<td>Za chwilę powiadomimy Twoich bliskich</td>
+<td>✔</td>
+<td>30 s</td>
+<td>6</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ALARM</td>
+<td>SMS WYSŁANY! Czekaj na pomoc.</td>
+<td>✔</td>
+<td>do skutku</td>
+<td>–</td>
+</tr>
+</tbody>
+</table></div>
+<p>Etap 6 zaczyna się <strong>150 s</strong> (2,5 min) po wybuchu alarmu. SMS wysyłany jest raz (flaga <code>smsSent</code>) do wszystkich opiekunów.</p>
+<h3 id="82-diagram-stanów">8.2 Diagram stanów <a class="anchor" href="#82-diagram-stanów" aria-label="Link do sekcji">#</a></h3>
+<pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Czuwanie
+    Czuwanie --&gt; Etap1: termin minął
+    Etap1 --&gt; Etap2: 30 s
+    Etap2 --&gt; Etap3: 30 s
+    Etap3 --&gt; Etap4: 30 s
+    Etap4 --&gt; Etap5: 30 s
+    Etap5 --&gt; Etap6_SMS: 30 s
+    Etap1 --&gt; Czuwanie: ŻYJĘ!
+    Etap2 --&gt; Czuwanie: ŻYJĘ!
+    Etap3 --&gt; Czuwanie: ŻYJĘ!
+    Etap4 --&gt; Czuwanie: ŻYJĘ!
+    Etap5 --&gt; Czuwanie: ŻYJĘ!
+    Etap6_SMS --&gt; Czuwanie: ŻYJĘ! (+ SMS „fałszywy alarm”)</pre>
+<h3 id="83-diagram-sekwencji-alarm-przy-zamkniętej-aplikacji">8.3 Diagram sekwencji (alarm przy zamkniętej aplikacji) <a class="anchor" href="#83-diagram-sekwencji-alarm-przy-zamkniętej-aplikacji" aria-label="Link do sekcji">#</a></h3>
+<pre class="mermaid">sequenceDiagram
+    participant AM as AlarmManager
+    participant AR as AlarmReceiver
+    participant AS as AlarmService
+    participant AA as AlarmActivity
+    participant U as Użytkownik
+    participant O as Opiekun
+
+    AM-&gt;&gt;AR: alarm (alarm_target)
+    AR-&gt;&gt;AS: START_SEQUENCE
+    AR-&gt;&gt;AA: start (nad ekranem blokady)
+    loop etapy 1..5 (co 30 s)
+        AS-&gt;&gt;AA: UPDATE_ALARM_UI (tytuł, treść, sekundy)
+    end
+    AS-&gt;&gt;AS: getCurrentLocation()
+    AS-&gt;&gt;O: SMS z lokalizacją
+    U-&gt;&gt;AA: „ŻYJĘ!”
+    AA-&gt;&gt;AS: I_AM_ALIVE
+    AS-&gt;&gt;O: SMS „fałszywy alarm”
+    AS-&gt;&gt;AM: nowy termin (scheduleAlarm)</pre>
+<h3 id="84-treść-sms-ów">8.4 Treść SMS-ów <a class="anchor" href="#84-treść-sms-ów" aria-label="Link do sekcji">#</a></h3>
+<p>Szablony są w <code>AlarmService.kt</code> (<code>trimIndent()</code>), <code>{imię}</code> = <code>user_name</code>:</p>
+<ul>
+<li><strong>z lokalizacją:</strong> nagłówek „🚨🚨🚨 SafeCheck ALARM!”, informacja „{imię} NIE POTWIERDZIŁ OBECNOŚCI!”, linki <code>https://www.google.com/maps?q=lat,lng</code> i <code>http://maps.apple.com/?ll=lat,lng</code>.</li>
+<li><strong>brak uprawnienia GPS:</strong> dopisek „(BRAK DOSTĘPU DO GPS)”.</li>
+<li><strong>brak pozycji / błąd lokalizacji:</strong> „Nie udało się ustalić lokalizacji.” / „Błąd ustalania lokalizacji.”</li>
+<li><strong>fałszywy alarm:</strong> „SafeCheck: Fałszywy alarm. {imię} potwierdził obecność. Wszystko w porządku.”</li>
+</ul>
+<blockquote>
+<p>Emoji wymuszają kodowanie UCS-2 (70 znaków na segment). Wiadomość z lokalizacją ma kilka segmentów, a każdy segment operator nalicza jak osobny SMS.</p>
+</blockquote>
+<hr />
+<h2 id="9-planowanie-alarmów">9. Planowanie alarmów <a class="anchor" href="#9-planowanie-alarmów" aria-label="Link do sekcji">#</a></h2>
+<p><code>AlarmScheduler</code> (obiekt Kotlin) zarządza <strong>jednym</strong> alarmem końca licznika.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Funkcja</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scheduleAlarm(ctx, time)</code></td>
+<td>anuluje stary alarm 1001 i planuje alarm <code>requestCode = 1</code> przez <code>setAlarmClock</code>. Każde wywołanie nadpisuje poprzedni termin</td>
+</tr>
+<tr>
+<td><code>scheduleStage(ctx, time, stage)</code></td>
+<td>niskopoziomowe planowanie z <code>requestCode = stage</code> (extra <code>ALARM_STAGE</code>)</td>
+</tr>
+<tr>
+<td><code>scheduleExactAlarm(ctx, time)</code></td>
+<td>alias <code>scheduleAlarm</code>, zachowany dla wywołań z <code>AlarmService</code> i <code>BootReceiver</code></td>
+</tr>
+<tr>
+<td><code>cancelAlarm(ctx)</code></td>
+<td>anuluje <code>requestCode</code> 1..6 oraz 1001</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Dlaczego <code>setAlarmClock</code>:</strong> system traktuje go jak budzik. Uruchamia go dokładnie o czasie także w trybie Doze, a w pasku statusu pokazuje ikonę zbliżającego się alarmu. Na Android 12+ wymaga <code>canScheduleExactAlarms() == true</code>, inaczej planowanie jest pomijane (patrz <code>CheckExactAlarmPermissionUI</code>).</p>
+<p><strong>Kiedy alarm jest (prze)planowany:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Zdarzenie</th>
+<th>Miejsce</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>zapis opiekunów w kreatorze</td>
+<td><code>SetupScreen</code></td>
+</tr>
+<tr>
+<td>wejście na ekran główny i każda zmiana <code>targetTime</code>/<code>duration</code></td>
+<td><code>MainDashboard</code> (<code>LaunchedEffect</code>)</td>
+</tr>
+<tr>
+<td>„ŻYJĘ!” (ekran główny, <code>AlarmActivity</code>, powiadomienie)</td>
+<td><code>AlarmService.handleIAmAlive</code></td>
+</tr>
+<tr>
+<td>zmiana długości licznika</td>
+<td><code>TimeEditDialog</code> → <code>MainDashboard</code></td>
+</tr>
+<tr>
+<td>restart telefonu</td>
+<td><code>BootReceiver</code></td>
+</tr>
+<tr>
+<td>usunięcie konta</td>
+<td><code>cancelAlarm</code></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>Jeden alarm:</strong> aplikacja utrzymuje dokładnie jeden alarm systemowy (<code>requestCode 1</code>). Starszy, równoległy alarm <code>requestCode 1001</code> (<code>setExactAndAllowWhileIdle</code>) jest zawsze anulowany, bo nie był aktualizowany przy zmianie długości licznika ani przy usunięciu konta i mógł wywołać fałszywy alarm.</p>
+</blockquote>
+<hr />
+<h2 id="10-model-danych-i-przechowywanie">10. Model danych i przechowywanie <a class="anchor" href="#10-model-danych-i-przechowywanie" aria-label="Link do sekcji">#</a></h2>
+<h3 id="101-sharedpreferences">10.1 SharedPreferences <a class="anchor" href="#101-sharedpreferences" aria-label="Link do sekcji">#</a></h3>
+<p>Dane są w dwóch plikach w prywatnym katalogu aplikacji (<code>/data/data/&lt;pakiet&gt;/shared_prefs/</code>). Dostęp wyłącznie przez <code>LocalPrefs</code>.</p>
+<p><strong>Plik <code>safecheck_local_db.xml</code> – ustawienia użytkownika (objęty kopią zapasową):</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Klucz</th>
+<th>Typ</th>
+<th>Domyślnie</th>
+<th>Znaczenie</th>
+<th>Zapis</th>
+<th>Odczyt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>language_code</code></td>
+<td>String</td>
+<td><code>"en"</code></td>
+<td>kod języka UI</td>
+<td>UI</td>
+<td><code>MainActivity.attachBaseContext</code></td>
+</tr>
+<tr>
+<td><code>is_lang_set_v2</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>czy wybrano język</td>
+<td>UI</td>
+<td>UI</td>
+</tr>
+<tr>
+<td><code>user_name</code></td>
+<td>String</td>
+<td><code>""</code></td>
+<td>imię (do SMS)</td>
+<td>UI</td>
+<td>UI, <code>AlarmService</code> (pusty → „Użytkownik”)</td>
+</tr>
+<tr>
+<td><code>contact_phones</code></td>
+<td>String (CSV)</td>
+<td><code>""</code></td>
+<td>numery E.164 rozdzielone przecinkami</td>
+<td>UI</td>
+<td>UI, <code>AlarmService</code></td>
+</tr>
+<tr>
+<td><code>timer_duration</code></td>
+<td>Long (ms)</td>
+<td><code>172800000</code> (48 h)</td>
+<td>długość licznika</td>
+<td>UI</td>
+<td>UI, <code>AlarmService</code></td>
+</tr>
+<tr>
+<td><code>is_intro_seen</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>czy pokazano intro</td>
+<td>UI</td>
+<td>UI</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Plik <code>safecheck_device_state.xml</code> – stan licznika na tym urządzeniu (wyłączony z kopii zapasowej):</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Klucz</th>
+<th>Typ</th>
+<th>Domyślnie</th>
+<th>Znaczenie</th>
+<th>Zapis</th>
+<th>Odczyt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>alarm_target</code></td>
+<td>Long (ms epoch)</td>
+<td><code>0</code></td>
+<td>moment końca licznika (<code>0</code> = brak terminu: świeża instalacja lub ustawienia przywrócone z kopii)</td>
+<td>UI, <code>AlarmService</code></td>
+<td>UI, <code>AlarmService</code>, <code>BootReceiver</code></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>W starszym układzie danych <code>alarm_target</code> był zapisany w <code>safecheck_local_db.xml</code>. <code>LocalPrefs</code> przenosi go automatycznie przy pierwszym uruchomieniu (migracja zweryfikowana na emulatorze).</p>
+</blockquote>
+<h3 id="102-klasy-danych">10.2 Klasy danych <a class="anchor" href="#102-klasy-danych" aria-label="Link do sekcji">#</a></h3>
+<pre><code class="language-kotlin">data class LanguageOption(val code: String, val name: String, val flag: String)
+data class IntroStep(val title: String, val description: String, val icon: ImageVector)
+data class PhoneContact(val name: String, val phoneNumber: String)
+data class Country(val code: String, val name: String, val dialCode: String, val flagEmoji: String)</code></pre>
+<h3 id="103-kopia-zapasowa">10.3 Kopia zapasowa <a class="anchor" href="#103-kopia-zapasowa" aria-label="Link do sekcji">#</a></h3>
+<p>Aplikacja <strong>nie ma własnej funkcji kopii zapasowej ani konta</strong>. Korzysta z mechanizmu systemu Android – <strong>Auto Backup</strong> (kopia na koncie Google) i <strong>device-to-device transfer</strong> (przenoszenie danych przy konfiguracji nowego telefonu). Włącza to <code>android:allowBackup="true"</code> w manifeście, a zakres określają reguły:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Plik reguł</th>
+<th>Android</th>
+<th>Zakres</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>res/xml/backup_rules.xml</code> (<code>fullBackupContent</code>)</td>
+<td>6–11</td>
+<td><code>include</code> tylko <code>sharedpref/safecheck_local_db.xml</code></td>
+</tr>
+<tr>
+<td><code>res/xml/data_extraction_rules.xml</code> (<code>dataExtractionRules</code>)</td>
+<td>12+</td>
+<td><code>cloud-backup</code> i <code>device-transfer</code>: <code>include</code> tylko <code>sharedpref/safecheck_local_db.xml</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Reguły typu <code>include</code> oznaczają, że kopiowany jest <strong>wyłącznie</strong> plik ustawień. Nie są kopiowane: termin licznika (<code>safecheck_device_state.xml</code>), ustawienia zgody UMP, pliki WebView ani inne dane.</p>
+<p><strong>Co dzieje się po przywróceniu na nowym telefonie:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Stan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imię, opiekunowie, długość licznika, język, ukończona konfiguracja</td>
+<td>przywrócone</td>
+</tr>
+<tr>
+<td>termin licznika</td>
+<td>brak → <code>MainDashboard</code> ustawia nowy termin (teraz + długość licznika) i pokazuje komunikat <code>restored_from_backup</code></td>
+</tr>
+<tr>
+<td>uprawnienia runtime i specjalne</td>
+<td><strong>nie</strong> są przenoszone – aplikacja prosi o nie ponownie (<code>Check…UI()</code>)</td>
+</tr>
+<tr>
+<td>zgoda na reklamy (UMP)</td>
+<td>nie jest przenoszona – formularz pojawi się ponownie</td>
+</tr>
+<tr>
+<td>alarm w <code>AlarmManager</code></td>
+<td>nie istnieje do pierwszego otwarcia aplikacji (wtedy jest planowany)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Dlaczego termin jest wyłączony z kopii: przywrócony stary termin zwykle już minął, więc pierwsze otwarcie aplikacji natychmiast uruchomiłoby alarm, a bez reakcji – SMS do opiekunów.</p>
+<p><strong>Ograniczenia (zależne od systemu, nie od aplikacji):</strong></p>
+<ul>
+<li>kopia wymaga włączonej kopii zapasowej Google; system wykonuje ją zwykle raz na dobę (urządzenie bezczynne, ładowanie, Wi-Fi),</li>
+<li>aplikacja dystrybuowana jako APK nie jest automatycznie instalowana na nowym telefonie podczas jego konfiguracji – użytkownik instaluje ją ręcznie; przywrócenie ustawień przy takiej instalacji zależy od wersji Androida i producenta i <strong>nie jest gwarantowane</strong>,</li>
+<li>po przywróceniu alarm jest planowany dopiero przy pierwszym otwarciu aplikacji.</li>
+</ul>
+<p>Weryfikacja: test T15 (rozdz. 18) – wykonany na emulatorze Pixel 8 przez <code>bmgr</code> z transportem lokalnym.</p>
+<p>Aby całkowicie wyłączyć kopię: <code>android:allowBackup="false"</code> w manifeście (wtedy po zmianie telefonu aplikację konfiguruje się od nowa). Należy też zaktualizować politykę prywatności (rozdz. 4.4) i instrukcję (FAQ).</p>
+<hr />
+<h2 id="11-kontrakt-komunikacji-intenty-broadcasty">11. Kontrakt komunikacji (Intenty, broadcasty) <a class="anchor" href="#11-kontrakt-komunikacji-intenty-broadcasty" aria-label="Link do sekcji">#</a></h2>
+<h3 id="111-akcje-alarmservice">11.1 Akcje <code>AlarmService</code> <a class="anchor" href="#111-akcje-alarmservice" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Akcja</th>
+<th>Nadawca</th>
+<th>Skutek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>START_SEQUENCE</code></td>
+<td><code>AlarmReceiver</code></td>
+<td>start etapu 1 (jeśli <code>currentStage == 0</code>)</td>
+</tr>
+<tr>
+<td><code>ALARM_TRIGGER</code></td>
+<td><code>MainDashboard</code>, <code>BootReceiver</code></td>
+<td>jak wyżej</td>
+</tr>
+<tr>
+<td><code>I_AM_ALIVE</code></td>
+<td><code>MainDashboard</code>, <code>AlarmActivity</code>, akcje powiadomień</td>
+<td><code>handleIAmAlive()</code></td>
+</tr>
+<tr>
+<td><code>STOP_SERVICE</code></td>
+<td>(nieużywana w UI)</td>
+<td>zatrzymanie usługi</td>
+</tr>
+<tr>
+<td>brak akcji</td>
+<td><code>MainActivity</code>, <code>IntroScreen</code></td>
+<td>powiadomienie „SafeCheck Aktywny”</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="112-broadcast-updatealarmui">11.2 Broadcast <code>UPDATE_ALARM_UI</code> <a class="anchor" href="#112-broadcast-updatealarmui" aria-label="Link do sekcji">#</a></h3>
+<p>Wysyłany przez <code>AlarmService</code> z <code>setPackage(packageName)</code>, odbierany przez <code>AlarmScreen</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>Typ</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TITLE</code></td>
+<td>String</td>
+<td>tytuł etapu</td>
+</tr>
+<tr>
+<td><code>MESSAGE</code></td>
+<td>String</td>
+<td>treść etapu</td>
+</tr>
+<tr>
+<td><code>SECONDS</code></td>
+<td>Int</td>
+<td>sekundy do następnego etapu (0 w etapie 6)</td>
+</tr>
+<tr>
+<td><code>IS_ALARM</code></td>
+<td>Boolean</td>
+<td><code>true</code> dla etapów nieparzystych (czerwone tło)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="113-komponenty-w-manifeście">11.3 Komponenty w manifeście <a class="anchor" href="#113-komponenty-w-manifeście" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Komponent</th>
+<th><code>exported</code></th>
+<th>Uwagi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MainActivity</code></td>
+<td>true</td>
+<td>launcher</td>
+</tr>
+<tr>
+<td><code>AlarmActivity</code></td>
+<td>false</td>
+<td><code>showWhenLocked</code>, <code>turnScreenOn</code></td>
+</tr>
+<tr>
+<td><code>AlarmService</code></td>
+<td>false</td>
+<td><code>specialUse\|location</code>, właściwość <code>PROPERTY_SPECIAL_USE_FGS_SUBTYPE</code></td>
+</tr>
+<tr>
+<td><code>AlarmReceiver</code></td>
+<td>false</td>
+<td>wywoływany tylko przez własny <code>PendingIntent</code></td>
+</tr>
+<tr>
+<td><code>BootReceiver</code></td>
+<td>true</td>
+<td>wymagane dla akcji systemowych</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="12-powiadomienia">12. Powiadomienia <a class="anchor" href="#12-powiadomienia" aria-label="Link do sekcji">#</a></h2>
+<p>Jeden kanał: <code>ALARM_CHANNEL_001</code> („SafeCheck Alarm”, <code>IMPORTANCE_HIGH</code>, wibracje, <strong>bez dźwięku kanału</strong>, bo dźwięk gra <code>MediaPlayer</code>, widoczny na ekranie blokady). ID powiadomienia: <code>1</code>, współdzielone przez wszystkie stany.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Stan</th>
+<th>Tytuł / treść</th>
+<th>Priorytet</th>
+<th>Akcja</th>
+<th>Inne</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>start usługi</td>
+<td>„SafeCheck” / „Inicjalizacja...”</td>
+<td>HIGH</td>
+<td>–</td>
+<td>kategoria SERVICE</td>
+</tr>
+<tr>
+<td>czuwanie</td>
+<td>„SafeCheck Aktywny” / „Czuwam w tle i monitoruję Twój czas.”</td>
+<td>LOW</td>
+<td>„ZRESETUJ ZEGAR” (<code>I_AM_ALIVE</code>)</td>
+<td>otwiera <code>MainActivity</code></td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>tytuł/treść etapu</td>
+<td>MAX</td>
+<td>„ŻYJĘ!” (<code>I_AM_ALIVE</code>)</td>
+<td><code>fullScreenIntent</code> → <code>AlarmActivity</code>, <code>VISIBILITY_PUBLIC</code>, kategoria ALARM</td>
+</tr>
+</tbody>
+</table></div>
+<p>Na Android 14+ <code>startForeground</code> jest wywoływane z typem <code>FOREGROUND_SERVICE_TYPE_SPECIAL_USE</code>.</p>
+<hr />
+<h2 id="13-uprawnienia">13. Uprawnienia <a class="anchor" href="#13-uprawnienia" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Uprawnienie</th>
+<th>API</th>
+<th>Typ</th>
+<th>Cel</th>
+<th>Gdzie prosimy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INTERNET</code>, <code>ACCESS_NETWORK_STATE</code></td>
+<td>–</td>
+<td>normalne</td>
+<td>reklamy</td>
+<td>–</td>
+</tr>
+<tr>
+<td><code>SEND_SMS</code></td>
+<td>–</td>
+<td>runtime</td>
+<td>SMS alarmowy, zaproszenia</td>
+<td><code>CheckSmsPermissionUI</code></td>
+</tr>
+<tr>
+<td><code>ACCESS_FINE_LOCATION</code>, <code>ACCESS_COARSE_LOCATION</code></td>
+<td>–</td>
+<td>runtime</td>
+<td>lokalizacja w SMS</td>
+<td><code>CheckLocationPermissionUI</code></td>
+</tr>
+<tr>
+<td><code>READ_CONTACTS</code></td>
+<td>–</td>
+<td>runtime</td>
+<td>lista do zaproszeń</td>
+<td>menu → „Zaproś znajomych”</td>
+</tr>
+<tr>
+<td><code>POST_NOTIFICATIONS</code></td>
+<td>33+</td>
+<td>runtime</td>
+<td>powiadomienia</td>
+<td><code>CheckNotificationPermissionUI</code></td>
+</tr>
+<tr>
+<td><code>SCHEDULE_EXACT_ALARM</code></td>
+<td>31+</td>
+<td>specjalne</td>
+<td>dokładny alarm</td>
+<td><code>CheckExactAlarmPermissionUI</code></td>
+</tr>
+<tr>
+<td><code>USE_FULL_SCREEN_INTENT</code></td>
+<td>34+</td>
+<td>specjalne</td>
+<td>alarm na blokadzie</td>
+<td><code>CheckFullScreenIntentPermissionUI</code></td>
+</tr>
+<tr>
+<td><code>SYSTEM_ALERT_WINDOW</code></td>
+<td>–</td>
+<td>specjalne</td>
+<td>start <code>AlarmActivity</code> z tła</td>
+<td><code>CheckOverlayPermissionUI</code></td>
+</tr>
+<tr>
+<td><code>REQUEST_IGNORE_BATTERY_OPTIMIZATIONS</code></td>
+<td>–</td>
+<td>specjalne</td>
+<td>brak usypiania</td>
+<td><code>CheckBatteryOptimizationUI</code></td>
+</tr>
+<tr>
+<td><code>FOREGROUND_SERVICE</code>, <code>…_SPECIAL_USE</code>, <code>…_LOCATION</code></td>
+<td>28+/34+</td>
+<td>normalne</td>
+<td>usługa w tle</td>
+<td>–</td>
+</tr>
+<tr>
+<td><code>WAKE_LOCK</code>, <code>RECEIVE_BOOT_COMPLETED</code></td>
+<td>–</td>
+<td>normalne</td>
+<td>budzenie, restart</td>
+<td>–</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Wzorzec <code>Check…UI()</code>:</strong></p>
+<ol>
+<li>Stan <code>hasPermission</code> odczytywany jest przy starcie i odświeżany przy każdym <code>Lifecycle.Event.ON_RESUME</code> (powrót z ustawień).</li>
+<li>Dla uprawnień runtime okno pokazuje się z opóźnieniem (500 / 800 / 1000 ms), żeby nie nakładały się jednocześnie.</li>
+<li><code>PermissionAlertDialog</code>:
+<ul>
+<li>„Zezwól” otwiera systemowe okno lub ekran ustawień,</li>
+<li>„Ustawienia” wywołuje <code>openSettings()</code>, czyli autostart producenta (Xiaomi, Huawei/Honor, Oppo, Vivo), a w razie braku ustawienia ogólne lub szczegóły aplikacji.</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="14-obsługa-numerów-telefonów">14. Obsługa numerów telefonów <a class="anchor" href="#14-obsługa-numerów-telefonów" aria-label="Link do sekcji">#</a></h2>
+<ul>
+<li><strong>Biblioteka:</strong> <code>libphonenumber-android</code> (port Google libphonenumber z metadanymi w zasobach).</li>
+<li><strong>Lista krajów:</strong> <code>PhoneNumberUtil.supportedRegions</code>.
+<ul>
+<li>Nazwy pochodzą z <code>Locale.getDisplayCountry()</code> w bieżącym języku.</li>
+<li>Flagi emoji są wyliczane z kodu ISO (<em>regional indicator symbols</em>).</li>
+<li>Lista jest posortowana alfabetycznie, z Polską na początku.</li>
+</ul></li>
+<li>
+<p><strong>Walidacja:</strong> <code>LaunchedEffect(phoneNumber, selectedCountry)</code>:</p>
+<ol>
+<li><code>parse(numer, region)</code>,</li>
+<li><code>isValidNumber</code>,</li>
+<li><code>format(E164)</code>.</li>
+</ol>
+<p>Wynik <code>(e164, isValid)</code> trafia do wywołującego.</p>
+</li>
+<li><strong>Zapis:</strong> numery opiekunów zapisywane są wyłącznie w formacie <strong>E.164</strong> (np. <code>+48601234567</code>).</li>
+<li><strong><code>GhostMaskTransformation</code>:</strong> wizualna maska w polu.
+<ul>
+<li>Na podstawie przykładowego numeru komórkowego kraju wyznacza oczekiwaną liczbę cyfr.</li>
+<li>Formatuje „na żywo” przez <code>AsYouTypeFormatter</code>.</li>
+<li>Cyfry wpisane są czarne, a brakujące szare zera.</li>
+<li>Własny <code>OffsetMapping</code> utrzymuje poprawną pozycję kursora.</li>
+</ul></li>
+<li><strong>Ograniczenia pola:</strong> tylko cyfry, maks. 15 znaków. Kierunkowy wybiera się z listy krajów.</li>
+</ul>
+<hr />
+<h2 id="15-reklamy-admob">15. Reklamy (AdMob) <a class="anchor" href="#15-reklamy-admob" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Miejsce</th>
+<th>Kod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baner 320×50 (<code>AdSize.BANNER</code>)</td>
+<td>dół ekranu głównego</td>
+<td><code>MainDashboard</code> → <code>AndroidView { AdView }</code></td>
+</tr>
+<tr>
+<td>Pełnoekranowa (interstitial)</td>
+<td>po każdym naciśnięciu „ŻYJĘ!” na ekranie głównym</td>
+<td><code>MainActivity.loadInterstitialAd()</code> / <code>showInterstitial()</code></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Inicjalizacja: dopiero po uzyskaniu zgody, w <code>AdsConsentManager.initializeAdsOnce()</code> (wywoływane z <code>MainActivity.onCreate</code> przez <code>gatherConsent</code>).</li>
+<li><strong>Zgoda RODO/TCF:</strong> Google UMP (<code>AdsConsentManager.kt</code>). Formularz pokazuje się użytkownikom z EOG, UK i Szwajcarii. Zmiana decyzji: „O aplikacji” → „Ustawienia prywatności reklam”.</li>
+<li>ID aplikacji (<code>com.google.android.gms.ads.APPLICATION_ID</code>) jest w manifeście jako <code>${admobAppId}</code>.</li>
+<li><strong>Reklamy nigdy nie są wyświetlane podczas alarmu</strong> (<code>AlarmActivity</code> ich nie zawiera).</li>
+</ul>
+<p><strong>Wymagania przed publikacją:</strong></p>
+<ol>
+<li>Konto AdMob, aplikacja i dwie jednostki reklamowe → ID do <code>gradle.properties</code>.</li>
+<li>Plik <strong><code>app-ads.txt</code></strong> na stronie dewelopera.</li>
+<li>W konsoli AdMob: <strong>Privacy &amp; messaging → European regulations</strong> – utwórz i opublikuj komunikat zgody dla swojej aplikacji (język, logo, link do polityki prywatności). Bez tego formularz UMP się nie pojawi. Na testowym ID Google wyświetla się komunikat „Publisher Test Ads”.</li>
+<li><strong>Aplikacja spoza sklepu (obecny model dystrybucji):</strong> AdMob weryfikuje aplikacje przez powiązanie z kartą w obsługiwanym sklepie (Google Play i inne). Aplikacja niepowiązana ze sklepem może mieć <strong>ograniczone wyświetlanie reklam</strong> (<em>limited ad serving</em>), więc przychód z reklam przy dystrybucji wyłącznie przez APK jest niepewny – patrz ryzyko R5 (rozdz. 20.1).</li>
+</ol>
+<p><strong>Całkowite usunięcie reklam:</strong></p>
+<ol>
+<li>usuń <code>AndroidView { AdView … }</code> z <code>MainDashboard</code>,</li>
+<li>usuń <code>loadInterstitialAd</code>, <code>showInterstitial</code>, wywołanie <code>showInterstitial()</code>, wywołanie <code>AdsConsentManager.gatherConsent</code> (oraz plik <code>AdsConsentManager.kt</code> i przycisk w <code>AboutAppDialog</code>),</li>
+<li>usuń zależność <code>play-services-ads</code> i wpis <code>APPLICATION_ID</code> z manifestu,</li>
+<li>usuń <code>safecheck.admob*</code> z <code>gradle.properties</code> i odpowiadające im wywołania <code>config()</code> oraz zależność <code>user-messaging-platform</code>.</li>
+</ol>
+<hr />
+<h2 id="16-internacjonalizacja">16. Internacjonalizacja <a class="anchor" href="#16-internacjonalizacja" aria-label="Link do sekcji">#</a></h2>
+<ul>
+<li>Zasoby tekstowe: <code>values/</code> (angielski, domyślny), <code>values-pl/</code>, <code>values-de/</code>, <code>values-fr/</code>.</li>
+<li>Język wybiera się w aplikacji, niezależnie od systemu. <code>ContextUtils.updateLocale()</code> jest stosowane w <code>attachBaseContext</code>, a zmiana wymaga <code>recreate()</code>.</li>
+<li>Dodanie języka:
+<ol>
+<li>utwórz <code>values-XX/strings.xml</code>,</li>
+<li>dopisz <code>LanguageOption</code> w <code>LanguageSelectionScreen</code> i <code>LanguageChangeDialog</code>.</li>
+</ol></li>
+</ul>
+<p><strong>Teksty niezlokalizowane</strong> (wpisane po polsku w kodzie; patrz <a href="#20-znane-ograniczenia-i-dług-techniczny">rozdział 20</a>):</p>
+<ul>
+<li>treści SMS-ów i powiadomień w <code>AlarmService</code>,</li>
+<li>tytuły i opisy okien uprawnień,</li>
+<li>część etykiet: „Proszę podaj swoje imię”, „Cześć, …!”, „Dodaj”, „Start”, „System i Bateria”, „Zezwól”, „Ustawienia”, „Brak przeglądarki”, komunikaty błędów numeru,</li>
+<li>teksty ekranu alarmu: „Ładowanie...”, „ŻYJĘ!”.</li>
+</ul>
+<p><strong>Stringi nieużywane</strong> (pozostałość po wcześniejszej wersji z weryfikacją SMS):
+<code>reason_1..4</code>, <code>verify</code>, <code>enter_code</code>, <code>send_sms</code>, <code>sms_verification_req</code>, <code>reg_user</code>, <code>change_btn</code>, <code>change_phone_btn</code>, <code>confirm_delete_btn</code>, <code>delete_why</code>, <code>delete_account_title</code>, <code>error_same_number</code>, <code>current_phone_format</code>, <code>copy_toast_msg</code>, <code>menu_logout</code>, <code>save</code>.</p>
+<hr />
+<h2 id="17-bezpieczeństwo-i-prywatność">17. Bezpieczeństwo i prywatność <a class="anchor" href="#17-bezpieczeństwo-i-prywatność" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Obszar</th>
+<th>Stan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transmisja danych do serwera dewelopera</td>
+<td><strong>brak</strong> (aplikacja nie ma backendu)</td>
+</tr>
+<tr>
+<td>Dane osobowe na urządzeniu</td>
+<td>imię, numery opiekunów, ustawienia w SharedPreferences (prywatny katalog aplikacji, bez szyfrowania)</td>
+</tr>
+<tr>
+<td>Lokalizacja</td>
+<td>pobierana jednorazowo <strong>wyłącznie</strong> w etapie 6 alarmu, wysyłana tylko w SMS, nie jest zapisywana</td>
+</tr>
+<tr>
+<td>Kontakty</td>
+<td>odczytywane tylko w oknie „Zaproś znajomych”, nie są zapisywane ani wysyłane</td>
+</tr>
+<tr>
+<td>Komponenty eksportowane</td>
+<td>tylko <code>MainActivity</code> (launcher) i <code>BootReceiver</code> (akcje systemowe). Usługa i <code>AlarmReceiver</code> nie są eksportowane</td>
+</tr>
+<tr>
+<td>Broadcast UI</td>
+<td>ograniczony do własnego pakietu (<code>setPackage</code>) i odbierany z <code>RECEIVER_NOT_EXPORTED</code></td>
+</tr>
+<tr>
+<td><code>PendingIntent</code></td>
+<td>wszystkie z <code>FLAG_IMMUTABLE</code></td>
+</tr>
+<tr>
+<td>Strony trzecie</td>
+<td>Google AdMob (identyfikator reklamowy, dane urządzenia), Google Play Services (lokalizacja), operator komórkowy (SMS)</td>
+</tr>
+<tr>
+<td>Kopia zapasowa</td>
+<td>systemowa (Auto Backup / device transfer), tylko plik ustawień – bez terminu licznika, patrz 10.3</td>
+</tr>
+</tbody>
+</table></div>
+<p>Szczegóły dla użytkownika są w <a href="/safecheck/polityka-prywatnosci">polityce prywatności</a>.</p>
+<p><strong>Tylko przy ewentualnej publikacji w Google Play – sekcja „Bezpieczeństwo danych” (Data safety), propozycja wypełnienia:</strong></p>
+<ul>
+<li>Lokalizacja (przybliżona i dokładna): <em>udostępniana</em> (w SMS do opiekunów wskazanych przez użytkownika), funkcja aplikacji, nie jest zbierana przez dewelopera.</li>
+<li>Informacje osobiste (imię, numery telefonów): przechowywane na urządzeniu; mogą trafić do systemowej kopii zapasowej Google użytkownika.</li>
+<li>Identyfikatory urządzenia / reklamowe: zbierane przez AdMob (reklamy, analityka, zapobieganie oszustwom).</li>
+<li>Dane nie są szyfrowane podczas przesyłania przez sieć SMS (ograniczenie technologii SMS).</li>
+<li>Użytkownik może usunąć dane: „Usuń konto” w aplikacji albo odinstalowanie.</li>
+</ul>
+<blockquote>
+<p>Ostateczne odpowiedzi należy zweryfikować z aktualnym formularzem Play Console i dokumentacją SDK AdMob dotyczącą danych.</p>
+</blockquote>
+<hr />
+<h2 id="18-testowanie">18. Testowanie <a class="anchor" href="#18-testowanie" aria-label="Link do sekcji">#</a></h2>
+<p>Projekt nie zawiera testów automatycznych (patrz roadmapa).</p>
+<h3 id="181-scenariusze-testów-ręcznych">18.1 Scenariusze testów ręcznych <a class="anchor" href="#181-scenariusze-testów-ręcznych" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Scenariusz</th>
+<th>Oczekiwany wynik</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Pierwsze uruchomienie: język → imię → opiekun → intro</td>
+<td>ekran główny, powiadomienie „SafeCheck Aktywny”</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Licznik 10 s, aplikacja na pierwszym planie</td>
+<td>po 10 s alarm, czerwony ekran, dźwięk</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Licznik 10 s, aplikacja zamknięta, ekran zablokowany</td>
+<td>ekran się włącza, <code>AlarmActivity</code> nad blokadą</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Brak reakcji w T2/T3</td>
+<td>etapy 1→5, po ~150 s SMS do opiekunów z linkiem do mapy</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>„ŻYJĘ!” w etapie 6</td>
+<td>SMS „fałszywy alarm”, licznik od nowa</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>„ŻYJĘ!” w etapie 1–5</td>
+<td>alarm przerwany, brak SMS</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Zmiana licznika (np. 1 h → 10 s → 1 h)</td>
+<td>w systemie zawsze <strong>jeden</strong> alarm na aktualny termin</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>„Usuń konto”</td>
+<td>brak zaplanowanych alarmów, powrót do wyboru języka</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>Restart telefonu przed terminem</td>
+<td>alarm uruchamia się o właściwym czasie</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Restart po terminie (telefon wyłączony)</td>
+<td>alarm od razu po starcie</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Odmowa każdego uprawnienia</td>
+<td>okno z prośbą wraca po powrocie do aplikacji, aplikacja nie ulega awarii</td>
+</tr>
+<tr>
+<td>T12</td>
+<td>Zaproszenie znajomego</td>
+<td>SMS z linkiem do strony pobierania (<code>safecheck.downloadUrl</code>), komunikat „Wysłano!”</td>
+</tr>
+<tr>
+<td>T13</td>
+<td>Zmiana języka na każdy z 4</td>
+<td>teksty z <code>strings.xml</code> w nowym języku</td>
+</tr>
+<tr>
+<td>T14</td>
+<td>Numer niepoprawny / zbyt krótki</td>
+<td>przycisk „Dodaj” nieaktywny</td>
+</tr>
+<tr>
+<td>T15</td>
+<td>Kopia zapasowa i przywrócenie (<code>bmgr</code>, patrz niżej)</td>
+<td>przywrócone tylko ustawienia; brak <code>safecheck_device_state.xml</code>; po otwarciu komunikat „Przywrócono ustawienia…”, licznik od nowa, <strong>brak alarmu</strong></td>
+</tr>
+<tr>
+<td>T16</td>
+<td>Aktualizacja ze starszego układu danych (termin w pliku ustawień)</td>
+<td>termin przeniesiony do <code>safecheck_device_state.xml</code> bez zmiany wartości, alarm zaplanowany na ten sam moment</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="182-przydatne-polecenia-adb">18.2 Przydatne polecenia ADB <a class="anchor" href="#182-przydatne-polecenia-adb" aria-label="Link do sekcji">#</a></h3>
+<pre><code class="language-bash"># zaplanowane alarmy aplikacji
+adb shell dumpsys alarm | grep -A3 com.example.safecheck
+
+# podgląd zapisanych danych (tylko build debug)
+adb shell run-as com.example.safecheck cat shared_prefs/safecheck_local_db.xml
+adb shell run-as com.example.safecheck cat shared_prefs/safecheck_device_state.xml
+
+# T15: kopia zapasowa i przywrócenie (transport lokalny, bez konta Google)
+adb shell bmgr enable true
+adb shell bmgr transport com.android.localtransport/.LocalTransport
+adb shell settings put secure backup_auto_restore 1
+adb shell bmgr backupnow com.example.safecheck
+adb uninstall com.example.safecheck
+adb install app-debug.apk            # przywrócenie następuje przy instalacji
+adb shell run-as com.example.safecheck ls shared_prefs
+# po teście: powrót do transportu Google
+adb shell bmgr transport com.google.android.gms/.backup.BackupTransportService
+
+# nadanie uprawnień bez klikania (emulator / testy)
+adb shell pm grant com.example.safecheck android.permission.SEND_SMS
+adb shell appops set com.example.safecheck SCHEDULE_EXACT_ALARM allow
+adb shell dumpsys deviceidle whitelist +com.example.safecheck
+
+# symulacja trybu Doze
+adb shell dumpsys deviceidle force-idle</code></pre>
+<blockquote>
+<p><strong>Uwaga:</strong> przy testach na prawdziwym telefonie SMS-y są wysyłane naprawdę i płatne według taryfy. Jako opiekuna wpisz własny drugi numer. Emulator nie wysyła SMS-ów do sieci.</p>
+</blockquote>
+<hr />
+<h2 id="19-wydanie-i-dystrybucja">19. Wydanie i dystrybucja <a class="anchor" href="#19-wydanie-i-dystrybucja" aria-label="Link do sekcji">#</a></h2>
+<h3 id="191-model-dystrybucji">19.1 Model dystrybucji <a class="anchor" href="#191-model-dystrybucji" aria-label="Link do sekcji">#</a></h3>
+<p>SafeCheck <strong>nie jest publikowany w Google Play</strong>. Aplikacja jest dystrybuowana jako plik APK:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Gdzie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>strona projektu (opis, dokumenty, pobieranie)</td>
+<td><code>https://pxware.pl/safecheck</code> (hosting OVH, PHP; źródła strony w prywatnym repozytorium <code>px-ware/strony</code>)</td>
+</tr>
+<tr>
+<td>plik APK</td>
+<td>GitHub Releases publicznego repozytorium <code>px-ware/safecheck</code> (bez kodu źródłowego), stały link: <code>https://github.com/px-ware/safecheck/releases/latest/download/SafeCheck.apk</code></td>
+</tr>
+<tr>
+<td>dokumenty otwierane z aplikacji</td>
+<td><code>safecheck.manualUrl</code>, <code>safecheck.termsUrl</code>, <code>safecheck.privacyUrl</code> – pliki <code>.md</code> w publicznym repozytorium <code>px-ware/safecheck</code> (niezależne od domeny strony)</td>
+</tr>
+<tr>
+<td>link w zaproszeniach SMS</td>
+<td><code>safecheck.downloadUrl</code> – najnowsze wydanie w <code>px-ware/safecheck</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Konsekwencje dla użytkownika i kodu:</p>
+<ul>
+<li>instalacja wymaga zgody na „instalowanie nieznanych aplikacji” (opisane w instrukcji),</li>
+<li><strong>brak automatycznych aktualizacji</strong> – użytkownik pobiera nową wersję ze strony; instaluje się ona na poprzedniej z zachowaniem danych, jeśli ma ten sam klucz podpisu (19.2) i wyższy <code>versionCode</code> (19.3),</li>
+<li>nowy telefon nie zainstaluje aplikacji sam podczas konfiguracji (wpływ na kopię zapasową – rozdz. 10.3),</li>
+<li>wymagania Google Play dotyczące uprawnień (SMS, pełnoekranowe powiadomienia, dokładne alarmy) <strong>nie mają zastosowania</strong>, dopóki aplikacja nie jest publikowana w sklepie (19.6).</li>
+</ul>
+<p><strong>Wydanie nowej wersji (obecny proces):</strong></p>
+<ol>
+<li>podnieś <code>versionCode</code> / <code>versionName</code>,</li>
+<li><code>./gradlew assembleRelease</code>, podpisz APK (19.2), zweryfikuj <code>apksigner verify</code>,</li>
+<li>utwórz wydanie na GitHub w publicznym repozytorium <code>px-ware/safecheck</code> (<code>gh release create vX.Y.Z SafeCheck.apk -R px-ware/safecheck …</code>),</li>
+<li>dołącz do wydania plik <code>SafeCheck.apk.sha256</code> (suma SHA-256). Strona projektu sama pobiera z GitHuba numer najnowszej wersji, sumę SHA-256 i wszystkie dokumenty – nic na niej nie trzeba zmieniać.</li>
+</ol>
+<h3 id="192-podpis-aplikacji">19.2 Podpis aplikacji <a class="anchor" href="#192-podpis-aplikacji" aria-label="Link do sekcji">#</a></h3>
+<ol>
+<li>Wygeneruj klucz podpisu release (przechowuj go <strong>poza repozytorium</strong> i w kopii zapasowej):
+<pre><code class="language-bash">keytool -genkeypair -v -keystore safecheck-release.jks -alias safecheck \
+       -keyalg RSA -keysize 2048 -validity 10000</code></pre></li>
+<li>Dodaj do <code>~/.gradle/gradle.properties</code> (nie do repozytorium):
+<pre><code class="language-properties">SAFECHECK_STORE_FILE=C:/sciezka/safecheck-release.jks
+SAFECHECK_STORE_PASSWORD=...
+SAFECHECK_KEY_ALIAS=safecheck
+SAFECHECK_KEY_PASSWORD=...</code></pre></li>
+<li>W <code>app/build.gradle.kts</code>:
+<pre><code class="language-kotlin">android {
+   signingConfigs {
+       create("release") {
+           storeFile = file(providers.gradleProperty("SAFECHECK_STORE_FILE").get())
+           storePassword = providers.gradleProperty("SAFECHECK_STORE_PASSWORD").get()
+           keyAlias = providers.gradleProperty("SAFECHECK_KEY_ALIAS").get()
+           keyPassword = providers.gradleProperty("SAFECHECK_KEY_PASSWORD").get()
+       }
+   }
+   buildTypes { release { signingConfig = signingConfigs.getByName("release") } }
+}</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Klucz podpisu jest krytyczny przy dystrybucji APK.</strong> Android zainstaluje nową wersję na poprzedniej tylko wtedy, gdy obie są podpisane tym samym kluczem. Utrata klucza oznacza, że użytkownicy muszą odinstalować aplikację (tracąc ustawienia) przed instalacją nowej wersji. Przechowuj plik <code>.jks</code> i hasła w co najmniej dwóch bezpiecznych miejscach.</p>
+<p>Obecne APK demonstracyjne (2.5.x na stronie projektu) jest podpisane kluczem debug Android Studio. Nabywca powinien wydać kolejne wersje własnym kluczem release – pierwsza taka wersja wymaga jednorazowej reinstalacji u dotychczasowych użytkowników.</p>
+</blockquote>
+<h3 id="193-wersjonowanie">19.3 Wersjonowanie <a class="anchor" href="#193-wersjonowanie" aria-label="Link do sekcji">#</a></h3>
+<p>Przy każdym wydaniu zwiększ <code>versionCode</code> (liczba całkowita, zawsze rosnąca – Android odrzuci instalację wersji o niższym numerze) i <code>versionName</code> w <code>app/build.gradle.kts</code>, a zmiany opisz w opisie wydania na GitHubie.</p>
+<h3 id="194-lista-kontrolna-wydania">19.4 Lista kontrolna wydania <a class="anchor" href="#194-lista-kontrolna-wydania" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li>[ ] własne wartości w <code>gradle.properties</code> (applicationId, AdMob, linki, strona pobierania)</li>
+<li>[ ] własny <code>powered_by</code>, ikona i logo</li>
+<li>[ ] dane wydawcy w regulaminie, polityce prywatności, instrukcji i licencji (obecnie: PX Paweł Mościbrodzki – nabywca podmienia na swoje) oraz <code>safecheck.companyName</code></li>
+<li>[ ] opublikowane dokumenty z <code>docs/strona/</code> pod adresami z konfiguracji</li>
+<li>[ ] <code>app-ads.txt</code> na stronie dewelopera (wymóg AdMob)</li>
+<li>[ ] opublikowany komunikat zgody w AdMob → <em>Privacy &amp; messaging</em> (formularz UMP jest już w kodzie)</li>
+<li>[ ] podpis release własnym kluczem, kopia zapasowa klucza</li>
+<li>[ ] <code>versionCode</code> / <code>versionName</code> + opis zmian w wydaniu na GitHubie</li>
+<li>[ ] testy T1–T16 na co najmniej 2 urządzeniach (w tym Samsung/Xiaomi) z Androidem 14+</li>
+<li>[ ] nowe APK w GitHub Releases, suma SHA-256 na stronie</li>
+</ul>
+<h3 id="195-hosting-dokumentów-instrukcja-regulamin-polityka">19.5 Hosting dokumentów (instrukcja, regulamin, polityka) <a class="anchor" href="#195-hosting-dokumentów-instrukcja-regulamin-polityka" aria-label="Link do sekcji">#</a></h3>
+<p>Katalog <code>docs/strona/</code> jest gotowy do opublikowania na dowolnym hostingu statycznym (np. GitHub Pages, Netlify, serwer WWW):</p>
+<pre><code>https://twoja-domena.pl/safecheck/docs.html?file=instrukcja.md
+https://twoja-domena.pl/safecheck/docs.html?file=regulamin.md
+https://twoja-domena.pl/safecheck/docs.html?file=polityka-prywatnosci.md</code></pre>
+<ul>
+<li><code>docs.html</code> wczytuje wskazany plik <code>.md</code> i wyświetla go jako sformatowaną stronę. Dopuszcza tylko pliki z białej listy w kodzie.</li>
+<li>Te trzy adresy wpisz do <code>gradle.properties</code> (<code>safecheck.manualUrl</code>, <code>safecheck.termsUrl</code>, <code>safecheck.privacyUrl</code>).</li>
+<li>Pliki <code>.md</code> można też podlinkować bezpośrednio lub przekonwertować do HTML.</li>
+</ul>
+<h3 id="196-opcjonalnie-publikacja-w-google-play-dla-nabywcy">19.6 Opcjonalnie: publikacja w Google Play (dla nabywcy) <a class="anchor" href="#196-opcjonalnie-publikacja-w-google-play-dla-nabywcy" aria-label="Link do sekcji">#</a></h3>
+<p>Obecnie nieużywane. Jeśli nabywca zdecyduje się opublikować aplikację w Google Play, dodatkowo potrzebne są:</p>
+<ul>
+<li>konto dewelopera Google Play, <strong>Play App Signing</strong> i plik AAB (<code>./gradlew bundleRelease</code>),</li>
+<li>sekcja <em>Data safety</em> (propozycja w rozdz. 17),</li>
+<li>poniższe deklaracje:</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Wymaganie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SMS (<code>SEND_SMS</code>)</strong></td>
+<td>uprawnienie z grupy objętej polityką <em>SMS and Call Log</em>. Wymaga formularza <em>Permissions Declaration</em> z uzasadnieniem (funkcja bezpieczeństwa: automatyczne powiadomienie wskazanych kontaktów). Akceptacja zależy od aktualnej polityki Google</td>
+</tr>
+<tr>
+<td><strong>Usługa pierwszoplanowa <code>specialUse</code></strong></td>
+<td>deklaracja typu FGS z opisem i ewentualnie nagraniem wideo działania</td>
+</tr>
+<tr>
+<td><strong><code>USE_FULL_SCREEN_INTENT</code></strong></td>
+<td>na Android 14+ przyznawane automatycznie tylko aplikacjom typu budzik/połączenia, wymagana deklaracja</td>
+</tr>
+<tr>
+<td><strong><code>SCHEDULE_EXACT_ALARM</code></strong></td>
+<td>uzasadnienie (funkcja alarmu/budzika)</td>
+</tr>
+<tr>
+<td><strong>Lokalizacja</strong></td>
+<td>deklaracja w <em>Data safety</em>. Aplikacja <strong>nie</strong> prosi o <code>ACCESS_BACKGROUND_LOCATION</code></td>
+</tr>
+<tr>
+<td><strong>Reklamy</strong></td>
+<td>zaznacz „Aplikacja zawiera reklamy”</td>
+</tr>
+<tr>
+<td><strong>Polityka prywatności</strong></td>
+<td>publiczny URL (<code>safecheck.privacyUrl</code>)</td>
+</tr>
+<tr>
+<td><strong>Kategoria wiekowa</strong></td>
+<td>formularz IARC. Regulamin przewiduje użytkowników od 16 lat</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>Uwaga: aplikacja z Google Play i APK ze strony podpisane różnymi kluczami nie zaktualizują się wzajemnie.</p>
+</blockquote>
+<hr />
+<h2 id="20-znane-ograniczenia-i-dług-techniczny">20. Znane ograniczenia i dług techniczny <a class="anchor" href="#20-znane-ograniczenia-i-dług-techniczny" aria-label="Link do sekcji">#</a></h2>
+<h3 id="201-ryzyka-do-weryfikacji-przed-publikacją">20.1 Ryzyka do weryfikacji przed publikacją <a class="anchor" href="#201-ryzyka-do-weryfikacji-przed-publikacją" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Ryzyko</th>
+<th>Szczegóły</th>
+<th>Rekomendacja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>R2</strong></td>
+<td><strong>Lokalizacja w tle</strong></td>
+<td>usługa przechodzi na pierwszy plan z typem <code>SPECIAL_USE</code> (bez <code>LOCATION</code>), a aplikacja nie ma <code>ACCESS_BACKGROUND_LOCATION</code>. Na Android 10+ / 14+ pobranie pozycji przy zamkniętej aplikacji może się nie udać. SMS zostanie wtedy wysłany w wersji „Błąd ustalania lokalizacji”</td>
+<td>przetestować T4 przy zamkniętej aplikacji na Android 14/15. Ewentualnie przekazywać typ <code>SPECIAL_USE or LOCATION</code> w <code>startForeground</code> (z zachowaniem zasad uruchamiania FGS lokalizacji z tła) lub dodać uprawnienie lokalizacji w tle z odpowiednią deklaracją w Play</td>
+</tr>
+<tr>
+<td><strong>R3</strong></td>
+<td><strong>Polityka Google Play dla SMS</strong> (tylko przy publikacji w sklepie)</td>
+<td><code>SEND_SMS</code> jest uprawnieniem ograniczonym w Google Play. Przy dystrybucji APK (obecny model) nie dotyczy</td>
+<td>przygotować uzasadnienie i wideo. Alternatywa: wysyłka przez Intent <code>ACTION_SENDTO</code>, która wymaga jednak interakcji użytkownika, więc nie działa automatycznie</td>
+</tr>
+<tr>
+<td><strong>R5</strong></td>
+<td><strong>Reklamy AdMob bez publikacji w sklepie</strong></td>
+<td>AdMob powiązuje aplikacje z kartą w obsługiwanym sklepie. Aplikacja dystrybuowana tylko jako APK może mieć ograniczone wyświetlanie reklam lub nie przejść weryfikacji, więc przychód z reklam jest niepewny</td>
+<td>przed oparciem modelu biznesowego na reklamach sprawdzić status aplikacji w konsoli AdMob; alternatywy: publikacja w sklepie (19.6), wersja płatna, model B2B (np. dla firm opieki)</td>
+</tr>
+<tr>
+<td><strong>R4</strong></td>
+<td><strong>Usypianie przez producentów</strong></td>
+<td>MIUI, EMUI, ColorOS i One UI mogą mimo uprawnień zatrzymywać usługę</td>
+<td><code>openSettings()</code> kieruje do autostartu. Instrukcja zawiera wskazówki, warto testować na urządzeniach docelowych</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="202-dług-techniczny">20.2 Dług techniczny <a class="anchor" href="#202-dług-techniczny" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Opis</th>
+<th>Wpływ</th>
+<th>Propozycja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>teksty po polsku wpisane na sztywno (SMS, powiadomienia, okna uprawnień, część etykiet)</td>
+<td>użytkownicy EN/DE/FR widzą częściowo polski interfejs i dostają polskie SMS-y</td>
+<td>przenieść do <code>strings.xml</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td>teksty SMS w formie męskiej („potwierdził”, „z nim”)</td>
+<td>brak neutralności</td>
+<td>formy neutralne lub wybór płci w profilu</td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>MainActivity.kt</code> ma ~2600 linii</td>
+<td>trudniejsze utrzymanie</td>
+<td>podział na pliki/pakiety, ViewModel + <code>StateFlow</code></td>
+</tr>
+<tr>
+<td>D5</td>
+<td>nieużywane: parametr <code>onReset</code>, <code>BenefitItem</code>, akcja <code>STOP_SERVICE</code>, extra <code>ALARM_STAGE</code>, kilkanaście stringów (rozdz. 16)</td>
+<td>szum w kodzie</td>
+<td>usunąć</td>
+</tr>
+<tr>
+<td>D6</td>
+<td>przestarzałe API: <code>SmsManager.getDefault()</code>, <code>Divider</code>, <code>ClickableText</code>, <code>CircularProgressIndicator(progress: Float)</code>, <code>Locale(String)</code></td>
+<td>ostrzeżenia przy aktualizacji bibliotek</td>
+<td>migracja przy podbiciu Compose BOM</td>
+</tr>
+<tr>
+<td>D7</td>
+<td>AGP 8.2.2 przy <code>compileSdk 35</code> (ostrzeżenie Gradle), Compose BOM z 2023 r.</td>
+<td>brak najnowszych poprawek</td>
+<td>aktualizacja do aktualnego AGP / Kotlin 2.x (kompilator Compose jako plugin)</td>
+</tr>
+<tr>
+<td>D8</td>
+<td>brak testów jednostkowych i UI, brak CI</td>
+<td>ręczna weryfikacja regresji</td>
+<td>testy dla <code>AlarmScheduler</code>, <code>GhostMaskTransformation</code>, logiki etapów, GitHub Actions</td>
+</tr>
+<tr>
+<td>D9</td>
+<td>minifikacja wyłączona</td>
+<td>większy APK (~15 MB), kod łatwy do odczytania</td>
+<td><code>isMinifyEnabled = true</code>, <code>isShrinkResources = true</code> + testy release</td>
+</tr>
+<tr>
+<td>D10</td>
+<td>ustawienia niezaszyfrowane; plik ustawień objęty systemową kopią zapasową</td>
+<td>imię i numery opiekunów mogą trafić do kopii Google użytkownika (opisane w polityce prywatności)</td>
+<td><code>EncryptedSharedPreferences</code> (uwaga: zaszyfrowane dane nie przywrócą się na innym urządzeniu) lub <code>allowBackup="false"</code> – decyzja produktowa</td>
+</tr>
+<tr>
+<td>D13</td>
+<td>brak mechanizmu powiadamiania o nowej wersji (dystrybucja APK)</td>
+<td>użytkownicy mogą długo korzystać ze starej wersji</td>
+<td>sprawdzanie najnowszego wydania przez API GitHub Releases i komunikat w aplikacji</td>
+</tr>
+<tr>
+<td>D11</td>
+<td>przy pierwszym uruchomieniu kilka okien uprawnień może pojawić się jedno po drugim nad ekranem wyboru języka</td>
+<td>słabszy UX</td>
+<td>kolejkowanie uprawnień lub osobny ekran „Uprawnienia” w kreatorze</td>
+</tr>
+<tr>
+<td>D12</td>
+<td><code>BootReceiver</code> ma w manifeście <code>QUICKBOOT_POWERON</code> i <code>USER_PRESENT</code>, ale kod reaguje tylko na <code>BOOT_COMPLETED</code></td>
+<td>brak przywracania na części urządzeń HTC/Xiaomi (quickboot)</td>
+<td>rozszerzyć warunek o <code>QUICKBOOT_POWERON</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="21-proponowany-rozwój-roadmapa">21. Proponowany rozwój (roadmapa) <a class="anchor" href="#21-proponowany-rozwój-roadmapa" aria-label="Link do sekcji">#</a></h2>
+<p><strong>Krótkoterminowo (przed publikacją / v2.6)</strong></p>
+<ol>
+<li>Weryfikacja lokalizacji w tle (R2).</li>
+<li>Lokalizacja wszystkich tekstów (D1, D2).</li>
+<li>Porządki: D5, D12, minifikacja (D9).</li>
+</ol>
+<p><strong>Średnioterminowo (v3.0)</strong></p>
+<ol start="4">
+<li>Refaktoryzacja do MVVM: <code>ViewModel</code> + <code>StateFlow</code>, <code>DataStore</code> zamiast SharedPreferences, podział <code>MainActivity.kt</code> (D3, D4).</li>
+<li>Testy jednostkowe i instrumentacyjne + CI (D8).</li>
+<li>Aktualizacja toolchainu (D7) i migracja przestarzałych API (D6).</li>
+</ol>
+<p><strong>Pomysły produktowe</strong></p>
+<ul>
+<li>harmonogram („przypominaj codziennie o 9:00”) zamiast samego licznika,</li>
+<li>wykrywanie upadku / braku ruchu (akcelerometr),</li>
+<li>przycisk SOS wysyłający SMS od razu,</li>
+<li>konfigurowalna długość etapów i liczba ostrzeżeń,</li>
+<li>wiadomość SMS edytowalna przez użytkownika,</li>
+<li>powiadomienia przez komunikatory / e-mail (wymagałoby backendu),</li>
+<li>widżet na ekran główny i kafelek szybkich ustawień z „ŻYJĘ!”,</li>
+<li>wersja Premium bez reklam (np. Google Play Billing przy publikacji w sklepie albo inna forma płatności).</li>
+</ul>
+<hr />
+<h2 id="22-słownik-pojęć">22. Słownik pojęć <a class="anchor" href="#22-słownik-pojęć" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pojęcie</th>
+<th>Znaczenie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Licznik</strong></td>
+<td>czas, po którym bez potwierdzenia wybucha alarm (<code>timer_duration</code>)</td>
+</tr>
+<tr>
+<td><strong>Termin</strong></td>
+<td>moment końca licznika (<code>alarm_target</code>)</td>
+</tr>
+<tr>
+<td><strong>Opiekun</strong></td>
+<td>osoba, której numer użytkownik wpisał. Dostaje SMS przy braku reakcji</td>
+</tr>
+<tr>
+<td><strong>„ŻYJĘ!”</strong></td>
+<td>potwierdzenie obecności, które resetuje licznik i przerywa alarm</td>
+</tr>
+<tr>
+<td><strong>Sekwencja alarmowa</strong></td>
+<td>6 etapów po 30 s zakończonych SMS-em</td>
+</tr>
+<tr>
+<td><strong>Fałszywy alarm</strong></td>
+<td>potwierdzenie „ŻYJĘ!” po wysłaniu SMS-a alarmowego. Opiekunowie dostają SMS uspokajający</td>
+</tr>
+<tr>
+<td><strong>E.164</strong></td>
+<td>międzynarodowy format numeru: <code>+</code> i kod kraju, bez spacji</td>
+</tr>
+<tr>
+<td><strong>FGS</strong></td>
+<td><em>Foreground Service</em>, usługa z widocznym powiadomieniem, której system nie zamyka</td>
+</tr>
+<tr>
+<td><strong>Doze</strong></td>
+<td>tryb oszczędzania energii Androida, ograniczający pracę w tle</td>
+</tr>
+<tr>
+<td><strong>Full-screen intent</strong></td>
+<td>powiadomienie, które od razu otwiera pełnoekranową aktywność (jak połączenie przychodzące)</td>
+</tr>
+<tr>
+<td><strong>UMP / CMP</strong></td>
+<td>platforma zarządzania zgodami na reklamy wymagana w UE</td>
+</tr>
+</tbody>
+</table></div>      <p class="doc-source">Źródło dokumentu: <a href="https://github.com/px-ware/safecheck/blob/main/dokumentacja-techniczna.md" rel="noopener" target="_blank">GitHub, px-ware/safecheck/dokumentacja-techniczna.md</a></p>
+      <p><a class="back-top" href="#tresc">↑ Na górę</a></p>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-bottom" style="margin-top:0;padding-top:0;border-top:0">
+        <span>© <span id="rok">2026</span> SafeCheck · <a href="/safecheck/">Strona główna</a> · <a href="/safecheck/#sprzedaz">Projekt na sprzedaż</a> · <a href="/safecheck/licencja">Licencja</a> · <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></span>
+        <span><a href="mailto:pxware@pxware.pl">pxware@pxware.pl</a></span>
+      </div>
+    </div>
+  </footer>
+  <script src="/safecheck/assets/js/site.js" defer></script>
+  <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";mermaid.initialize({ startOnLoad: true, theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default" });</script>
+</body>
+</html>

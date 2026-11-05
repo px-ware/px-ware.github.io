@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator haseł i test siły hasła online | FlashTools</title>
+    <meta name="description" content="Wygeneruj silne, losowe hasła i sprawdź, ile czasu zajęłoby ich złamanie. Wszystko dzieje się w przeglądarce – hasła nigdzie nie są wysyłane.">
+    <link rel="canonical" href="https://pxware.pl/flashtools/generator-hasel/">
+        <meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o">
+
+    <!-- Podgląd linku w social media / komunikatorach -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="FlashTools">
+    <meta property="og:title" content="Generator haseł i test siły hasła online | FlashTools">
+    <meta property="og:description" content="Wygeneruj silne, losowe hasła i sprawdź, ile czasu zajęłoby ich złamanie. Wszystko dzieje się w przeglądarce – hasła nigdzie nie są wysyłane.">
+    <meta property="og:url" content="https://pxware.pl/flashtools/generator-hasel/">
+    <meta property="og:image" content="https://pxware.pl/flashtools/assets/img/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/flashtools/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/flashtools/assets/img/apple-touch-icon.png">
+    <meta name="theme-color" content="#09090b">
+    <link rel="stylesheet" href="/flashtools/assets/css/style.css">
+
+    <!-- Dane strukturalne dla Google -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Generator haseł","url":"https://pxware.pl/flashtools/generator-hasel/","description":"Wygeneruj silne, losowe hasła i sprawdź, ile czasu zajęłoby ich złamanie. Wszystko dzieje się w przeglądarce – hasła nigdzie nie są wysyłane.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"pl","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"PLN"},"publisher":{"@type":"Organization","name":"FlashTools","url":"https://pxware.pl/flashtools/"}}</script>    </head>
+<body>
+
+    <div class="app-container">
+        <header>
+    <div class="brand">
+        <a class="logo-container" href="/flashtools/" aria-label="FlashTools - strona główna">
+            <svg class="logo-svg" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="20" fill="#09090b"/><path d="M58 10 L26 55 H47 L42 90 L74 44 H53 Z" fill="#00d2ff"/></svg>
+            <div class="logo-text">Flash<span>Tools</span></div>
+        </a>
+    </div>
+
+    <a class="coffee-btn" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+
+    <nav class="top-nav" aria-label="Narzędzia">
+        <a class="nav-link" href="/flashtools/generator-qr/">🔲 Kody QR</a>
+        <a class="nav-link" href="/flashtools/generator-hasel/">🔑 Hasła</a>
+        <a class="nav-link" href="/flashtools/formatowanie-tekstu/">✍️ Tekst</a>
+        <a class="nav-link" href="/flashtools/narzedzia-pdf/">📄 PDF</a>
+        <a class="nav-link" href="/flashtools/dev-tools/">💻 DevTools</a>
+        <a class="nav-link" href="/flashtools/kolory-wcag/">🎨 Kolory</a>
+        <a class="nav-link" href="/flashtools/konwerter-obrazow/">🖼️ Foto</a>
+        <a class="nav-link" href="/flashtools/pomodoro/">⏱️ Czas</a>
+        <a class="nav-link nav-coffee" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Wesprzyj</a>
+    </nav>
+</header>
+
+        <main id="app-root">
+            <!-- 2. HASŁA -->
+<section id="view-pass" class="tool-view">
+    <div class="tool-header"><h1>🔑 Generator haseł i test siły hasła</h1><p>Losowe, bezpieczne hasła i ocena siły hasła.</p></div>
+    <div class="flex-row">
+        <div class="flex-1 panel">
+            <h3>Generator</h3><br>
+            <div class="form-group"><label>Długość: <span id="p_lenV">16</span></label><input type="range" id="p_len" min="8" max="64" value="16" oninput="document.getElementById('p_lenV').innerText=this.value; genPass()"></div>
+            <div class="form-group"><label>Liczba haseł:</label><input type="number" id="p_cnt" value="1" min="1" max="20" oninput="genPass()"></div>
+            <div class="flex-row mb-15">
+                <label><input type="checkbox" id="pUp" checked onchange="genPass()"> A-Z</label>
+                <label><input type="checkbox" id="pLo" checked onchange="genPass()"> a-z</label>
+                <label><input type="checkbox" id="pNu" checked onchange="genPass()"> 0-9</label>
+                <label><input type="checkbox" id="pSy" checked onchange="genPass()"> Znaki specjalne</label>
+            </div>
+            <div id="p_out"></div>
+            <button id="p_copyBtn" class="btn-primary" onclick="copyPassMain()">Skopiuj hasło</button>
+            <div id="p_ext" class="is-hidden"></div>
+        </div>
+        <div class="flex-1 panel">
+            <h3>Sprawdź siłę hasła</h3><br>
+            <div class="form-group"><input type="text" id="p_chk" oninput="checkPass()" placeholder="Wklej hasło..."></div>
+            <div class="meter meter-lg"><div id="p_bar" class="meter-fill"></div></div>
+            <div id="p_txt">Oczekuję...</div>
+            <div id="p_crk"></div>
+            <div id="p_warn"></div>
+        </div>
+    </div>
+</section>
+
+<article class="panel seo-content">
+    <h2>Jak działa generator haseł?</h2>
+    <p>Hasła są tworzone przy użyciu kryptograficznego generatora liczb losowych wbudowanego w przeglądarkę (Web Crypto API). Każdy znak jest losowany z równym prawdopodobieństwem, więc hasła są naprawdę przypadkowe. Możesz ustawić długość od 8 do 64 znaków, wybrać rodzaje znaków i wygenerować do 20 haseł naraz.</p>
+
+    <h2>Sprawdzanie siły hasła</h2>
+    <p>Weryfikator korzysta z biblioteki zxcvbn, która rozpoznaje popularne hasła, słowa ze słownika, imiona, daty, sekwencje (abc, 123) i wzory klawiaturowe (qwerty). Pokazuje ocenę hasła, szacowany czas jego złamania i wskazówki, co poprawić.</p>
+
+    <h2>Jak stworzyć silne hasło?</h2>
+    <ul>
+        <li>Używaj co najmniej 12–16 znaków – długość ma największe znaczenie.</li>
+        <li>Łącz wielkie i małe litery, cyfry oraz znaki specjalne.</li>
+        <li>Nie używaj tego samego hasła w wielu serwisach.</li>
+        <li>Przechowuj hasła w menedżerze haseł zamiast je zapamiętywać.</li>
+    </ul>
+
+    <h2>Czy to bezpieczne?</h2>
+    <p>Tak. Generowanie i sprawdzanie haseł odbywa się wyłącznie na Twoim urządzeniu. Wpisane i wygenerowane hasła nie są nigdzie wysyłane ani zapisywane.</p>
+</article>
+        </main>
+
+        <footer>
+    <nav class="footer-tools" aria-label="Wszystkie narzędzia">
+        <a href="/flashtools/generator-qr/">Generator kodów QR</a>
+        <a href="/flashtools/generator-hasel/">Generator haseł</a>
+        <a href="/flashtools/formatowanie-tekstu/">Licznik znaków</a>
+        <a href="/flashtools/narzedzia-pdf/">Łączenie PDF</a>
+        <a href="/flashtools/dev-tools/">JSON i Base64</a>
+        <a href="/flashtools/kolory-wcag/">Kontrast WCAG</a>
+        <a href="/flashtools/konwerter-obrazow/">Konwerter zdjęć</a>
+        <a href="/flashtools/pomodoro/">Timer Pomodoro</a>
+    </nav>
+    <div class="footer-links">
+        <a href="/flashtools/privacy.html">Polityka prywatności i cookies</a> |
+        <a href="/flashtools/terms.html">Regulamin serwisu</a> |
+        <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+    </div>
+    © <span id="footerYear">2026</span> FlashTools. Wszelkie prawa zastrzeżone.
+</footer>
+    </div>
+
+    <!-- BIBLIOTEKI ZEWNĘTRZNE (lista w inc/routes.php) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+        <!-- LOGIKA JS -->
+    <script src="/flashtools/assets/js/core.js"></script>
+    <script src="/flashtools/assets/js/modules/pass.js"></script>
+    </body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polityka prywatności — NetworkMaster</title>
+<meta name="description" content="Polityka prywatności programu NetworkMaster: jakie połączenia wykonuje program i jakie dane przetwarza.">
+<link rel="canonical" href="https://pxware.pl/networkmaster/polityka-prywatnosci">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="NetworkMaster">
+<meta property="og:title" content="Polityka prywatności — NetworkMaster">
+<meta property="og:description" content="Polityka prywatności programu NetworkMaster: jakie połączenia wykonuje program i jakie dane przetwarza.">
+<meta property="og:url" content="https://pxware.pl/networkmaster/polityka-prywatnosci">
+<link rel="icon" href="/networkmaster/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/networkmaster/assets/css/doc.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-top">
+    <a class="brand" href="/networkmaster/"><span>Network</span>Master</a>
+    <nav aria-label="Dokumenty">
+            <a href="/networkmaster/dokumentacja">Dokumentacja użytkownika</a>
+            <a href="/networkmaster/dokumentacja-techniczna">Dokumentacja techniczna</a>
+            <a href="/networkmaster/regulamin">Regulamin</a>
+            <a href="/networkmaster/polityka-prywatnosci" aria-current="page">Polityka prywatności</a>
+            <a href="/networkmaster/licencja">Licencja</a>
+          </nav>
+  </header>
+  <main class="prose" id="tresc">
+<h1 id="polityka-prywatności--networkmaster">Polityka Prywatności — NetworkMaster</h1>
+<p><strong>To jest szablon przygotowany bez udziału prawnika/specjalisty RODO.</strong> Przed jakimkolwiek
+komercyjnym wykorzystaniem tego dokumentu skonsultuj go z prawnikiem specjalizującym się w
+ochronie danych osobowych. Ten dokument sam w sobie nie stanowi porady prawnej.</p>
+<p>Wersja: 1.0 · Dotyczy programu: NetworkMaster</p>
+<h2 id="1-ogólna-zasada-program-działa-lokalnie">1. Ogólna zasada: Program działa lokalnie <a class="anchor" href="#1-ogólna-zasada-program-działa-lokalnie" aria-label="Link do sekcji">#</a></h2>
+<p>NetworkMaster <strong>nie ma konta użytkownika, nie zawiera telemetrii ani analityki i nie wysyła
+żadnych danych do Właściciela programu.</strong> Cała logika działa lokalnie, na urządzeniu
+Użytkownika. Właściciel programu nie posiada żadnego serwera zbierającego dane z działania
+Programu i nie ma wglądu w to, jak i do czego Program jest używany.</p>
+<h2 id="2-połączenia-sieciowe-wychodzące-z-programu">2. Połączenia sieciowe wychodzące z Programu <a class="anchor" href="#2-połączenia-sieciowe-wychodzące-z-programu" aria-label="Link do sekcji">#</a></h2>
+<p>Program łączy się z internetem <strong>wyłącznie wtedy, gdy Użytkownik sam aktywnie uruchomi
+konkretną funkcję tego wymagającą</strong> z menu głównego. Poniżej pełna lista takich połączeń:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Funkcja w programie</th>
+<th>Usługa zewnętrzna</th>
+<th>Jakie dane są wysyłane</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sprawdzanie aktualizacji (<code>UP</code>)</td>
+<td><code>api.github.com</code></td>
+<td>standardowe zapytanie HTTP do publicznego API GitHuba; bez danych osobowych</td>
+</tr>
+<tr>
+<td>WHOIS (<code>X</code>)</td>
+<td><code>rdap.org</code></td>
+<td>sprawdzana domena/adres IP</td>
+</tr>
+<tr>
+<td>GeoIP (<code>G</code>)</td>
+<td><code>ipwho.is</code>, <code>ip-api.com</code></td>
+<td>sprawdzany adres IP (własny lub dowolny wskazany przez Użytkownika)</td>
+</tr>
+<tr>
+<td>Test prędkości łącza (<code>SP</code>)</td>
+<td><code>speed.cloudflare.com</code></td>
+<td>dane testowe (transfer), bez danych osobowych</td>
+</tr>
+<tr>
+<td>Szybka diagnoza sieci (<code>V</code>)</td>
+<td><code>www.cloudflare.com/cdn-cgi/trace</code>, <code>connectivitycheck.gstatic.com</code></td>
+<td>zapytanie sprawdzające kondycję połączenia</td>
+</tr>
+<tr>
+<td>MAC Lookup (<code>M</code>)</td>
+<td><code>api.macvendors.com</code></td>
+<td>sprawdzany adres MAC — <strong>tylko</strong> gdy lokalna, wbudowana baza producentów (ok. 39,7 tys. wpisów IEEE) nie zna danego adresu</td>
+</tr>
+</tbody>
+</table></div>
+<p>Każde z powyższych połączeń idzie <strong>bezpośrednio</strong> z urządzenia Użytkownika do wskazanej usługi
+zewnętrznej. Właściciel programu nie pośredniczy w tej transmisji, nie ma do niej dostępu ani
+wglądu. Korzystanie z tych funkcji podlega odpowiednio politykom prywatności: GitHub, dostawców
+usługi RDAP, ipwho.is, ip-api.com, Cloudflare, Google oraz macvendors.com — Użytkownik powinien
+się z nimi zapoznać, jeśli ma to dla niego znaczenie.</p>
+<h2 id="3-dane-przechowywane-lokalnie">3. Dane przechowywane lokalnie <a class="anchor" href="#3-dane-przechowywane-lokalnie" aria-label="Link do sekcji">#</a></h2>
+<p>Program zapisuje dane wyłącznie lokalnie, w folderach obok pliku programu:</p>
+<ul>
+<li><strong><code>core_data/</code></strong> — ustawienia programu, baza zapisanych profili konfiguracji IP, baza urządzeń
+Wake-on-LAN, dziennik zdarzeń programu, flaga pierwszego uruchomienia.</li>
+<li><strong><code>Reports/</code></strong> — wygenerowane przez Użytkownika raporty diagnostyczne.</li>
+<li><strong>Opcjonalne pliki <code>.zip</code></strong> — kopie zapasowe konfiguracji VPN (systemowego, WireGuard,
+OpenVPN), tworzone wyłącznie na wyraźne żądanie Użytkownika (funkcja kopii zapasowej w menu VPN).</li>
+</ul>
+<p>Użytkownik ma pełną kontrolę nad tymi danymi — usunięcie odpowiednich plików/folderów usuwa dane
+bez pozostawiania kopii gdziekolwiek indziej.</p>
+<h2 id="4-ważne-ostrzeżenie-kopie-zapasowe-vpn-zawierają-hasła-w-postaci-jawnej">4. Ważne ostrzeżenie: kopie zapasowe VPN zawierają hasła w postaci jawnej <a class="anchor" href="#4-ważne-ostrzeżenie-kopie-zapasowe-vpn-zawierają-hasła-w-postaci-jawnej" aria-label="Link do sekcji">#</a></h2>
+<p>Pliki kopii zapasowych VPN (<code>.zip</code>) mogą zawierać <strong>hasła, klucze PSK oraz klucze prywatne
+WireGuard zapisane w postaci jawnej (niezaszyfrowanej)</strong>. To celowy wybór projektowy — kopia zapasowa ma
+być kompletna i pozwalać na pełne odtworzenie konfiguracji. W praktyce oznacza to, że taki plik
+należy traktować z taką samą ostrożnością jak plik zawierający hasła: nie wysyłać go
+niezaszyfrowanym kanałem (np. zwykłym e-mailem), nie przechowywać w niezabezpieczonej chmurze i
+zabezpieczyć dostęp do niego tak, jak do menedżera haseł.</p>
+<h2 id="5-podstawa-prawna-i-zgodność-z-rodo">5. Podstawa prawna i zgodność z RODO <a class="anchor" href="#5-podstawa-prawna-i-zgodność-z-rodo" aria-label="Link do sekcji">#</a></h2>
+<p>Ponieważ Właściciel programu nie prowadzi żadnego przetwarzania danych osobowych Użytkowników
+(brak serwera, brak konta, brak zbierania danych po stronie Właściciela), większość obowiązków
+administratora danych osobowych wynikających z RODO nie znajduje tu zastosowania w klasycznym
+sensie. Należy jednak mieć na uwadze, że:</p>
+<ul>
+<li>funkcje opisane w §2 (GeoIP, WHOIS, sprawdzanie aktualizacji, MAC Lookup) mogą przekazywać
+adres IP Użytkownika <strong>bezpośrednio</strong> do wskazanych usług trzecich — to te podmioty, nie
+Właściciel programu, stają się wówczas administratorem tych danych w zakresie własnego
+przetwarzania,</li>
+<li>Użytkownik korzystający z tych funkcji robi to świadomie, uruchamiając je z menu programu.</li>
+</ul>
+<h2 id="6-zmiany-polityki-prywatności">6. Zmiany Polityki Prywatności <a class="anchor" href="#6-zmiany-polityki-prywatności" aria-label="Link do sekcji">#</a></h2>
+<p>Właściciel zastrzega sobie prawo do aktualizacji niniejszej Polityki Prywatności, w
+szczególności w związku ze zmianami funkcji Programu lub modelu jego udostępniania
+(patrz <a href="/networkmaster/regulamin">Regulamin, §8</a>).</p>
+<h2 id="7-kontakt">7. Kontakt <a class="anchor" href="#7-kontakt" aria-label="Link do sekcji">#</a></h2>
+<p>W sprawach dotyczących prywatności i danych: <strong>pxware@pxware.pl</strong>.</p>    <p class="doc-source">Źródło dokumentu: <a href="https://github.com/px-ware/networkmaster/blob/main/dokumentacja/Polityka-Prywatnosci.md" rel="noopener" target="_blank">GitHub, px-ware/networkmaster/dokumentacja/Polityka-Prywatnosci.md</a></p>
+  </main>
+  <footer>
+    <p><a href="/networkmaster/">Strona główna</a> · <a href="https://github.com/px-ware/networkmaster/releases/latest">Pobierz</a> · <a href="mailto:pxware@pxware.pl">Kontakt</a> · <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></p>
+    <p>© 2026 PX Paweł Mościbrodzki (NetworkMaster) · <a href="/">pxware.pl</a>. Wszelkie prawa zastrzeżone.</p>
+  </footer>
+</div>
+<script src="/networkmaster/assets/js/site.js" defer></script>
+</body>
+</html>

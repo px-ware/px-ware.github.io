@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instrukcja obsługi – SafeCheck</title>
+  <meta name="description" content="Instrukcja obsługi aplikacji SafeCheck: konfiguracja, uprawnienia, działanie alarmu, ustawienia baterii dla Samsung, Xiaomi, Huawei i najczęstsze pytania.">
+  <link rel="canonical" href="https://pxware.pl/safecheck/instrukcja">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2e7d32">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:site_name" content="SafeCheck">
+  <meta property="og:title" content="Instrukcja obsługi – SafeCheck">
+  <meta property="og:description" content="Instrukcja obsługi aplikacji SafeCheck: konfiguracja, uprawnienia, działanie alarmu, ustawienia baterii dla Samsung, Xiaomi, Huawei i najczęstsze pytania.">
+  <meta property="og:url" content="https://pxware.pl/safecheck/instrukcja">
+  <meta property="og:image" content="https://pxware.pl/safecheck/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/safecheck/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/safecheck/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/safecheck/apple-touch-icon.png">
+  <link rel="manifest" href="/safecheck/site.webmanifest">
+  <link rel="stylesheet" href="/safecheck/assets/css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SafeCheck","item":"https://pxware.pl/safecheck/"},{"@type":"ListItem","position":2,"name":"Instrukcja obsługi","item":"https://pxware.pl/safecheck/instrukcja"}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#tresc">Przejdź do treści</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/safecheck/" aria-label="SafeCheck – strona główna">
+        <img src="/safecheck/assets/img/logo.svg" alt="" width="32" height="32">
+        SafeCheck
+      </a>
+      <nav class="nav" aria-label="Główna nawigacja">
+        <a href="/safecheck/#jak-dziala">Jak działa</a>
+        <a href="/safecheck/#funkcje">Funkcje</a>
+        <a href="/safecheck/#pobierz">Pobierz</a>
+        <a href="/safecheck/#dokumenty">Dokumenty</a>
+      </nav>
+      <a class="btn btn-primary btn-sm header-cta" href="/safecheck/#sprzedaz">
+        <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-sell"/></svg>
+        Kup projekt
+      </a>
+    </div>
+  </header>
+
+  <div class="wrap doc-layout">
+    <nav class="doc-nav" aria-label="Dokumenty">
+            <a href="/safecheck/instrukcja" aria-current="page">Instrukcja obsługi</a>
+            <a href="/safecheck/dokumentacja-techniczna">Dokumentacja techniczna</a>
+            <a href="/safecheck/regulamin">Regulamin</a>
+            <a href="/safecheck/polityka-prywatnosci">Polityka prywatności</a>
+            <a href="/safecheck/licencja">Licencja</a>
+          </nav>
+    <main id="tresc" class="prose">
+      <blockquote><p><strong>Wzór dokumentu.</strong> Ten dokument jest częścią projektu SafeCheck oferowanego na sprzedaż. Po sprzedaży projektu nabywca wpisuje w nim własne dane jako wydawca aplikacji.</p></blockquote>
+<h1 id="safecheck--instrukcja-obsługi">SafeCheck – instrukcja obsługi</h1>
+<blockquote>
+<p><strong>Ważne:</strong> SafeCheck jest dodatkowym zabezpieczeniem, a <strong>nie zastępuje numeru alarmowego 112</strong> ani profesjonalnych systemów teleopieki. W sytuacji zagrożenia życia zawsze dzwoń pod 112.</p>
+</blockquote>
+<hr />
+<h2 id="spis-treści">Spis treści <a class="anchor" href="#spis-treści" aria-label="Link do sekcji">#</a></h2>
+<ol>
+<li><a href="#1-czym-jest-safecheck">Czym jest SafeCheck?</a></li>
+<li><a href="#2-wymagania">Wymagania</a></li>
+<li><a href="#3-pierwsze-uruchomienie--krok-po-kroku">Pierwsze uruchomienie – krok po kroku</a></li>
+<li><a href="#4-uprawnienia--dlaczego-są-potrzebne">Uprawnienia – dlaczego są potrzebne</a></li>
+<li><a href="#5-ekran-główny">Ekran główny</a></li>
+<li><a href="#6-co-się-dzieje-gdy-czas-minie">Co się dzieje, gdy czas minie?</a></li>
+<li><a href="#7-menu-aplikacji">Menu aplikacji</a></li>
+<li><a href="#8-ustawienia-telefonu--samsung-xiaomi-huawei-i-inne">Ustawienia telefonu – Samsung, Xiaomi, Huawei i inne</a></li>
+<li><a href="#9-dobre-praktyki">Dobre praktyki</a></li>
+<li><a href="#10-najczęstsze-pytania-i-problemy">Najczęstsze pytania i problemy</a></li>
+<li><a href="#11-koszty">Koszty</a></li>
+<li><a href="#12-kontakt">Kontakt</a></li>
+</ol>
+<hr />
+<h2 id="1-czym-jest-safecheck">1. Czym jest SafeCheck? <a class="anchor" href="#1-czym-jest-safecheck" aria-label="Link do sekcji">#</a></h2>
+<p>SafeCheck pilnuje, czy dajesz regularnie znak życia. Jest pomyślany dla osób, które mieszkają same, są starsze lub chorują albo pracują i podróżują w pojedynkę.</p>
+<p><strong>Jak to działa:</strong></p>
+<ol>
+<li>Ustawiasz <strong>licznik czasu</strong>, np. 48 godzin.</li>
+<li>Co jakiś czas naciskasz duży przycisk <strong>„ŻYJĘ!”</strong>, a licznik zaczyna liczyć od nowa.</li>
+<li>Jeśli nie naciśniesz przycisku, zanim licznik dojdzie do zera, telefon włączy <strong>głośny alarm</strong>.</li>
+<li>Jeśli nie wyłączysz alarmu w ciągu około <strong>2,5 minuty</strong>, aplikacja wyśle <strong>SMS z Twoją lokalizacją</strong> do osób, które wskażesz (<strong>opiekunów</strong>).</li>
+</ol>
+<p>Aplikacja nie wymaga zakładania konta ani internetu do wysłania alarmu. SMS idzie przez Twoją sieć komórkową.</p>
+<hr />
+<h2 id="2-wymagania">2. Wymagania <a class="anchor" href="#2-wymagania" aria-label="Link do sekcji">#</a></h2>
+<ul>
+<li>Telefon z systemem <strong>Android 7.0 lub nowszym</strong>.</li>
+<li><strong>Karta SIM z możliwością wysyłania SMS-ów</strong> (aktywna usługa, środki na koncie przy karcie na doładowania).</li>
+<li>Włączona <strong>lokalizacja (GPS)</strong>, jeśli chcesz, żeby SMS zawierał Twoją pozycję.</li>
+<li>Usługi Google Play (Google Play Services – składnik systemu, na większości telefonów jest fabrycznie; potrzebny do lokalizacji i reklam).</li>
+</ul>
+<h3 id="instalacja">Instalacja <a class="anchor" href="#instalacja" aria-label="Link do sekcji">#</a></h3>
+<p>SafeCheck <strong>nie jest dostępny w sklepie Google Play</strong>. Aplikację instaluje się z pliku APK pobranego z <strong><a href="https://github.com/px-ware/safecheck/releases/latest" rel="noopener" target="_blank">https://github.com/px-ware/safecheck/releases/latest</a></strong> (link jest też na stronie <a href="/safecheck" rel="noopener" target="_blank">https://pxware.pl/safecheck</a>):</p>
+<ol>
+<li>Pobierz plik <code>SafeCheck.apk</code> na telefon i otwórz go (z powiadomienia o pobraniu lub z folderu „Pobrane”).</li>
+<li>Jeśli telefon zapyta, zezwól przeglądarce lub menedżerowi plików na <strong>instalowanie nieznanych aplikacji</strong>.</li>
+<li>Naciśnij <strong>Zainstaluj</strong>.</li>
+</ol>
+<blockquote>
+<p>Aplikacja zainstalowana z pliku APK nie aktualizuje się sama. Nowe wersje pobierasz z tej samej strony i instalujesz na poprzedniej – ustawienia zostają zachowane.</p>
+</blockquote>
+<hr />
+<h2 id="3-pierwsze-uruchomienie--krok-po-kroku">3. Pierwsze uruchomienie – krok po kroku <a class="anchor" href="#3-pierwsze-uruchomienie--krok-po-kroku" aria-label="Link do sekcji">#</a></h2>
+<h3 id="zgoda-na-reklamy-ue-wielka-brytania-szwajcaria">Zgoda na reklamy (UE, Wielka Brytania, Szwajcaria) <a class="anchor" href="#zgoda-na-reklamy-ue-wielka-brytania-szwajcaria" aria-label="Link do sekcji">#</a></h3>
+<p>Przy pierwszym uruchomieniu może pojawić się okno Google z pytaniem o zgodę na wykorzystanie danych do reklam. Możesz:</p>
+<ul>
+<li>zgodzić się,</li>
+<li>odmówić (zobaczysz wtedy reklamy niespersonalizowane),</li>
+<li>wybrać „Zarządzaj opcjami”, aby ustawić szczegóły.</li>
+</ul>
+<p>Decyzja nie wpływa na działanie alarmu. Zmienisz ją później w <em>Menu → O aplikacji → Ustawienia prywatności reklam</em>.</p>
+<h3 id="krok-1--wybór-języka">Krok 1 – Wybór języka <a class="anchor" href="#krok-1--wybór-języka" aria-label="Link do sekcji">#</a></h3>
+<p>Wybierz język aplikacji: English, Polski, Deutsch lub Français. Język możesz później zmienić w menu.</p>
+<h3 id="krok-2--twoje-imię-i-zgoda">Krok 2 – Twoje imię i zgoda <a class="anchor" href="#krok-2--twoje-imię-i-zgoda" aria-label="Link do sekcji">#</a></h3>
+<ol>
+<li>Wpisz swoje <strong>imię</strong>. Pojawi się w SMS-ie do opiekunów, np. „Jan NIE POTWIERDZIŁ OBECNOŚCI!”, dlatego wpisz imię, po którym bliscy Cię rozpoznają.</li>
+<li>Przeczytaj <strong>Regulamin</strong> i <strong>Politykę Prywatności</strong> (kliknij podkreślone nazwy).</li>
+<li>Zaznacz pole akceptacji i naciśnij <strong>Start</strong>.</li>
+</ol>
+<blockquote>
+<p>Ikonka 🌐 w prawym górnym rogu pozwala zmienić język na tym etapie.</p>
+</blockquote>
+<h3 id="krok-3--opiekunowie">Krok 3 – Opiekunowie <a class="anchor" href="#krok-3--opiekunowie" aria-label="Link do sekcji">#</a></h3>
+<p>Opiekun to osoba, która dostanie SMS, jeśli nie zareagujesz na alarm.</p>
+<ol>
+<li>Naciśnij <strong>flagę z numerem kierunkowym</strong> (domyślnie 🇵🇱 +48), jeśli opiekun ma numer z innego kraju.</li>
+<li>Wpisz numer telefonu <strong>bez kierunkowego</strong>. Szare cyfry podpowiadają, ile cyfr brakuje.</li>
+<li>Gdy numer jest poprawny, przycisk <strong>Dodaj</strong> staje się aktywny. Naciśnij go.</li>
+<li>Możesz dodać kilku opiekunów. Ikona 🗑 obok numeru go usuwa.</li>
+<li>Naciśnij <strong>Zapisz Opiekuna</strong>.</li>
+</ol>
+<blockquote>
+<p><strong>Uprzedź opiekunów</strong>, że zostali wpisani do SafeCheck i co oznacza SMS z aplikacji. Najlepiej poproś ich o zgodę.</p>
+</blockquote>
+<h3 id="krok-4--wprowadzenie">Krok 4 – Wprowadzenie <a class="anchor" href="#krok-4--wprowadzenie" aria-label="Link do sekcji">#</a></h3>
+<p>Kilka plansz wyjaśnia działanie aplikacji. Przechodzisz przyciskiem <strong>Dalej</strong>, a na końcu naciskasz <strong>Start!</strong>. Od tej chwili SafeCheck czuwa w tle.</p>
+<hr />
+<h2 id="4-uprawnienia--dlaczego-są-potrzebne">4. Uprawnienia – dlaczego są potrzebne <a class="anchor" href="#4-uprawnienia--dlaczego-są-potrzebne" aria-label="Link do sekcji">#</a></h2>
+<p>Przy pierwszym uruchomieniu aplikacja poprosi o kilka zgód. <strong>Bez nich alarm może nie zadziałać.</strong> Na każde okno odpowiedz <strong>Zezwól</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>O co prosi aplikacja</th>
+<th>Po co</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Wysyłanie SMS</strong></td>
+<td>aby automatycznie powiadomić opiekunów</td>
+</tr>
+<tr>
+<td><strong>Lokalizacja</strong></td>
+<td>aby dołączyć do SMS-a link do mapy z Twoją pozycją</td>
+</tr>
+<tr>
+<td><strong>Powiadomienia</strong></td>
+<td>aby pokazać, że aplikacja czuwa, i wyświetlić alarm</td>
+</tr>
+<tr>
+<td><strong>Alarmy i przypomnienia</strong></td>
+<td>aby alarm zadziałał dokładnie o czasie</td>
+</tr>
+<tr>
+<td><strong>Powiadomienia pełnoekranowe</strong></td>
+<td>aby alarm pojawił się na zablokowanym ekranie</td>
+</tr>
+<tr>
+<td><strong>Wyświetlanie nad innymi aplikacjami</strong></td>
+<td>aby alarm był widoczny, nawet gdy używasz innej aplikacji</td>
+</tr>
+<tr>
+<td><strong>Bateria: bez ograniczeń</strong></td>
+<td>aby telefon nie „uśpił” aplikacji</td>
+</tr>
+<tr>
+<td><strong>Kontakty</strong> <em>(tylko przy zapraszaniu znajomych)</em></td>
+<td>aby wybrać, komu wysłać zaproszenie</td>
+</tr>
+</tbody>
+</table></div>
+<p>Jeśli przez pomyłkę odmówisz, aplikacja zapyta ponownie. Możesz też otworzyć <strong>Menu → Sprawdź uprawnienia</strong>.</p>
+<hr />
+<h2 id="5-ekran-główny">5. Ekran główny <a class="anchor" href="#5-ekran-główny" aria-label="Link do sekcji">#</a></h2>
+<pre><code> ☰            SafeCheck
+         Powered by ...
+
+   ┌──────────────────────┐
+   │   MONITOROWANIE...    │
+   │                       │
+   │     ╭──────────╮      │
+   │     │  ŻYJĘ!   │      │   ← duży przycisk
+   │     ╰──────────╯      │
+   │                       │
+   │   01 : 23 : 45 : 10   │   ← pozostały czas (dni : godz : min : sek)
+   │ Kliknij, aby zmienić  │
+   └──────────────────────┘
+        [ reklama ]</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Co robi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Napis MONITOROWANIE...</strong> (zielony)</td>
+<td>licznik działa, wszystko w porządku</td>
+</tr>
+<tr>
+<td><strong>Napis CZAS MINĄŁ!</strong> (czerwony)</td>
+<td>licznik doszedł do zera, alarm został uruchomiony</td>
+</tr>
+<tr>
+<td><strong>Zielony pierścień</strong></td>
+<td>im mniej pierścienia, tym mniej czasu zostało</td>
+</tr>
+<tr>
+<td><strong>Przycisk „ŻYJĘ!”</strong></td>
+<td>potwierdza, że wszystko w porządku. Licznik zaczyna od nowa</td>
+</tr>
+<tr>
+<td><strong>Pozostały czas</strong></td>
+<td>kliknij, aby zmienić długość licznika</td>
+</tr>
+<tr>
+<td><strong>☰</strong> (lewy górny róg)</td>
+<td>otwiera menu</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="zmiana-długości-licznika">Zmiana długości licznika <a class="anchor" href="#zmiana-długości-licznika" aria-label="Link do sekcji">#</a></h3>
+<ol>
+<li>Kliknij pozostały czas.</li>
+<li>Wpisz dni (D), godziny (H), minuty (M) i sekundy (S).</li>
+<li>Naciśnij <strong>Zapisz</strong>. Licznik zaczyna liczyć nowy czas <strong>od teraz</strong>.</li>
+</ol>
+<blockquote>
+<p>Najkrótszy możliwy licznik to 10 sekund. Przydaje się do sprawdzenia, czy alarm działa (patrz rozdział 9).</p>
+</blockquote>
+<h3 id="powiadomienie-safecheck-aktywny">Powiadomienie „SafeCheck Aktywny” <a class="anchor" href="#powiadomienie-safecheck-aktywny" aria-label="Link do sekcji">#</a></h3>
+<p>Na pasku powiadomień stale widać „SafeCheck Aktywny – Czuwam w tle i monitoruję Twój czas.”. Oznacza ono, że aplikacja działa poprawnie. Przycisk <strong>ZRESETUJ ZEGAR</strong> w powiadomieniu działa tak samo jak „ŻYJĘ!”, bez otwierania aplikacji.</p>
+<hr />
+<h2 id="6-co-się-dzieje-gdy-czas-minie">6. Co się dzieje, gdy czas minie? <a class="anchor" href="#6-co-się-dzieje-gdy-czas-minie" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Czas od końca licznika</th>
+<th>Co widzisz i słyszysz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0:00</td>
+<td><strong>ALARM</strong>, czerwony ekran i głośny dźwięk: „Potwierdź że żyjesz!”</td>
+</tr>
+<tr>
+<td>0:30</td>
+<td>przerwa (żółty ekran): „Następny alarm za chwilę...”</td>
+</tr>
+<tr>
+<td>1:00</td>
+<td><strong>ALARM</strong>: „Nie potwierdziłeś że żyjesz!”</td>
+</tr>
+<tr>
+<td>1:30</td>
+<td>przerwa: „Ostatnie ostrzeżenie...”</td>
+</tr>
+<tr>
+<td>2:00</td>
+<td><strong>ALARM</strong>: „Za chwilę powiadomimy Twoich bliskich”</td>
+</tr>
+<tr>
+<td><strong>2:30</strong></td>
+<td><strong>SMS do wszystkich opiekunów</strong>, alarm gra dalej: „SMS WYSŁANY! Czekaj na pomoc.”</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Alarm włącza ekran także wtedy, gdy telefon jest <strong>zablokowany</strong>.</li>
+<li>Dźwięk alarmu gra głośnością <strong>budzika</strong>, więc słychać go nawet w trybie cichym. Wyjątkiem jest sytuacja, gdy głośność budzika jest wyłączona.</li>
+<li><strong>Aby zatrzymać alarm</strong>, naciśnij duży zielony przycisk <strong>ŻYJĘ!</strong> na ekranie alarmu albo w powiadomieniu.</li>
+</ul>
+<h3 id="przykładowy-sms-do-opiekuna">Przykładowy SMS do opiekuna <a class="anchor" href="#przykładowy-sms-do-opiekuna" aria-label="Link do sekcji">#</a></h3>
+<pre><code>🚨🚨🚨
+SafeCheck ALARM!
+
+Jan NIE POTWIERDZIŁ OBECNOŚCI!
+
+Może potrzebować natychmiastowej pomocy.
+
+📍 Lokalizacja:
+Google Maps:
+https://www.google.com/maps?q=52.2297,21.0122
+
+Apple Maps:
+http://maps.apple.com/?ll=52.2297,21.0122
+
+Zadzwoń do niego NATYCHMIAST!</code></pre>
+<p>Jeśli telefon nie ustali pozycji (brak zgody, wyłączony GPS, brak sygnału), SMS zostanie wysłany <strong>bez lokalizacji</strong> z prośbą o pilny kontakt.</p>
+<h3 id="fałszywy-alarm">Fałszywy alarm <a class="anchor" href="#fałszywy-alarm" aria-label="Link do sekcji">#</a></h3>
+<p>Jeśli naciśniesz „ŻYJĘ!” <strong>po</strong> wysłaniu SMS-a, opiekunowie dostaną drugą wiadomość:</p>
+<blockquote>
+<p>SafeCheck: Fałszywy alarm. Jan potwierdził obecność. Wszystko w porządku.</p>
+</blockquote>
+<h3 id="telefon-był-wyłączony">Telefon był wyłączony <a class="anchor" href="#telefon-był-wyłączony" aria-label="Link do sekcji">#</a></h3>
+<p>Jeśli termin minął, gdy telefon był wyłączony, alarm uruchomi się zaraz po jego włączeniu.</p>
+<hr />
+<h2 id="7-menu-aplikacji">7. Menu aplikacji <a class="anchor" href="#7-menu-aplikacji" aria-label="Link do sekcji">#</a></h2>
+<p>Otwierasz je ikoną <strong>☰</strong> w lewym górnym rogu ekranu głównego.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pozycja</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Zmień Opiekuna</strong></td>
+<td>dodawanie i usuwanie numerów opiekunów. Poprawny numer dodaje się sam po wpisaniu, zmiany zatwierdzasz przyciskiem <strong>Zapisz</strong></td>
+</tr>
+<tr>
+<td><strong>Zaproś znajomych</strong></td>
+<td>lista kontaktów z telefonu. Przycisk <strong>Zaproś</strong> wysyła SMS z linkiem do strony, z której można pobrać aplikację</td>
+</tr>
+<tr>
+<td><strong>Zarządzaj kontem</strong></td>
+<td>zmiana imienia (przycisk <strong>Edytuj</strong>)</td>
+</tr>
+<tr>
+<td><strong>Język / Language</strong></td>
+<td>zmiana języka aplikacji</td>
+</tr>
+<tr>
+<td><strong>O aplikacji</strong></td>
+<td>wersja aplikacji, instrukcja, regulamin, polityka prywatności oraz – w krajach UE, Wielkiej Brytanii i Szwajcarii – <strong>Ustawienia prywatności reklam</strong> (zmiana zgody na reklamy spersonalizowane)</td>
+</tr>
+<tr>
+<td><strong>Sprawdź uprawnienia</strong></td>
+<td>otwiera ustawienia telefonu (np. autostart)</td>
+</tr>
+<tr>
+<td><strong>Usuń konto</strong></td>
+<td>wyłącza alarmy i usuwa wszystkie dane z telefonu. Aplikacja wraca do ekranu startowego</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>„Usuń konto” nie wymaga potwierdzenia i nie da się go cofnąć. Aplikacja nie ma konta w internecie, więc usuwa dane zapisane w telefonie.</p>
+</blockquote>
+<hr />
+<h2 id="8-ustawienia-telefonu--samsung-xiaomi-huawei-i-inne">8. Ustawienia telefonu – Samsung, Xiaomi, Huawei i inne <a class="anchor" href="#8-ustawienia-telefonu--samsung-xiaomi-huawei-i-inne" aria-label="Link do sekcji">#</a></h2>
+<p>Niektórzy producenci agresywnie zamykają aplikacje w tle, żeby oszczędzać baterię. <strong>To najczęstsza przyczyna, dla której alarm się nie uruchamia.</strong> Po instalacji sprawdź poniższe ustawienia. Nazwy mogą się różnić w zależności od wersji systemu.</p>
+<h3 id="samsung-one-ui">Samsung (One UI) <a class="anchor" href="#samsung-one-ui" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><em>Ustawienia → Aplikacje → SafeCheck → Bateria</em> → <strong>Bez ograniczeń</strong>.</li>
+<li><em>Ustawienia → Bateria → Limity wykorzystania w tle</em> → upewnij się, że SafeCheck <strong>nie</strong> jest na liście „Aplikacje uśpione” ani „Aplikacje w głębokim uśpieniu”.</li>
+</ul>
+<h3 id="xiaomi--redmi--poco-miui-hyperos">Xiaomi / Redmi / POCO (MIUI, HyperOS) <a class="anchor" href="#xiaomi--redmi--poco-miui-hyperos" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><em>Ustawienia → Aplikacje → Zarządzaj aplikacjami → SafeCheck</em> → włącz <strong>Autostart</strong>.</li>
+<li>Tam też: <em>Oszczędzanie baterii</em> → <strong>Bez ograniczeń</strong>.</li>
+<li>W widoku ostatnich aplikacji przytrzymaj SafeCheck i wybierz <strong>kłódkę 🔒</strong>.</li>
+</ul>
+<h3 id="huawei--honor-emui-magicos">Huawei / Honor (EMUI, MagicOS) <a class="anchor" href="#huawei--honor-emui-magicos" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><em>Ustawienia → Bateria → Uruchamianie aplikacji → SafeCheck</em> → wyłącz „Zarządzaj automatycznie” i włącz wszystkie trzy przełączniki.</li>
+</ul>
+<h3 id="oppo--realme--oneplus-coloros-oxygenos">Oppo / Realme / OnePlus (ColorOS, OxygenOS) <a class="anchor" href="#oppo--realme--oneplus-coloros-oxygenos" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><em>Ustawienia → Bateria → Więcej → Optymalizuj użycie baterii → SafeCheck</em> → <strong>Nie optymalizuj</strong>.</li>
+<li><em>Ustawienia aplikacji → SafeCheck</em> → włącz <strong>Autostart</strong> / <strong>Zezwalaj na działanie w tle</strong>.</li>
+</ul>
+<h3 id="vivo-funtouch-os-originos">Vivo (Funtouch OS, OriginOS) <a class="anchor" href="#vivo-funtouch-os-originos" aria-label="Link do sekcji">#</a></h3>
+<ul>
+<li><em>i Manager → Menedżer aplikacji → Autostart</em> → włącz SafeCheck.</li>
+<li><em>Ustawienia → Bateria → Wysokie zużycie energii w tle</em> → zezwól dla SafeCheck.</li>
+</ul>
+<p>Więcej porad dla konkretnych modeli znajdziesz na stronie <a href="https://dontkillmyapp.com" rel="noopener" target="_blank">dontkillmyapp.com</a>.</p>
+<hr />
+<h2 id="9-dobre-praktyki">9. Dobre praktyki <a class="anchor" href="#9-dobre-praktyki" aria-label="Link do sekcji">#</a></h2>
+<ol>
+<li><strong>Przetestuj alarm po instalacji.</strong>
+<ul>
+<li>Wpisz siebie (drugi numer) lub zaufaną osobę jako opiekuna.</li>
+<li>Ustaw licznik na 10–20 sekund.</li>
+<li>Zablokuj telefon i poczekaj.</li>
+<li>Sprawdź, czy alarm się włączył i czy SMS dotarł.</li>
+<li>Potem przywróć normalny czas.</li>
+</ul></li>
+<li><strong>Dobierz rozsądny licznik.</strong> Za krótki oznacza częste alarmy, np. w nocy. Za długi oznacza późną pomoc. Większość osób wybiera 12–48 godzin.</li>
+<li><strong>Naciskaj „ŻYJĘ!” w stałych momentach</strong>, np. rano przy kawie i wieczorem.</li>
+<li><strong>Nie wyłączaj powiadomienia „SafeCheck Aktywny”.</strong></li>
+<li><strong>Dbaj o baterię i środki na SMS.</strong> Rozładowany telefon albo brak środków na koncie oznacza, że SMS nie wyjdzie.</li>
+<li><strong>Sprawdzaj aplikację po aktualizacji systemu.</strong> Aktualizacje potrafią resetować ustawienia baterii.</li>
+<li><strong>Ustal z opiekunami, co mają zrobić po SMS-ie</strong>: zadzwonić, przyjechać, a w razie braku kontaktu zadzwonić pod 112.</li>
+</ol>
+<hr />
+<h2 id="10-najczęstsze-pytania-i-problemy">10. Najczęstsze pytania i problemy <a class="anchor" href="#10-najczęstsze-pytania-i-problemy" aria-label="Link do sekcji">#</a></h2>
+<p><strong>Alarm nie zadziałał.</strong>
+Sprawdź rozdział 8 (ustawienia producenta) i uprawnienia (<strong>Menu → Sprawdź uprawnienia</strong>). Upewnij się też, że widzisz powiadomienie „SafeCheck Aktywny”.</p>
+<p><strong>SMS nie dotarł do opiekuna.</strong>
+Sprawdź:</p>
+<ul>
+<li>środki na koncie i zasięg,</li>
+<li>czy numer opiekuna jest poprawny (<strong>Menu → Zmień Opiekuna</strong>),</li>
+<li>czy aplikacja ma zgodę na SMS.</li>
+</ul>
+<p>Możesz też sprawdzić w aplikacji Wiadomości, czy SMS został wysłany.</p>
+<p><strong>W SMS-ie nie było lokalizacji.</strong>
+Włącz lokalizację w telefonie i nadaj aplikacji zgodę na <strong>dokładną</strong> lokalizację. W budynkach GPS może nie ustalić pozycji.</p>
+<p><strong>Alarm nie dzwoni, tylko wibruje.</strong>
+Sprawdź głośność <strong>budzika</strong> w ustawieniach dźwięku telefonu.</p>
+<p><strong>Czy aplikacja zużywa dużo baterii?</strong>
+Nie. W trybie czuwania nic nie liczy w tle, tylko system „budzi” ją o wyznaczonej porze.</p>
+<p><strong>Czy aplikacja działa bez internetu?</strong>
+Tak. Alarm i SMS nie potrzebują internetu. Internet jest potrzebny tylko do wyświetlania reklam.</p>
+<p><strong>Zmieniłem telefon. Co z danymi?</strong>
+SafeCheck nie ma własnej funkcji przenoszenia danych ani konta w internecie. Ustawienia mogą jednak zostać przeniesione przez <strong>systemową kopię zapasową Androida</strong> (kopia na koncie Google lub przenoszenie danych podczas konfiguracji nowego telefonu). To funkcja systemu, a nie aplikacji – zadziała tylko wtedy, gdy:</p>
+<ul>
+<li>na starym telefonie była włączona kopia zapasowa Google (<em>Ustawienia → Google → Kopia zapasowa</em>) i system zdążył ją wykonać (zwykle raz na dobę, gdy telefon się ładuje i ma Wi-Fi),</li>
+<li>na nowym telefonie zalogujesz się na to samo konto Google i przywrócisz kopię albo przeniesiesz dane ze starego telefonu.</li>
+</ul>
+<p>Ponieważ SafeCheck nie pochodzi ze sklepu Google Play, nowy telefon <strong>nie zainstaluje go sam</strong> podczas konfiguracji – trzeba ponownie pobrać plik APK ze strony i go zainstalować. System może przywrócić ustawienia z kopii w chwili tej instalacji, ale <strong>nie jest to gwarantowane</strong> (zależy od wersji Androida i producenta telefonu).</p>
+<p>Co zostanie przeniesione, a co nie:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Przenoszone</th>
+<th><strong>Nie</strong> przenoszone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imię</td>
+<td>termin licznika – na nowym telefonie licznik <strong>zaczyna odliczanie od nowa</strong> (pełny ustawiony czas)</td>
+</tr>
+<tr>
+<td>numery opiekunów</td>
+<td>uprawnienia (SMS, lokalizacja, powiadomienia, alarmy, bateria) – aplikacja poprosi o nie ponownie</td>
+</tr>
+<tr>
+<td>długość licznika, język</td>
+<td>ustawienia autostartu i baterii producenta telefonu</td>
+</tr>
+<tr>
+<td>informacja, że konfiguracja została ukończona</td>
+<td>decyzja dotycząca zgody na reklamy – formularz pojawi się ponownie</td>
+</tr>
+</tbody>
+</table></div>
+<p>Po przywróceniu aplikacja wyświetli komunikat „Przywrócono ustawienia z kopii. Licznik liczy od nowa.”. Termin licznika celowo nie jest przenoszony: stary termin zwykle już minął i mógłby od razu uruchomić alarm oraz SMS do opiekunów.</p>
+<p>Jeśli ustawienia nie zostaną przywrócone, po prostu skonfiguruj aplikację od nowa – zajmuje to około minuty. <strong>Po każdej zmianie telefonu sprawdź uprawnienia</strong> (<em>Menu → Sprawdź uprawnienia</em>) i zrób test alarmu (rozdział 9).</p>
+<p><strong>Jak całkowicie usunąć dane?</strong>
+<strong>Menu → Usuń konto</strong> albo odinstaluj aplikację.</p>
+<p><strong>Czy opiekun musi mieć zainstalowaną aplikację?</strong>
+Nie. Wystarczy, że może odbierać SMS-y.</p>
+<hr />
+<h2 id="11-koszty">11. Koszty <a class="anchor" href="#11-koszty" aria-label="Link do sekcji">#</a></h2>
+<ul>
+<li>Aplikacja jest <strong>bezpłatna</strong> i wyświetla reklamy.</li>
+<li><strong>SMS-y alarmowe i zaproszenia są płatne według taryfy Twojego operatora.</strong> SMS z lokalizacją jest długi i zawiera emoji, więc operator zwykle liczy go jak kilka wiadomości. Przy kilku opiekunach mnoży się to przez liczbę osób.</li>
+<li>Przy numerach zagranicznych mogą obowiązywać stawki międzynarodowe.</li>
+</ul>
+<hr />
+<h2 id="12-kontakt">12. Kontakt <a class="anchor" href="#12-kontakt" aria-label="Link do sekcji">#</a></h2>
+<p>Pytania, błędy, sugestie: <strong>pxware@pxware.pl</strong></p>
+<p>Dostawca aplikacji: <strong>PX Paweł Mościbrodzki</strong>, NIP 5372682524</p>
+<p><em>Ostatnia aktualizacja instrukcji: 25 października 2026 r. (dotyczy wersji 2.5.5).</em></p>      <p class="doc-source">Źródło dokumentu: <a href="https://github.com/px-ware/safecheck/blob/main/instrukcja.md" rel="noopener" target="_blank">GitHub, px-ware/safecheck/instrukcja.md</a></p>
+      <p><a class="back-top" href="#tresc">↑ Na górę</a></p>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-bottom" style="margin-top:0;padding-top:0;border-top:0">
+        <span>© <span id="rok">2026</span> SafeCheck · <a href="/safecheck/">Strona główna</a> · <a href="/safecheck/#sprzedaz">Projekt na sprzedaż</a> · <a href="/safecheck/licencja">Licencja</a> · <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></span>
+        <span><a href="mailto:pxware@pxware.pl">pxware@pxware.pl</a></span>
+      </div>
+    </div>
+  </footer>
+  <script src="/safecheck/assets/js/site.js" defer></script>
+</body>
+</html>

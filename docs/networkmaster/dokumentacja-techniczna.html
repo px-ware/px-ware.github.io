@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dokumentacja techniczna — NetworkMaster</title>
+<meta name="description" content="Dokumentacja techniczna NetworkMaster: architektura, moduły, system aktualizacji, testy, wydania i dług techniczny.">
+<link rel="canonical" href="https://pxware.pl/networkmaster/dokumentacja-techniczna">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="NetworkMaster">
+<meta property="og:title" content="Dokumentacja techniczna — NetworkMaster">
+<meta property="og:description" content="Dokumentacja techniczna NetworkMaster: architektura, moduły, system aktualizacji, testy, wydania i dług techniczny.">
+<meta property="og:url" content="https://pxware.pl/networkmaster/dokumentacja-techniczna">
+<link rel="icon" href="/networkmaster/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/networkmaster/assets/css/doc.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-top">
+    <a class="brand" href="/networkmaster/"><span>Network</span>Master</a>
+    <nav aria-label="Dokumenty">
+            <a href="/networkmaster/dokumentacja">Dokumentacja użytkownika</a>
+            <a href="/networkmaster/dokumentacja-techniczna" aria-current="page">Dokumentacja techniczna</a>
+            <a href="/networkmaster/regulamin">Regulamin</a>
+            <a href="/networkmaster/polityka-prywatnosci">Polityka prywatności</a>
+            <a href="/networkmaster/licencja">Licencja</a>
+          </nav>
+  </header>
+  <main class="prose" id="tresc">
+<h1 id="networkmaster--dokumentacja-techniczna-due-diligence">NetworkMaster — dokumentacja techniczna (due diligence)</h1>
+<p>Ten dokument jest przeznaczony dla kogoś, kto <strong>ocenia kod technicznie</strong> — głównie przed
+zakupem projektu (patrz <a href="/networkmaster/regulamin">Regulamin §8</a>) — i chce wiedzieć precyzyjnie, z czym
+ma do czynienia: jak jest zbudowany, jak jest przechowywany stan, jakie są realne (nie
+marketingowe) ograniczenia i dług techniczny. Dokument <a href="/networkmaster/dokumentacja"><code>Dokumentacja-NetworkMaster.md</code></a>
+opisuje program z perspektywy użytkownika; ten dokument patrzy na niego z perspektywy kogoś,
+kto będzie czytał i rozwijał ten kod.</p>
+<p>Każde twierdzenie poniżej odpowiada konkretnemu plikowi/funkcji w <code>source_code/</code> — to nie jest
+ogólny opis, to mapa kodu.</p>
+<div class="table-wrap"><table>
+
+<tbody>
+<tr>
+<td><strong>Produkt</strong></td>
+<td>NetworkMaster — terminalowe (TUI) narzędzie do diagnostyki sieci, skanowania LAN, zarządzania VPN i klient SSH/SFTP/FTP</td>
+</tr>
+<tr>
+<td><strong>Wersja dokumentu</strong></td>
+<td>odpowiada najnowszemu wydaniu: <a href="https://github.com/px-ware/networkmaster/releases/latest" rel="noopener" target="_blank">Releases</a></td>
+</tr>
+<tr>
+<td><strong>Platformy</strong></td>
+<td>Windows, Linux, macOS — amd64/arm64 (Windows i Linux dodatkowo 386)</td>
+</tr>
+<tr>
+<td><strong>Język</strong></td>
+<td>Go 1.22+, zero CGO</td>
+</tr>
+<tr>
+<td><strong>UI</strong></td>
+<td>własny TUI w terminalu (kolory ANSI, surowy tryb klawiatury), zero bibliotek UI</td>
+</tr>
+<tr>
+<td><strong>Backend</strong></td>
+<td>brak — w pełni lokalny, przenośny</td>
+</tr>
+<tr>
+<td><strong>Dystrybucja</strong></td>
+<td>pojedynczy plik wykonywalny, GitHub Releases, wbudowane automatyczne aktualizacje</td>
+</tr>
+<tr>
+<td><strong>Status prawny</strong></td>
+<td>zamknięty, wszelkie prawa zastrzeżone — <a href="/networkmaster/licencja"><code>LICENSE.md</code></a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="spis-treści">Spis treści <a class="anchor" href="#spis-treści" aria-label="Link do sekcji">#</a></h2>
+<ol>
+<li><a href="#1-stos-technologiczny-i-zależności">Stos technologiczny i zależności</a></li>
+<li><a href="#2-uruchomienie-i-budowanie">Uruchomienie i budowanie</a></li>
+<li><a href="#3-konfiguracja-i-zmiana-marki-dane-do-podmiany">Konfiguracja i zmiana marki (dane do podmiany)</a></li>
+<li><a href="#4-struktura-projektu">Struktura projektu</a></li>
+<li><a href="#5-architektura">Architektura</a></li>
+<li><a href="#6-opis-komponentów">Opis komponentów</a></li>
+<li><a href="#7-model-danych-i-przechowywanie">Model danych i przechowywanie</a></li>
+<li><a href="#8-system-aktualizacji-i-komunikatów">System aktualizacji i komunikatów</a></li>
+<li><a href="#9-bezpieczeństwo-i-prywatność">Bezpieczeństwo i prywatność</a></li>
+<li><a href="#10-testowanie">Testowanie</a></li>
+<li><a href="#11-wydanie-i-dystrybucja--proces-dwóch-repozytoriów">Wydanie i dystrybucja — proces dwóch repozytoriów</a></li>
+<li><a href="#12-znane-ograniczenia-i-dług-techniczny">Znane ograniczenia i dług techniczny</a></li>
+<li><a href="#13-proponowany-rozwój-roadmapa">Proponowany rozwój (roadmapa)</a></li>
+<li><a href="#14-słownik-pojęć">Słownik pojęć</a></li>
+</ol>
+<hr />
+<h2 id="1-stos-technologiczny-i-zależności">1. Stos technologiczny i zależności <a class="anchor" href="#1-stos-technologiczny-i-zależności" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Obszar</th>
+<th>Technologia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Język</td>
+<td>Go 1.22 (dyrektywa <code>go 1.22</code> w <code>go.mod</code> — pinowana ręcznie, patrz niżej)</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>brak frameworka budowania — <code>go build</code> / <code>go test</code> / <code>go vet</code> wywoływane przez <code>build.ps1</code> (PowerShell)</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>brak biblioteki TUI (nie ncurses/tcell/bubbletea) — własna, ręczna obsługa ANSI i surowego trybu terminala</td>
+</tr>
+<tr>
+<td>Współbieżność</td>
+<td>tylko standardowa biblioteka (<code>goroutine</code>/<code>channel</code>), brak frameworków async</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Zależności Go (<code>go.mod</code>):</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Moduł</th>
+<th>Wersja</th>
+<th>Do czego</th>
+<th>Czy konieczna</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>golang.org/x/crypto</code></td>
+<td>v0.33.0</td>
+<td>implementacja protokołu SSH (<code>ssh.Dial</code>, PTY, auth)</td>
+<td>tak — kryptografia SSH nie jest czymś, co pisze się samemu</td>
+</tr>
+<tr>
+<td><code>golang.org/x/term</code></td>
+<td>v0.29.0</td>
+<td>tryb surowy terminala przy wpisywaniu haseł/PSK (maskowanie)</td>
+<td>pomocnicza, mała</td>
+</tr>
+<tr>
+<td><code>github.com/pkg/sftp</code></td>
+<td>v1.13.9</td>
+<td>protokół SFTP na już nawiązanej sesji SSH</td>
+<td>tak, z tego samego powodu co SSH</td>
+</tr>
+<tr>
+<td><code>golang.org/x/sys</code></td>
+<td>v0.30.0</td>
+<td>zależność pośrednia <code>x/crypto</code>/<code>x/term</code></td>
+<td>pośrednia</td>
+</tr>
+<tr>
+<td><code>github.com/kr/fs</code></td>
+<td>v0.1.0</td>
+<td>zależność pośrednia <code>pkg/sftp</code></td>
+<td>pośrednia</td>
+</tr>
+</tbody>
+</table></div>
+<p>To są <strong>jedyne trzy bezpośrednie zależności w całym projekcie</strong> — reszta (diagnostyka, skanowanie,
+VPN, FTP, system aktualizacji) jest napisana bez żadnych zależności zewnętrznych, włącznie z
+protokołem FTP (RFC 959) napisanym od zera na <code>net/textproto</code>. Zależności SSH/SFTP to
+świadomy wybór (własna implementacja kryptografii SSH byłaby ryzykowna), nie przeoczenie.</p>
+<p><strong>Pułapka przy pracy z modułami:</strong> <code>go get</code>/<code>go mod tidy</code> przy pobieraniu najnowszych wersji
+<code>x/crypto</code>/<code>x/term</code> podbijają automatycznie dyrektywę <code>go</code> w <code>go.mod</code> do wersji lokalnego
+toolchaina (np. 1.26), bo najnowsze wydania tych pakietów tego wymagają. Żeby zachować
+zadeklarowane minimum <strong>Go 1.22</strong>, przypięto starsze, konkretne wersje (powyższa tabela) i <strong>po
+każdej operacji na modułach trzeba ręcznie przywrócić <code>go 1.22</code></strong> w <code>go.mod</code> — inaczej
+zadeklarowane minimum przestaje być prawdą bez żadnego ostrzeżenia kompilatora.</p>
+<h2 id="2-uruchomienie-i-budowanie">2. Uruchomienie i budowanie <a class="anchor" href="#2-uruchomienie-i-budowanie" aria-label="Link do sekcji">#</a></h2>
+<pre><code class="language-powershell">cd source_code
+go build -o NetworkMaster.exe .     # szybka budowa na bieżącą platformę (sekundy)
+go vet ./...                        # analiza statyczna
+go test .                           # 108 testów, kilkanaście-kilkadziesiąt sekund
+.\build.ps1 -Version X.Y.Z          # testy + budowa 8 wariantów + checksums.txt</code></pre>
+<p><code>build.ps1</code> jest jedynym &quot;CI&quot; tego projektu — nie ma GitHub Actions ani innego pipeline'u.
+Uruchamia <code>go vet</code> i <code>go test .</code> na hoście budującym (zawsze Windows w tym projekcie), a
+następnie krzyżowo kompiluje (<code>GOOS</code>/<code>GOARCH</code>) na 8 kombinacji. <strong>Krzyżowa kompilacja weryfikuje
+tylko, że kod się kompiluje</strong> na danej platformie — nie uruchamia testów na docelowym systemie
+(Go nie pozwala łatwo wykonać testów dla innego <code>GOOS</code> bez emulacji/QEMU). W praktyce: pakiet
+testów faktycznie wykonuje się tylko na Windows przy każdym budowaniu; poprawność na
+Linux/macOS opiera się na (a) plikach z build tagami pisanymi specyficznie pod API każdego
+systemu, (b) czystym <code>go vet</code> na każdej platformie, (c) testach parserów, które nie wymagają
+uruchomienia na danym systemie (działają na nagranych, przykładowych danych wejściowych), i
+(d) bezpośrednich testach na działającym serwerze z Linuksem (patrz §10 i §12).</p>
+<p>Pierwsze budowanie wymaga internetu (pobranie trzech modułów Go do lokalnego cache'u). Wynikowy
+plik jest w pełni samodzielny — moduły są wkompilowane statycznie, zero zależności
+uruchomieniowych na maszynie użytkownika.</p>
+<h2 id="3-konfiguracja-i-zmiana-marki-dane-do-podmiany">3. Konfiguracja i zmiana marki (dane do podmiany) <a class="anchor" href="#3-konfiguracja-i-zmiana-marki-dane-do-podmiany" aria-label="Link do sekcji">#</a></h2>
+<p>W przeciwieństwie do projektów z jednym plikiem <code>.env</code>/<code>config</code>, dane specyficzne dla właściciela
+są rozproszone w kilku miejscach — to pierwsza rzecz, którą nowy właściciel powinien przejrzeć:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Plik</th>
+<th>Uwagi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AppName</code></td>
+<td><code>source_code/version.go</code></td>
+<td>nazwa używana w UI, ścieżkach danych (<code>os.UserConfigDir()/&lt;AppName&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>UpdateRepo</code>, <code>RepoURL</code></td>
+<td><code>source_code/version.go</code></td>
+<td>repozytorium GitHub, z którego program czyta Releases przy aktualizacji (obecnie <code>px-ware/networkmaster</code>) — przy zmianie trzeba opublikować wydanie z nowym <code>UpdateRepo</code> także w dotychczasowym repozytorium, żeby istniejące instalacje przeszły na nowe przy aktualizacji (program nie ma innego mechanizmu &quot;migracji&quot;)</td>
+</tr>
+<tr>
+<td><code>LegalURL</code></td>
+<td><code>source_code/version.go</code></td>
+<td>link do folderu <code>dokumentacja/</code> w publicznym repo, pokazywany w ekranie zgody przy pierwszym uruchomieniu</td>
+</tr>
+<tr>
+<td><code>AnnouncementsURL</code></td>
+<td><code>source_code/version.go</code></td>
+<td>surowy URL do <code>announcements.json</code> na branchu <code>main</code> publicznego repo — <strong>musi</strong> tam istnieć, inaczej sprawdzanie komunikatów po cichu nie znajduje nic (nie crashuje, patrz §8)</td>
+</tr>
+<tr>
+<td>Właściciel, NIP, kontakt</td>
+<td><code>LICENSE.md</code>, <code>dokumentacja/Regulamin.md</code>, <code>dokumentacja/Polityka-Prywatnosci.md</code></td>
+<td>dane prawne — do zmiany przy przeniesieniu praw</td>
+</tr>
+<tr>
+<td>Adres kontaktowy w kodzie/UI</td>
+<td>brak — program nie ma żadnego adresu e-mail wpisanego na stałe w kodzie źródłowym; adresy (np. <code>pxware@pxware.pl</code>) są tylko w dokumentach <code>.md</code> i na stronie www, nie w <code>source_code/</code></td>
+<td>łatwiejsza zmiana marki niż gdyby adres był wkompilowany w program</td>
+</tr>
+<tr>
+<td>Nazwa plików wydań</td>
+<td><code>source_code/RELEASING.md</code>, <code>build.ps1</code></td>
+<td>wzorzec <code>NetworkMaster-&lt;os&gt;-&lt;arch&gt;</code> — zmiana <code>AppName</code> <strong>nie</strong> zmienia automatycznie tego wzorca, trzeba edytować oba miejsca ręcznie</td>
+</tr>
+<tr>
+<td>Strona WWW</td>
+<td><code>https://pxware.pl/networkmaster</code> (hosting OVH, PHP), źródła w prywatnym repo <code>px-ware/strony</code></td>
+<td>poza tym repozytorium kodu — patrz §11</td>
+</tr>
+</tbody>
+</table></div>
+<p>Program <strong>nie ma</strong> ikony/logotypu wkompilowanego w plik programu (to program konsolowy, bez interfejsu graficznego) —
+jedyna &quot;marka&quot; widoczna użytkownikowi to nazwa w nagłówkach menu (<code>drawMenu()</code> w <code>main.go</code>) i
+powyższe stałe.</p>
+<h2 id="4-struktura-projektu">4. Struktura projektu <a class="anchor" href="#4-struktura-projektu" aria-label="Link do sekcji">#</a></h2>
+<pre><code>NetworkMaster/
+├── LICENSE.md
+├── dokumentacja/              – dokumenty użytkownika/prawne/techniczne (ten plik też tu jest)
+├── source_code/
+│   ├── go.mod, go.sum
+│   ├── build.ps1, RELEASING.md, README.md
+│   ├── main.go                – menu główne, pierwsze uruchomienie, flagi CLI
+│   ├── ui.go, config.go, log.go, exec.go
+│   │                           – terminal/kolory, ścieżki i ustawienia (wersja przenośna), log, uruchamianie poleceń bez powłoki
+│   ├── keys.go, terminal_{windows,linux,darwin}.go
+│   │                           – Ctrl+C/Ctrl+X: tryb surowy terminala dla każdego systemu, edytor linii
+│   ├── platform_{windows,linux,darwin,unix}.go
+│   │                           – wszystko zależne od systemu: karty sieciowe, ARP, Wi-Fi, uprawnienia, restart
+│   ├── netparse.go            – czyste parsery (arp/ip neigh/ss/netsh/ping), w pełni testowalne
+│   ├── update.go, update_ui.go, update_test.go
+│   │                           – aktualizacje z GitHub Releases
+│   ├── announcements.go, announcements_test.go
+│   │                           – komunikaty od twórcy
+│   ├── db.go, wol.go, reports.go, card.go
+│   │                           – profile IP, Wake-on-LAN, raporty, menu karty sieciowej
+│   ├── scan.go, dns.go, subnet.go, web.go, speedtest.go, health.go, live.go, mac.go, tools_sys.go
+│   │                           – narzędzia diagnostyczne
+│   ├── vpn_types.go, vpn_store.go, vpn_ui.go, vpn_unix.go
+│   │   vpn_windows.go, vpn_linux_native.go, vpn_darwin_native.go, rasapi_windows.go
+│   │                           – menedżer VPN (WireGuard/OpenVPN + VPN systemowy każdego systemu)
+│   ├── remote_types.go, remote_store.go
+│   │                           – wspólne dla SSH i FTP: typy profili, magazyn JSON
+│   ├── ssh_client.go, ssh_hostkey.go, sftp_client.go, ssh_ui.go
+│   │                           – klient SSH/SFTP
+│   ├── ftp_client.go, ftp_ui.go
+│   │                           – klient FTP (od zera, RFC 959)
+│   ├── oui.gz                 – osadzona baza producentów MAC (IEEE, ~39,7 tys. wpisów)
+│   ├── tools/mockgithub        – atrapa API GitHuba do testów aktualizacji
+│   ├── tools/genoui             – generator oui.gz z pliku CSV
+│   └── *_test.go (13 plików)  – patrz §10
+└── (gitignored, nigdy nie commitowane: _gotool/ – przenośne Go, core_data/ – dane
+    uruchomieniowe z testów lokalnych, Reports/)</code></pre>
+<p><strong>50 plików <code>.go</code> nie-testowych, ~12 400 linii; 13 plików testowych, ~2 850 linii; razem ~15 250
+linii.</strong> Największe pliki to <code>vpn_ui.go</code> (876 linii — menu menedżera VPN, wszystkie platformy
+współdzielą ten jeden plik UI), <code>netparse.go</code> (627), <code>scan.go</code> (584), <code>platform_linux.go</code> (555),
+<code>platform_windows.go</code> (526), <code>update.go</code> (512) — żaden plik nie jest na tyle duży, żeby wymagał
+pilnego podziału, ale <code>vpn_ui.go</code> jest naturalnym kandydatem do rozbicia na mniejsze pliki
+(dodawanie/edycja/kopia zapasowa/lista), jeśli funkcje VPN będą dalej rosły.</p>
+<h2 id="5-architektura">5. Architektura <a class="anchor" href="#5-architektura" aria-label="Link do sekcji">#</a></h2>
+<h3 id="51-model-ogólny">5.1 Model ogólny <a class="anchor" href="#51-model-ogólny" aria-label="Link do sekcji">#</a></h3>
+<p>Jedna baza kodu Go, współdzielona przez wszystkie platformy. Różnice systemowe są odseparowane
+plikami z tagami budowania (<code>//go:build windows</code>, <code>//go:build linux</code>, <code>//go:build darwin</code>,
+<code>//go:build unix</code>), <strong>nie</strong> osobnymi gałęziami Git ani osobnymi plikami wykonywalnymi o różnym kodzie —
+każda platforma kompiluje te same pliki &quot;wspólne&quot; plus swój własny zestaw plików
+platformowych. To oznacza, że zmiana w pliku wspólnym (np. <code>scan.go</code>) automatycznie obowiązuje
+na wszystkich trzech systemach bez ręcznej synchronizacji.</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│  main() → mainLoop()  (main.go)                          │
+│  menu tekstowe, drawMenu(), mainActions[klawisz] → fn()  │
+└───────────────┬─────────────────────────────┬────────────┘
+                │                              │
+     ┌──────────▼──────────┐       ┌───────────▼───────────┐
+     │  moduły funkcjonalne │       │  warstwa systemowa     │
+     │  (diagnostyka,       │──────▶│  platform_&lt;os&gt;.go      │
+     │  skanowanie, VPN,    │       │  (ARP, WiFi, karty,    │
+     │  SSH/SFTP/FTP, ...)  │       │   uprawnienia, restart)│
+     └──────────┬───────────┘       └────────────────────────┘
+                │
+     ┌──────────▼───────────┐
+     │  warstwa terminala    │   keys.go, terminal_&lt;os&gt;.go
+     │  (Ctrl+C/Ctrl+X,      │   – surowy tryb terminala,
+     │   edytor linii)       │     osobno dla każdego systemu
+     └────────────────────────┘</code></pre>
+<h3 id="52-mechanizm-nawigacji-panicrecover-nie-stos-stanów">5.2 Mechanizm nawigacji: panic/recover, nie stos stanów <a class="anchor" href="#52-mechanizm-nawigacji-panicrecover-nie-stos-stanów" aria-label="Link do sekcji">#</a></h3>
+<p>Każde &quot;okno&quot; programu (funkcja menu, formularz, narzędzie) zaczyna się od <code>defer backOnCtrlC()</code>
+(<code>keys.go</code>). Gdy użytkownik naciśnie Ctrl+C w dowolnym miejscu tej funkcji, warstwa odczytu
+klawiatury wywołuje <code>panic(errBack{})</code>. Ten panic &quot;przebija&quot; cały stos wywołań bieżącego okna i
+jest przechwytywany przez najbliższy <code>defer backOnCtrlC()</code> nad nim na stosie — czyli przez
+funkcję, która to okno otworzyła. Efekt: &quot;wróć do okna, które mnie wywołało&quot;, bez żadnego
+jawnego stosu stanów UI czy maszyny stanów.</p>
+<p><strong>Nieoczywisty, ale w pełni zamierzony skutek tego mechanizmu:</strong> <code>main()</code> samo ma
+<code>defer backOnCtrlC()</code> na samym początku (przed <code>mainLoop()</code>). Menu najwyższego poziomu nie ma
+żadnego okna-rodzica — jego &quot;rodzicem&quot; jest właśnie <code>main()</code>. Dlatego <strong>Ctrl+C naciśnięty
+dokładnie w menu głównym kończy program równie czysto jak Ctrl+X</strong>, mimo że dokumentacja
+użytkownika opisuje Ctrl+C jako &quot;wróć o jedno okno&quot; — na najwyższym poziomie &quot;jedno okno wyżej&quot;
+to po prostu wyjście z programu. Sprawdzone bezpośrednio podczas testów na działającym serwerze
+Linux (§10): obie kombinacje klawiszy w menu głównym kończą proces czysto, bez zawieszenia i bez
+śladu panicu w konsoli (bo recover go przechwytuje, zanim doleci do runtime Go).</p>
+<h3 id="53-dane-program-przenośny-z-zapasowym-katalogiem-danych">5.3 Dane: program przenośny, z zapasowym katalogiem danych <a class="anchor" href="#53-dane-program-przenośny-z-zapasowym-katalogiem-danych" aria-label="Link do sekcji">#</a></h3>
+<p>Program nie ma instalatora i domyślnie zapisuje swoje dane (<code>core_data/</code>, <code>Reports/</code>) <strong>obok
+pliku wykonywalnego</strong> (<code>initPaths()</code> w <code>config.go</code>, oparte na <code>os.Executable()</code>). To pozwala
+przenosić cały katalog programu wraz z jego stanem. Gdy katalog programu (albo jego podfoldery
+danych) nie są zapisywalne, program <strong>wykrywa to i przełącza się</strong> na katalog konfiguracji
+użytkownika (<code>os.UserConfigDir()/&lt;AppName&gt;</code> — <code>%AppData%</code> na Windows, <code>~/.config</code> na Linuksie,
+<code>~/Library/Application Support</code> na macOS), z czytelnym ostrzeżeniem na starcie
+(<code>dataNote</code>, wyświetlane w <code>main.go</code>).</p>
+<p>Detekcja sprawdza zapisywalność samych podfolderów <code>core_data/</code>/<code>Reports/</code>, nie tylko katalogu
+bazowego, bo te podfoldery mogą istnieć z innymi uprawnieniami (typowo: jednorazowe
+<code>sudo ./NetworkMaster...</code> na Linuksie/macOS). Scenariusz pokrywa test w <code>config_test.go</code>.</p>
+<h2 id="6-opis-komponentów">6. Opis komponentów <a class="anchor" href="#6-opis-komponentów" aria-label="Link do sekcji">#</a></h2>
+<h3 id="61-rdzeń-i-ui-terminala">6.1 Rdzeń i UI terminala <a class="anchor" href="#61-rdzeń-i-ui-terminala" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Plik</th>
+<th>Rola</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main.go</code></td>
+<td><code>mainLoop()</code> — pętla menu; <code>mainActions map[string]func()</code> — routing klawisza na funkcję; <code>handleFlags()</code> — <code>--version</code>/<code>--check-update</code>/<code>--help</code>; <code>firstRun()</code> — ekran zgody z licencją przy pierwszym starcie</td>
+</tr>
+<tr>
+<td><code>ui.go</code></td>
+<td><code>input()</code>/<code>inputSecret()</code> (maskowanie haseł), <code>runTool()</code> — <code>defer backOnCtrlC()</code> + <code>recover()</code> wokół każdego wywołania narzędzia z menu</td>
+</tr>
+<tr>
+<td><code>keys.go</code></td>
+<td><code>errBack</code> (typ panic-sygnału), <code>backOnCtrlC()</code>, obserwator Ctrl+X (natychmiastowe <code>os.Exit</code>, podmieniane w testach przez <code>exitFunc</code>)</td>
+</tr>
+<tr>
+<td><code>terminal_windows.go</code> / <code>_linux.go</code> / <code>_darwin.go</code></td>
+<td>tryb surowy terminala — <strong>trzy zupełnie różne implementacje</strong>, bo Windows (Console API), Linux i macOS (termios, ale z drobnymi różnicami) obsługują to inaczej</td>
+</tr>
+<tr>
+<td><code>config.go</code>, <code>log.go</code>, <code>exec.go</code></td>
+<td>ścieżki danych i zapasowy katalog danych (§5.3), prosty log tekstowy do pliku, uruchamianie poleceń <strong>bez powłoki</strong> (<code>exec.Command</code> z rozbitymi argumentami, nie <code>sh -c "..."</code> — ochrona przed wstrzyknięciem poleceń przez dane wejściowe użytkownika, patrz §9)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="62-parsery-netparsego">6.2 Parsery (<code>netparse.go</code>) <a class="anchor" href="#62-parsery-netparsego" aria-label="Link do sekcji">#</a></h3>
+<p>Cała logika interpretacji wyjścia poleceń systemowych (<code>arp</code>/<code>ip neigh</code>, <code>ss</code>, <code>netsh</code>, <code>ping</code> w
+wielu językach interfejsu systemu) jest wydzielona do czystych funkcji <code>string → struct</code>,
+niezależnych od tego, czy dane polecenie jest fizycznie dostępne na maszynie, na której toczą
+się testy — testy karmią te funkcje nagranymi próbkami tekstu. To jest właśnie to, co pozwoliło
+w 100% przetestować logikę parsowania na Windows, mimo że część poleceń (<code>arp</code>, <code>ip neigh</code>)
+dotyczy Linuksa.</p>
+<h3 id="63-system-aktualizacji-updatego-updateuigo">6.3 System aktualizacji (<code>update.go</code>, <code>update_ui.go</code>) <a class="anchor" href="#63-system-aktualizacji-updatego-updateuigo" aria-label="Link do sekcji">#</a></h3>
+<p>Patrz §8 — opisany osobno, bo ma własny model bezpieczeństwa.</p>
+<h3 id="64-komunikaty-od-twórcy-announcementsgo">6.4 Komunikaty od twórcy (<code>announcements.go</code>) <a class="anchor" href="#64-komunikaty-od-twórcy-announcementsgo" aria-label="Link do sekcji">#</a></h3>
+<p><code>fetchAnnouncements()</code> ściąga <code>AnnouncementsURL</code> (JSON) przy starcie w tle
+(<code>startAnnouncementsCheck()</code>), <code>pendingAnnouncements()</code> filtruje te, których ID nie są jeszcze w
+lokalnej historii potwierdzeń (<code>core_data/announcements_seen.json</code>,
+<code>loadAckedAnnouncements()</code>/<code>saveAckedAnnouncements()</code>). <code>handleStartupAnnouncements()</code> blokuje
+przejście do menu głównego, aż użytkownik potwierdzi Enterem każdy nieprzeczytany komunikat
+(<code>showAnnouncement()</code>). Ten sam wzorzec &quot;GitHub jako lekka baza danych&quot; co system aktualizacji —
+brak komunikatów lub błąd sieci po cichu nic nie pokazuje (nie blokuje programu, patrz §8).</p>
+<h3 id="65-menedżer-vpn">6.5 Menedżer VPN <a class="anchor" href="#65-menedżer-vpn" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Plik</th>
+<th>Rola</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vpn_types.go</code></td>
+<td>typy (<code>VPNEntry</code>, <code>SystemVPNProfile</code>, <code>WGSummary</code>...), parser/serializer formatu <code>.conf</code> WireGuard i <code>.ovpn</code> OpenVPN (<code>splitConfBlocks</code>, <code>summarizeWG</code>, <code>scanOpenVPNFileRefs</code>...)</td>
+</tr>
+<tr>
+<td><code>vpn_store.go</code></td>
+<td>magazyn plików profili, kopia zapasowa do <code>.zip</code> z <code>manifest.json</code>, przywracanie</td>
+</tr>
+<tr>
+<td><code>vpn_ui.go</code></td>
+<td>menu menedżera — jeden plik wspólny dla wszystkich platform, który pyta warstwę platformową o jej <strong>realne</strong> możliwości (<code>systemVPNInfo()</code>) i pokazuje użytkownikowi dokładnie to, czego dana platforma pozwala zrobić, zamiast ukrywać niedostępne opcje za cichym błędem</td>
+</tr>
+<tr>
+<td><code>vpn_unix.go</code></td>
+<td>WireGuard/OpenVPN na Linuksie i macOS (identyczne na obu — to te samo narzędzia linii poleceń)</td>
+</tr>
+<tr>
+<td><code>vpn_windows.go</code></td>
+<td>VPN systemowy Windows przez natywne RAS API</td>
+</tr>
+<tr>
+<td><code>vpn_linux_native.go</code></td>
+<td>VPN systemowy Linux przez <code>nmcli</code> (NetworkManager) — zweryfikowane na żywo: gdy <code>nmcli</code> nie istnieje, program wyświetla <code>[i] Nie znaleziono 'nmcli' (NetworkManager) – wbudowany VPN niedostępny. Użyj WireGuard/OpenVPN.</code> zamiast crashować lub ciche nic nie robić (§10)</td>
+</tr>
+<tr>
+<td><code>vpn_darwin_native.go</code></td>
+<td>VPN systemowy macOS przez <code>scutil --nc</code> — tylko odczyt/połączenie z istniejącymi profilami (twarde ograniczenie API Apple, nie kodu, patrz §12)</td>
+</tr>
+<tr>
+<td><code>rasapi_windows.go</code></td>
+<td>odczyt zapamiętanych haseł/PSK Windows RAS do pełnej kopii zapasowej — bezpośrednie wywołania <code>rasapi32.dll</code>, struktury zweryfikowane na poziomie bajtów w testach (<code>unsafe.Sizeof</code>/<code>Offsetof</code>, patrz §10)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="66-klient-sshsftpftp">6.6 Klient SSH/SFTP/FTP <a class="anchor" href="#66-klient-sshsftpftp" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Plik</th>
+<th>Funkcje</th>
+<th>Rola</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>remote_types.go</code>, <code>remote_store.go</code></td>
+<td><code>SSHHost</code>/<code>FTPHost</code>, magazyn JSON</td>
+<td>typy i przechowywanie profili, wspólne dla SSH i FTP</td>
+</tr>
+<tr>
+<td><code>ssh_client.go</code></td>
+<td><code>sshClientConfig</code>, <code>sshDial</code>, <code>sshRunCommand</code>, <code>sshInteractiveShell</code></td>
+<td>konfiguracja klienta (hasło i/lub klucz prywatny), sesja z pojedynczą komendą, pełna sesja interaktywna (PTY + surowe przekazywanie klawiatury)</td>
+</tr>
+<tr>
+<td><code>ssh_hostkey.go</code></td>
+<td><code>loadKnownHosts</code>, <code>saveKnownHosts</code>, <code>tofuVerify</code></td>
+<td>TOFU — weryfikacja klucza hosta przy pierwszym połączeniu, zapis odcisku w <code>core_data/ssh_known_hosts.json</code>, ten sam model co <code>known_hosts</code> OpenSSH</td>
+</tr>
+<tr>
+<td><code>sftp_client.go</code></td>
+<td><code>sftpConnect</code>, <code>sftpSession.{list,cd,download,upload,remove,mkdir}</code></td>
+<td>przeglądarka plików SFTP na już nawiązanej sesji SSH</td>
+</tr>
+<tr>
+<td><code>ftp_client.go</code></td>
+<td><code>ftpConnect</code>, <code>ftpClient.{Pwd,Cwd,Mkdir,Delete,List,Download,Upload}</code>, <code>simple()</code></td>
+<td>klient FTP od zera (RFC 959, tryb pasywny), na <code>net/textproto</code></td>
+</tr>
+<tr>
+<td><code>ssh_ui.go</code>, <code>ftp_ui.go</code></td>
+<td>—</td>
+<td>menu: lista hostów, formularz, przeglądarka plików, <code>[O]</code> otwarcie w systemowym eksploratorze</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Uwaga do <code>ftp_client.go</code>:</strong> <code>net/textproto.Pipeline</code> wymaga, żeby <em>każde</em> wywołanie <code>Cmd()</code>
+było opakowane parą <code>StartResponse</code>/<code>EndResponse</code> w kolejności. Bezpośrednie <code>Cmd()</code>/<code>ReadResponse()</code>
+po cichu psuje wewnętrzny sekwencer na <em>każdym kolejnym</em> poleceniu (deadlock). Takie błędy łapią
+testy z prawdziwym serwerem FTP (§10), a testy na atrapach by je przepuściły.</p>
+<h2 id="7-model-danych-i-przechowywanie">7. Model danych i przechowywanie <a class="anchor" href="#7-model-danych-i-przechowywanie" aria-label="Link do sekcji">#</a></h2>
+<p>Wszystkie dane własne programu żyją w <code>core_data/</code> (obok pliku programu albo w katalogu
+zapasowy katalog, §5.3) — <strong>żadnej bazy danych</strong>, same pliki JSON/binarne, odczytywane/zapisywane przez
+<code>writeFileAtomic()</code> (zapis do pliku <code>.tmp</code> + <code>os.Rename</code> — awaria w trakcie zapisu nie
+koruptuje istniejących danych).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Plik</th>
+<th>Format</th>
+<th>Zawartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>installed.flag</code></td>
+<td>2 bajty</td>
+<td>znacznik &quot;program już widział ekran zgody&quot;</td>
+</tr>
+<tr>
+<td><code>ip_registry.sys</code></td>
+<td>tekstowy, pola rozdzielane <code>;</code> (<code>nazwa;ip;maska;brama;dns1;dns2;</code>) — format zgodny z wersją 1.x, mimo nazwy pliku to zwykły tekst, nie binarny format</td>
+<td>baza profili IP</td>
+</tr>
+<tr>
+<td><code>wol_registry.sys</code></td>
+<td>tekstowy, analogiczny format</td>
+<td>baza urządzeń Wake-on-LAN</td>
+</tr>
+<tr>
+<td><code>settings.json</code></td>
+<td>JSON</td>
+<td><code>Settings</code> — automatyczne aktualizacje, interwał sprawdzania, ostatnio widziana/pominięta wersja</td>
+</tr>
+<tr>
+<td><code>networkmaster.log</code></td>
+<td>tekst</td>
+<td>log zdarzeń startowych i błędów zapisu (<code>logf()</code>)</td>
+</tr>
+<tr>
+<td><code>announcements_seen.json</code></td>
+<td>JSON</td>
+<td>ID potwierdzonych komunikatów od twórcy</td>
+</tr>
+<tr>
+<td><code>ssh_hosts.json</code></td>
+<td>JSON, <strong>jawne hasła</strong></td>
+<td>profile SSH (host, login, hasło i/lub klucz prywatny)</td>
+</tr>
+<tr>
+<td><code>ssh_known_hosts.json</code></td>
+<td>JSON</td>
+<td>odciski kluczy hostów (TOFU)</td>
+</tr>
+<tr>
+<td><code>ftp_hosts.json</code></td>
+<td>JSON, <strong>jawne hasła</strong></td>
+<td>profile FTP</td>
+</tr>
+<tr>
+<td><code>vpn/</code></td>
+<td>pliki <code>.conf</code>/<code>.ovpn</code> + metadane</td>
+<td>profile WireGuard/OpenVPN</td>
+</tr>
+<tr>
+<td><code>Reports/</code></td>
+<td>tekst/Markdown</td>
+<td>raporty zapisane na życzenie z narzędzi diagnostycznych</td>
+</tr>
+<tr>
+<td>kopia zapasowa VPN (<code>VPN_&lt;znacznik czasu&gt;.zip</code>)</td>
+<td>ZIP z <code>manifest.json</code></td>
+<td>pełna kopia zapasowa profili VPN <strong>z jawnymi hasłami/kluczami PSK/kluczami prywatnymi WireGuard</strong> — świadoma decyzja (§9), nie przeoczenie</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Hasła i klucze są przechowywane jawnie, bez szyfrowania, we wszystkich modułach jednolicie</strong>
+(VPN, SSH, FTP) — to udokumentowana, świadoma decyzja projektowa (prostota, przenośność — jeden
+plik kopii zapasowej ma zawierać <em>wszystko</em> potrzebne do odtworzenia konfiguracji), nie przeoczenie.
+Konsekwencje bezpieczeństwa są opisane w §9 i w <a href="/networkmaster/dokumentacja">Dokumentacja-NetworkMaster.md §7</a>.</p>
+<h2 id="8-system-aktualizacji-i-komunikatów">8. System aktualizacji i komunikatów <a class="anchor" href="#8-system-aktualizacji-i-komunikatów" aria-label="Link do sekcji">#</a></h2>
+<p>Program nie ma własnego serwera — &quot;backend&quot; to wprost API GitHub Releases repozytorium
+wskazanego w <code>UpdateRepo</code> (<code>version.go</code>). <code>Updater.Check()</code> (<code>update.go</code>) odpytuje listę
+wydań, <code>PickAsset()</code> wybiera plik odpowiadający <code>runtime.GOOS</code>/<code>GOARCH</code> (z tłumaczeniem
+<code>darwin</code>→<code>macos</code> w nazwach plików), <code>expectedHash()</code> czyta sumę SHA-256 z pola <code>digest</code>
+załącznika GitHuba albo z <code>checksums.txt</code>.</p>
+<p><strong>Model bezpieczeństwa (z <code>RELEASING.md</code>):</strong></p>
+<ul>
+<li>Pobieranie wyłącznie przez HTTPS; przekierowanie na HTTP jest blokowane (<code>allowedURL()</code>).</li>
+<li>Zmienna <code>NETWORKMASTER_UPDATE_URL</code> (do testów bez publikowania, <code>tools/mockgithub</code>) działa
+<strong>tylko</strong> dla adresów pętli zwrotnej (<code>127.0.0.1</code>/<code>localhost</code>) — <code>isLoopbackHost()</code> —
+więc nie da się jej użyć do przekierowania prawdziwego klienta na obcy serwer (ochrona przed
+SSRF-podobnym nadużyciem tej furtki testowej).</li>
+<li>Suma SHA-256 jest <strong>obowiązkowa</strong> — brak sumy odrzuca aktualizację.</li>
+<li>Przed podmianą plik jest też sprawdzany pod kątem nagłówka wykonywalnego (<code>hasExecutableMagic</code> —
+<code>MZ</code> dla Windows, <code>ELF</code> dla Linuksa) — ochrona przed podmianą na plik, który nie jest wcale
+programem.</li>
+<li>Podmiana jest odwracalna: stary plik trafia do <code>NetworkMaster.exe.old</code> i wraca automatycznie,
+jeśli nowy plik nie wystartuje poprawnie (<code>applyUpdate()</code>, <code>cleanupOldBinary()</code>).</li>
+<li><strong>To, czego ten model NIE chroni:</strong> przejęcia konta GitHub właściciela repozytorium. Sumy
+kontrolne pochodzą z tego samego wydania co plik — chronią przed uszkodzeniem transferu i
+przypadkowym błędem publikacji, nie przed złośliwym aktorem, który ma dostęp do konta
+publikującego wydania. Pełne zamknięcie tej furtki wymagałoby podpisu kryptograficznego
+(np. Ed25519) z kluczem publicznym wkompilowanym w program, niezależnym od konta GitHub —
+nie zaimplementowane, odnotowane jako możliwy kierunek rozwoju w <code>RELEASING.md</code>.</li>
+<li>Wydania oznaczone jako <strong>draft</strong> lub <strong>pre-release</strong> są ignorowane przez klienta.</li>
+</ul>
+<p>Komunikaty od twórcy (<code>announcements.go</code>) używają tego samego wzorca &quot;GitHub jako płytka,
+publiczna baza danych&quot;, ale bez weryfikacji integralności — to kanał tylko-informacyjny
+(tekst do wyświetlenia), nie wykonywalny kod, więc nie wymaga tego samego poziomu ochrony co
+aktualizacje.</p>
+<h2 id="9-bezpieczeństwo-i-prywatność">9. Bezpieczeństwo i prywatność <a class="anchor" href="#9-bezpieczeństwo-i-prywatność" aria-label="Link do sekcji">#</a></h2>
+<ul>
+<li><strong>Brak telemetrii i konta użytkownika.</strong> Program łączy się z internetem wyłącznie wtedy, gdy
+użytkownik sam uruchomi funkcję, która tego wymaga (sprawdzenie aktualizacji, komunikaty od
+twórcy, WHOIS, GeoIP, test prędkości, rozpoznawanie producenta po adresie MAC, sesje SSH/SFTP/FTP) — każde połączenie
+dotyczy tylko usługi, z którą dana funkcja jest bezpośrednio związana.</li>
+<li><strong>Polecenia systemowe uruchamiane bez powłoki</strong> (<code>exec.Command</code> z osobnymi argumentami, nigdy
+<code>sh -c</code>/<code>cmd /c</code> ze sklejonym łańcuchem) — eliminuje klasę błędów wstrzyknięcia poleceń przez
+dane wejściowe użytkownika (np. nazwę hosta zawierającą <code>; rm -rf</code>).</li>
+<li><strong>Hasła/klucze przechowywane jawnie</strong> (VPN, SSH, FTP) — świadoma decyzja, patrz §7. Plik
+kopii zapasowej VPN wymaga tej samej ostrożności, co plik z hasłami.</li>
+<li><strong>TOFU dla SSH</strong> (<code>ssh_hostkey.go</code>) — zmiana klucza hosta przy kolejnym połączeniu jest
+sygnalizowana wprost jako możliwy atak (man-in-the-middle), nie cicho ignorowana.</li>
+<li><strong>Ostrzeżenie o ekspozycji hasła przez argumenty procesu:</strong> funkcja <code>[O] Otwórz w eksploratorze systemu</code> (SFTP/FTP) przekazuje adres <code>sftp://</code>/<code>ftp://</code> (z hasłem, jeśli profil
+je ma) do zewnętrznego procesu systemowego — hasło trafia chwilowo do listy argumentów tego
+procesu, widocznej innym procesom/użytkownikom tej maszyny (np. w Menedżerze Zadań). Program
+sygnalizuje to przed otwarciem, nie naprawia (nie da się tego naprawić bez zmiany mechanizmu
+skojarzeń protokołów samego systemu operacyjnego).</li>
+<li><strong>FTP jest nieszyfrowany</strong> (ograniczenie samego protokołu z 1985 r., nie kodu) — hasło i
+transferowane pliki idą jawnym tekstem przez sieć, jeśli użytkownik wybierze FTP zamiast SFTP.</li>
+<li><strong>Brak podpisu cyfrowego binarek</strong> (Authenticode/Apple Developer ID) — SmartScreen/Gatekeeper
+mogą pokazać ostrzeżenie &quot;nieznany wydawca&quot; przy pierwszym uruchomieniu. Obfuskacja
+(<code>garble</code>) nie jest stosowana, bo w praktyce daje gorszy efekt: Google Chrome
+(Safe Browsing) blokuje pobieranie pliku, oznaczając go jako wirusa. Podpis cyfrowy jest
+jedynym trwałym rozwiązaniem, nie zaimplementowanym w tej wersji (koszt certyfikatu, nie
+decyzja techniczna).</li>
+<li>Model bezpieczeństwa systemu aktualizacji — patrz §8.</li>
+</ul>
+<h2 id="10-testowanie">10. Testowanie <a class="anchor" href="#10-testowanie" aria-label="Link do sekcji">#</a></h2>
+<p><code>go test .</code> w <code>source_code/</code> — <strong>108 testów w 13 plikach</strong>, wykonują się w kilkanaście-kilkadziesiąt
+sekund na Windows (jedyna platforma, na której testy faktycznie <em>uruchamiają się</em>, patrz §2).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Plik testowy</th>
+<th>Zakres</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logic_test.go</code></td>
+<td>parsery (<code>arp</code>, <code>ip neigh</code>, <code>ss</code>, <code>netsh</code>, <code>ping</code> w wielu językach systemowych), kalkulator podsieci, pozostała &quot;czysta&quot; logika</td>
+</tr>
+<tr>
+<td><code>keys_test.go</code></td>
+<td>mechanizm Ctrl+C/Ctrl+X (<code>errBack</code>, <code>recover</code>, <code>exitFunc</code> podmieniany na atrapę)</td>
+</tr>
+<tr>
+<td><code>vpn_test.go</code>, <code>vpn_windows_test.go</code></td>
+<td>parser/serializer WireGuard/OpenVPN, kopia zapasowa i przywracanie oraz (Windows) weryfikacja <strong>na poziomie bajtów</strong> (<code>unsafe.Sizeof</code>/<code>Offsetof</code>) układu struktur Win32 RAS/Menedżera Poświadczeń — bez wywoływania samych API poświadczeń</td>
+</tr>
+<tr>
+<td><code>update_test.go</code></td>
+<td>cały system aktualizacji na atrapie API GitHuba (<code>tools/mockgithub</code>): wybór pliku dla danego systemu i architektury, wykrywanie wydań krytycznych, weryfikacja SHA-256, odrzucanie podmienionych plików, podmiana z wycofaniem</td>
+</tr>
+<tr>
+<td><code>announcements_test.go</code></td>
+<td>komunikaty od twórcy: filtrowanie nieprzeczytanych, zapis historii potwierdzeń</td>
+</tr>
+<tr>
+<td><code>remote_test.go</code></td>
+<td>magazyn profili SSH/FTP, logika TOFU, poprawność kodowania URL (<code>sftp://</code>/<code>ftp://</code> ze specjalnymi znakami w haśle — <code>net/url.URL</code>, nie sklejanie stringów)</td>
+</tr>
+<tr>
+<td><code>ssh_server_test.go</code> + <code>ssh_integration_test.go</code></td>
+<td><strong>prawdziwy, lokalny serwer SSH</strong> (<code>golang.org/x/crypto/ssh</code> jako serwer) — testy łączą się z nim prawdziwym klientem programu, nie atrapą wywołań</td>
+</tr>
+<tr>
+<td><code>ftp_server_test.go</code> + <code>ftp_integration_test.go</code></td>
+<td><strong>prawdziwy, lokalny serwer FTP</strong> z realnym katalogiem tymczasowym — to właśnie te testy znalazły deadlock w <code>ftp_client.go</code> (§6.6) przed wydaniem</td>
+</tr>
+<tr>
+<td><code>platform_windows_test.go</code></td>
+<td>funkcje specyficzne dla Windows</td>
+</tr>
+<tr>
+<td><code>config_test.go</code></td>
+<td><code>dataDirsWritable()</code> — regresja dla błędu opisanego w §12</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Poza automatycznym pakietem testów</strong>, w ramach tej rundy przeglądu technicznego program został
+<strong>ręcznie sprawdzony na działającym, zdalnym serwerze Ubuntu 26.04 LTS</strong> (nie emulacja, nie
+kontener) — połączenie przez prawdziwą sesję SSH z PTY, sterowanie tymi samymi klawiszami, które
+wpisałby użytkownik. Zweryfikowano: budowanie krzyżowe → działający plik ELF, <code>--version</code>/
+<code>--check-update</code>/<code>--help</code>, ekran zgody przy pierwszym uruchomieniu, komunikaty od twórcy, pełne
+menu główne, IPConfig (realny <code>ip addr</code>/<code>ip route</code>/<code>/etc/resolv.conf</code>), tabelę ARP (program sam użył
+<code>ip neigh</code>, bo <code>arp</code> nie był nawet zainstalowany na tym serwerze, i poprawnie rozpoznał producenta
+po adresie MAC dwóch rzeczywistych urządzeń w sieci), kalkulator podsieci, oraz menedżer VPN — w tym
+poprawne, czytelne zgłoszenie braku <code>nmcli</code>/NetworkManager zamiast cichej awarii. Nie zweryfikowano na tym samym serwerze: realnego
+połączenia WireGuard/OpenVPN (wymaga drugiego końca tunelu), monitora Wi-Fi (serwer nie ma karty
+Wi-Fi) i macOS (brak dostępu do maszyny z tym systemem).</p>
+<p><code>go vet</code> musi przechodzić czysto na wszystkich 8 kombinacjach system/architektura przy każdym
+budowaniu — wymusza to <code>build.ps1</code> (przerywa budowanie, jeśli <code>go vet</code> zwróci błąd na
+jakiejkolwiek platformie).</p>
+<h2 id="11-wydanie-i-dystrybucja--proces-dwóch-repozytoriów">11. Wydanie i dystrybucja — proces dwóch repozytoriów <a class="anchor" href="#11-wydanie-i-dystrybucja--proces-dwóch-repozytoriów" aria-label="Link do sekcji">#</a></h2>
+<p>Projekt jest rozbity na <strong>dwa repozytoria GitHub</strong> pod kontem <code>px-ware</code> i stronę WWW:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Repozytorium / miejsce</th>
+<th>Widoczność</th>
+<th>Zawartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>px-ware/networkmaster-core</code></td>
+<td>prywatne</td>
+<td>pełne zwierciadło kodu źródłowego (to, co kupuje nabywca)</td>
+</tr>
+<tr>
+<td><code>px-ware/networkmaster</code></td>
+<td>publiczne</td>
+<td><strong>tylko</strong> dokumentacja, <code>LICENSE.md</code>, <code>announcements.json</code> i GitHub <strong>Releases</strong> (pliki wykonywalne) — zero kodu źródłowego</td>
+</tr>
+<tr>
+<td><code>https://pxware.pl/networkmaster</code></td>
+<td>publiczna strona (hosting OVH, PHP)</td>
+<td>opis programu, pobieranie (linki do najnowszego wydania w <code>px-ware/networkmaster</code>), dokumenty; źródła strony w prywatnym repo <code>px-ware/strony</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Synchronizacja między nimi jest w pełni ręczna</strong> — nie ma żadnej automatyzacji (brak GitHub
+Actions, brak webhooków). Przy każdym wydaniu trzeba ręcznie: skopiować zaktualizowane
+<code>README.md</code>/<code>LICENSE.md</code>/<code>dokumentacja/*.md</code>/<code>announcements.json</code> do kopii
+roboczej publicznego repo, commitować i wypychać osobno do obu repozytoriów, a potem jeszcze
+zbudować i opublikować wydanie binarek (<code>gh release create</code>, patrz <code>RELEASING.md</code>). To jest największy punkt manualnej pracy w całym procesie wydawniczym i
+najbardziej oczywisty kandydat do automatyzacji dla nowego właściciela (patrz §13).</p>
+<p><strong>Zasada dotycząca starych wydań:</strong> w Releases zostaje tylko najnowsze wydanie, poprzednie są
+usuwane po opublikowaniu nowego (<code>RELEASING.md</code>).</p>
+<h2 id="12-znane-ograniczenia-i-dług-techniczny">12. Znane ograniczenia i dług techniczny <a class="anchor" href="#12-znane-ograniczenia-i-dług-techniczny" aria-label="Link do sekcji">#</a></h2>
+<p>Pełna, opisana z perspektywy użytkownika lista jest w
+<a href="/networkmaster/dokumentacja#7-znane-ograniczenia">Dokumentacja-NetworkMaster.md §7</a>. Tutaj —
+to, co jest istotne z perspektywy kogoś oceniającego kod/proces:</p>
+<ol>
+<li><strong>Brak CI/CD.</strong> <code>build.ps1</code> to cały &quot;pipeline&quot; — uruchamiany ręcznie, na jednej maszynie
+(Windows autora). Nie ma automatycznego uruchamiania testów przy każdym pushu/PR.</li>
+<li><strong>Synchronizacja dwóch repozytoriów jest ręczna</strong> (§11) — realne ryzyko rozjazdu, jeśli ktoś
+zapomni skopiować zmianę do wszystkich miejsc. Brak automatycznego mechanizmu wykrywania
+takiego rozjazdu.</li>
+<li><strong>Testy automatyczne realnie wykonują się tylko na Windows</strong> (§2, §10) — pokrycie
+Linux/macOS to kompilacja + <code>go vet</code> + (częściowo) ręczna weryfikacja na działającym
+serwerze Linux, nie automatyczny pakiet testów uruchamiany na tych systemach.</li>
+<li><strong>Brak podpisu cyfrowego</strong> (§9) — SmartScreen/Gatekeeper pokazują ostrzeżenie &quot;nieznany
+wydawca&quot; przy pierwszym uruchomieniu/pobraniu każdego pliku programu.</li>
+<li><strong><code>vpn_ui.go</code> (876 linii)</strong> to największy plik projektu i naturalny kandydat do podziału,
+jeśli funkcjonalność VPN dalej rośnie (np. kolejne protokoły) — obecnie nie jest to pilny
+problem, ale warto mieć to na radarze przy większej rozbudowie.</li>
+<li><strong>Model bezpieczeństwa aktualizacji chroni przed uszkodzonym transferem, nie przed
+przejęciem konta GitHub</strong> (§8) — pełne zamknięcie tej furtki wymaga podpisu kryptograficznego
+niezależnego od GitHuba, nieobecnego w tej wersji.</li>
+<li><strong>Reszta ograniczeń jest specyficzna funkcjonalnie</strong> (macOS i tworzenie profili VPN, Linux i
+wtyczki NetworkManager, Windows 32-bit i odczyt zapamiętanych haseł VPN, klawiatura w sesji
+SSH na Windows, FTP bez szyfrowania) — opisana szczegółowo w dokumentacji użytkownika, nie
+powtarzana tutaj.</li>
+</ol>
+<h2 id="13-proponowany-rozwój-roadmapa">13. Proponowany rozwój (roadmapa) <a class="anchor" href="#13-proponowany-rozwój-roadmapa" aria-label="Link do sekcji">#</a></h2>
+<p>Pomysły w naturalny sposób wynikające z architektury i ograniczeń opisanych wyżej, nie
+zobowiązanie — do oceny przez nowego właściciela:</p>
+<ul>
+<li><strong>Automatyzacja CI/CD</strong> (GitHub Actions: <code>go vet</code>/<code>go test</code> przy każdym PR, docelowo też
+automatyczne budowanie i publikacja wydań) — największy pojedynczy krok redukujący ryzyko
+błędu ludzkiego w procesie opisanym w §11.</li>
+<li><strong>Testy Linux/macOS w CI</strong> (np. przez macierz <code>runs-on</code> w GitHub Actions) — zamiast polegać
+tylko na kompilacji krzyżowej i ręcznej weryfikacji.</li>
+<li><strong>Podpis cyfrowy binarek</strong> (Authenticode na Windows, Apple Developer ID na macOS) — usuwa
+ostrzeżenia systemowe, koszt to głównie certyfikat, nie zmiana kodu.</li>
+<li><strong>GUI</strong> (np. jako alternatywny front-end korzystający z tej samej logiki domenowej) — obecna
+architektura (logika w osobnych plikach od UI terminala) częściowo to ułatwia, ale <code>vpn_ui.go</code>
+i inne pliki <code>*_ui.go</code> mieszają logikę z prezentacją silniej niż reszta kodu.</li>
+<li><strong>Dodatkowe protokoły VPN / rozszerzenie klienta SSH</strong> (np. agent SSH, <code>ProxyJump</code>) — logika
+klienta SSH jest już wyodrębniona (<code>ssh_client.go</code>) na tyle, że rozszerzenie nie wymaga
+przebudowy reszty programu.</li>
+<li><strong>Podpis kryptograficzny aktualizacji niezależny od GitHuba</strong> (§8, §12 pkt 7).</li>
+</ul>
+<h2 id="14-słownik-pojęć">14. Słownik pojęć <a class="anchor" href="#14-słownik-pojęć" aria-label="Link do sekcji">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Znaczenie w tym projekcie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TOFU</strong></td>
+<td>Trust On First Use — ufaj kluczowi serwera przy pierwszym połączeniu, ostrzegaj przy każdej zmianie. Ten sam model co <code>known_hosts</code> OpenSSH; tu: <code>ssh_hostkey.go</code>.</td>
+</tr>
+<tr>
+<td><strong>Build tag</strong></td>
+<td>znacznik <code>//go:build &lt;warunek&gt;</code> nad plikiem <code>.go</code>, decydujący, czy plik wchodzi do kompilacji dla danego <code>GOOS</code>/<code>GOARCH</code>. Mechanizm separacji kodu platformowego w tym projekcie.</td>
+</tr>
+<tr>
+<td><strong>Program przenośny (portable)</strong></td>
+<td>brak instalatora; dane własne programu są zapisywane obok pliku wykonywalnego, nie w systemowych lokalizacjach — przenosisz folder, przenosisz stan.</td>
+</tr>
+<tr>
+<td><strong>RAS</strong></td>
+<td>Remote Access Service — natywne API Windows do VPN/dial-up, używane przez <code>rasapi_windows.go</code> i <code>vpn_windows.go</code>.</td>
+</tr>
+<tr>
+<td><strong><code>nmcli</code></strong></td>
+<td>interfejs linii poleceń NetworkManagera (Linux) — brak tego pakietu = brak VPN systemowego na danym Linuksie, zgłaszane programowi wprost.</td>
+</tr>
+<tr>
+<td><strong><code>scutil --nc</code></strong></td>
+<td>narzędzie systemowe macOS do zarządzania konfiguracjami sieciowymi, w tym VPN — jedyny sposób programowej integracji z VPN systemowym macOS, i to tylko do odczytu/połączenia z istniejącymi profilami.</td>
+</tr>
+<tr>
+<td><strong>SSRF (Server-Side Request Forgery)</strong></td>
+<td>klasa ataku polegająca na zmuszeniu programu do wysłania żądania do nieautoryzowanego celu. Tu istotne przy <code>NETWORKMASTER_UPDATE_URL</code> (§8) — ograniczone do adresów pętli zwrotnej właśnie w tym celu.</td>
+</tr>
+<tr>
+<td><strong>Magic bytes</strong></td>
+<td>pierwsze bajty pliku identyfikujące jego format (<code>MZ</code> dla plików <code>.exe</code>, <code>ELF</code> dla binarek Linuksa) — używane przy weryfikacji pobranej aktualizacji.</td>
+</tr>
+<tr>
+<td><strong>Authenticode / Gatekeeper / SmartScreen</strong></td>
+<td>mechanizmy Windows/macOS ostrzegające przed niepodpisanymi cyfrowo plikami wykonywalnymi.</td>
+</tr>
+</tbody>
+</table></div>    <p class="doc-source">Źródło dokumentu: <a href="https://github.com/px-ware/networkmaster/blob/main/dokumentacja/Dokumentacja-Techniczna-NetworkMaster.md" rel="noopener" target="_blank">GitHub, px-ware/networkmaster/dokumentacja/Dokumentacja-Techniczna-NetworkMaster.md</a></p>
+  </main>
+  <footer>
+    <p><a href="/networkmaster/">Strona główna</a> · <a href="https://github.com/px-ware/networkmaster/releases/latest">Pobierz</a> · <a href="mailto:pxware@pxware.pl">Kontakt</a> · <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></p>
+    <p>© 2026 PX Paweł Mościbrodzki (NetworkMaster) · <a href="/">pxware.pl</a>. Wszelkie prawa zastrzeżone.</p>
+  </footer>
+</div>
+<script src="/networkmaster/assets/js/site.js" defer></script>
+</body>
+</html>

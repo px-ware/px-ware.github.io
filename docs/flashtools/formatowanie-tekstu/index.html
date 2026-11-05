@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licznik znaków, słów i zmiana wielkości liter | FlashTools</title>
+    <meta name="description" content="Policz znaki, słowa i linie, zamień tekst na WIELKIE lub małe litery, usuń zbędne spacje i podejrzyj Markdown na żywo. Darmowe narzędzie online.">
+    <link rel="canonical" href="https://pxware.pl/flashtools/formatowanie-tekstu/">
+        <meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o">
+
+    <!-- Podgląd linku w social media / komunikatorach -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="FlashTools">
+    <meta property="og:title" content="Licznik znaków, słów i zmiana wielkości liter | FlashTools">
+    <meta property="og:description" content="Policz znaki, słowa i linie, zamień tekst na WIELKIE lub małe litery, usuń zbędne spacje i podejrzyj Markdown na żywo. Darmowe narzędzie online.">
+    <meta property="og:url" content="https://pxware.pl/flashtools/formatowanie-tekstu/">
+    <meta property="og:image" content="https://pxware.pl/flashtools/assets/img/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/flashtools/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/flashtools/assets/img/apple-touch-icon.png">
+    <meta name="theme-color" content="#09090b">
+    <link rel="stylesheet" href="/flashtools/assets/css/style.css">
+
+    <!-- Dane strukturalne dla Google -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Licznik znaków i formatowanie tekstu","url":"https://pxware.pl/flashtools/formatowanie-tekstu/","description":"Policz znaki, słowa i linie, zamień tekst na WIELKIE lub małe litery, usuń zbędne spacje i podejrzyj Markdown na żywo. Darmowe narzędzie online.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"pl","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"PLN"},"publisher":{"@type":"Organization","name":"FlashTools","url":"https://pxware.pl/flashtools/"}}</script>    </head>
+<body>
+
+    <div class="app-container">
+        <header>
+    <div class="brand">
+        <a class="logo-container" href="/flashtools/" aria-label="FlashTools - strona główna">
+            <svg class="logo-svg" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="20" fill="#09090b"/><path d="M58 10 L26 55 H47 L42 90 L74 44 H53 Z" fill="#00d2ff"/></svg>
+            <div class="logo-text">Flash<span>Tools</span></div>
+        </a>
+    </div>
+
+    <a class="coffee-btn" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+
+    <nav class="top-nav" aria-label="Narzędzia">
+        <a class="nav-link" href="/flashtools/generator-qr/">🔲 Kody QR</a>
+        <a class="nav-link" href="/flashtools/generator-hasel/">🔑 Hasła</a>
+        <a class="nav-link" href="/flashtools/formatowanie-tekstu/">✍️ Tekst</a>
+        <a class="nav-link" href="/flashtools/narzedzia-pdf/">📄 PDF</a>
+        <a class="nav-link" href="/flashtools/dev-tools/">💻 DevTools</a>
+        <a class="nav-link" href="/flashtools/kolory-wcag/">🎨 Kolory</a>
+        <a class="nav-link" href="/flashtools/konwerter-obrazow/">🖼️ Foto</a>
+        <a class="nav-link" href="/flashtools/pomodoro/">⏱️ Czas</a>
+        <a class="nav-link nav-coffee" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Wesprzyj</a>
+    </nav>
+</header>
+
+        <main id="app-root">
+            <!-- 3. TEKST -->
+<section id="view-text" class="tool-view">
+    <div class="tool-header"><h1>✍️ Licznik znaków i formatowanie tekstu</h1><p>Oczyszczanie tekstu, statystyki i podgląd na żywo.</p></div>
+    <div class="panel">
+        <div class="flex-row stats-bar">
+            <div>Znaków: <span id="t_chr" class="stat-value">0</span></div>
+            <div>Słów: <span id="t_wrd" class="stat-value">0</span></div>
+            <div>Linii: <span id="t_lin" class="stat-value">0</span></div>
+        </div>
+        <div class="flex-row mb-15">
+            <button class="btn-secondary flex-1" onclick="fmtTxt('UP')">WIELKIE LITERY</button>
+            <button class="btn-secondary flex-1" onclick="fmtTxt('LO')">małe litery</button>
+            <button class="btn-secondary flex-1" onclick="fmtTxt('TI')">Każde Słowo Wielką</button>
+            <button class="btn-secondary flex-1" onclick="fmtTxt('CL')">Usuń zbędne spacje</button>
+            <button class="btn-secondary btn-highlight flex-1" onclick="genLorem()">+ Lorem Ipsum</button>
+        </div>
+        <div class="flex-row">
+            <textarea id="t_in" class="flex-1" placeholder="Wklej tekst lub kod Markdown..." oninput="parseTxt()"></textarea>
+            <div id="t_out" class="flex-1">Podgląd HTML...</div>
+        </div>
+    </div>
+</section>
+
+<article class="panel seo-content">
+    <h2>Licznik znaków online</h2>
+    <p>Wklej lub wpisz tekst, a licznik od razu pokaże liczbę znaków (ze spacjami), słów i linii. Przydaje się przy pisaniu postów w mediach społecznościowych, opisów produktów, meta opisów stron czy prac z limitem znaków.</p>
+
+    <h2>Zmiana wielkości liter</h2>
+    <ul>
+        <li><strong>WIELKIE LITERY</strong> – zamienia cały tekst na wielkie litery.</li>
+        <li><strong>małe litery</strong> – zamienia cały tekst na małe litery.</li>
+        <li><strong>Każde Słowo Wielką</strong> – każde słowo zaczyna się wielką literą (poprawnie obsługuje polskie znaki).</li>
+        <li><strong>Usuń zbędne spacje</strong> – usuwa podwójne spacje i spacje na początku oraz końcu linii.</li>
+    </ul>
+
+    <h2>Podgląd Markdown</h2>
+    <p>Tekst w formacie Markdown (nagłówki <code>#</code>, pogrubienia <code>**tekst**</code>, listy, linki) jest na bieżąco zamieniany na sformatowany podgląd. Wygodne przy pisaniu plików README, notatek i dokumentacji.</p>
+</article>
+        </main>
+
+        <footer>
+    <nav class="footer-tools" aria-label="Wszystkie narzędzia">
+        <a href="/flashtools/generator-qr/">Generator kodów QR</a>
+        <a href="/flashtools/generator-hasel/">Generator haseł</a>
+        <a href="/flashtools/formatowanie-tekstu/">Licznik znaków</a>
+        <a href="/flashtools/narzedzia-pdf/">Łączenie PDF</a>
+        <a href="/flashtools/dev-tools/">JSON i Base64</a>
+        <a href="/flashtools/kolory-wcag/">Kontrast WCAG</a>
+        <a href="/flashtools/konwerter-obrazow/">Konwerter zdjęć</a>
+        <a href="/flashtools/pomodoro/">Timer Pomodoro</a>
+    </nav>
+    <div class="footer-links">
+        <a href="/flashtools/privacy.html">Polityka prywatności i cookies</a> |
+        <a href="/flashtools/terms.html">Regulamin serwisu</a> |
+        <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+    </div>
+    © <span id="footerYear">2026</span> FlashTools. Wszelkie prawa zastrzeżone.
+</footer>
+    </div>
+
+    <!-- BIBLIOTEKI ZEWNĘTRZNE (lista w inc/routes.php) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+        <!-- LOGIKA JS -->
+    <script src="/flashtools/assets/js/core.js"></script>
+    <script src="/flashtools/assets/js/modules/text.js"></script>
+    </body>
+</html>

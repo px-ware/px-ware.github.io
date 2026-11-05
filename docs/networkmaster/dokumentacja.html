@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dokumentacja użytkownika — NetworkMaster</title>
+<meta name="description" content="Dokumentacja NetworkMaster: instalacja, funkcje diagnostyki, skanowania, VPN, SSH/SFTP/FTP, aktualizacje i znane ograniczenia.">
+<link rel="canonical" href="https://pxware.pl/networkmaster/dokumentacja">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="NetworkMaster">
+<meta property="og:title" content="Dokumentacja użytkownika — NetworkMaster">
+<meta property="og:description" content="Dokumentacja NetworkMaster: instalacja, funkcje diagnostyki, skanowania, VPN, SSH/SFTP/FTP, aktualizacje i znane ograniczenia.">
+<meta property="og:url" content="https://pxware.pl/networkmaster/dokumentacja">
+<link rel="icon" href="/networkmaster/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/networkmaster/assets/css/doc.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-top">
+    <a class="brand" href="/networkmaster/"><span>Network</span>Master</a>
+    <nav aria-label="Dokumenty">
+            <a href="/networkmaster/dokumentacja" aria-current="page">Dokumentacja użytkownika</a>
+            <a href="/networkmaster/dokumentacja-techniczna">Dokumentacja techniczna</a>
+            <a href="/networkmaster/regulamin">Regulamin</a>
+            <a href="/networkmaster/polityka-prywatnosci">Polityka prywatności</a>
+            <a href="/networkmaster/licencja">Licencja</a>
+          </nav>
+  </header>
+  <main class="prose" id="tresc">
+<h1 id="networkmaster--dokumentacja-programu">NetworkMaster — dokumentacja programu</h1>
+<p><strong>Wersja:</strong> 2.5.x — dokładny numer i opis najnowszego wydania: <a href="https://github.com/px-ware/networkmaster/releases/latest" rel="noopener" target="_blank">Releases</a>
+<strong>Rodzaj:</strong> terminalowe narzędzie do diagnostyki i zarządzania siecią lokalną
+<strong>Platformy:</strong> Windows, Linux, macOS (amd64, arm64; Windows i Linux dodatkowo 386/32-bit)
+<strong>Model dystrybucji:</strong> pojedynczy plik wykonywalny, bez instalatora, przenośny (dane zapisywane obok pliku programu). Zero zależności uruchomieniowych — jedyne trzy zależności to biblioteki Go wkompilowane statycznie na etapie budowania (SSH/SFTP, patrz §5).
+<strong>Status prawny:</strong> oprogramowanie zamknięte, wszelkie prawa zastrzeżone — patrz <a href="/networkmaster/licencja"><code>../LICENSE.md</code></a> i <a href="/networkmaster/regulamin"><code>Regulamin.md</code></a></p>
+<p>Ten dokument opisuje program taki, jaki jest — funkcje, sposób działania, architekturę kodu i
+znane ograniczenia — z myślą głównie o użytkowniku końcowym. Kto ocenia projekt technicznie
+(np. przed zakupem) i chce dużo głębszego spojrzenia — opis każdego modułu, model danych,
+proces wydawniczy, dług techniczny — znajdzie je w osobnym dokumencie:
+<a href="/networkmaster/dokumentacja-techniczna"><code>Dokumentacja-Techniczna-NetworkMaster.md</code></a>.</p>
+<hr />
+<h2 id="1-czym-jest-networkmaster">1. Czym jest NetworkMaster <a class="anchor" href="#1-czym-jest-networkmaster" aria-label="Link do sekcji">#</a></h2>
+<p>NetworkMaster to menu tekstowe (TUI) uruchamiane w terminalu, które zbiera w jednym miejscu
+narzędzia do diagnostyki sieci, skanowania LAN, zarządzania konfiguracją sieciową urządzenia,
+zarządzania VPN (systemowym oraz WireGuard/OpenVPN) i monitorowania połączenia — bez potrzeby
+instalowania osobnych narzędzi wiersza poleceń ani zapamiętywania ich składni.</p>
+<p>Program nie wymaga instalacji: to jeden plik wykonywalny dla każdego systemu. Wszystkie dane własne
+(profile IP, baza WOL, ustawienia, dziennik, raporty) zapisywane są w folderach <code>core_data/</code> i
+<code>Reports/</code> tworzonych obok pliku programu — przeniesienie folderu z programem przenosi też jego
+dane.</p>
+<h2 id="2-funkcje--pełny-spis-menu-głównego">2. Funkcje — pełny spis menu głównego <a class="anchor" href="#2-funkcje--pełny-spis-menu-głównego" aria-label="Link do sekcji">#</a></h2>
+<h3 id="diagnostyka">Diagnostyka <a class="anchor" href="#diagnostyka" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td>Testy PING — pomiar opóźnień do wskazanego hosta</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Traceroute — śledzenie trasy pakietów do celu</td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td>DNS Lookup — odpytywanie rekordów DNS wskazanej domeny</td>
+</tr>
+<tr>
+<td><code>Q</code></td>
+<td>DNS Benchmark — test szybkości odpowiedzi wielu serwerów DNS</td>
+</tr>
+<tr>
+<td><code>SP</code></td>
+<td>Test prędkości łącza — pomiar szybkości pobierania i wysyłania</td>
+</tr>
+<tr>
+<td><code>Y</code></td>
+<td>SSL Audit — weryfikacja certyfikatu TLS wskazanego hosta</td>
+</tr>
+<tr>
+<td><code>X</code></td>
+<td>WHOIS — informacje rejestracyjne domeny/adresu IP</td>
+</tr>
+<tr>
+<td><code>G</code></td>
+<td>GeoIP — lokalizacja własnego adresu IP lub dowolnego wskazanego</td>
+</tr>
+<tr>
+<td><code>V</code></td>
+<td>Szybka diagnoza sieci — automatyczny zestaw testów i zbiorczy werdykt</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="skanowanie">Skanowanie <a class="anchor" href="#skanowanie" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>P</code></td>
+<td>Port Skaner — skanowanie usług na wskazanym hoście (wielowątkowo)</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Calculator — kalkulator podsieci (maski, zakresy, liczba hostów)</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td>Skaner Sieci — wykrywanie urządzeń w LAN</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>ARP Tabela — lista adresów fizycznych (MAC) widocznych w sieci</td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>MAC Lookup — ustalanie producenta karty sieciowej po adresie MAC</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="zarządzanie">Zarządzanie <a class="anchor" href="#zarządzanie" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>I</code></td>
+<td>IPConfig — pełny podgląd konfiguracji sieciowej urządzenia</td>
+</tr>
+<tr>
+<td><em>(numer karty na liście)</em></td>
+<td>Menu wybranej karty sieciowej — konfiguracja adresu IP/DHCP tego interfejsu</td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>Sprzęt sieciowy — informacje o kartach/urządzeniach (Menedżer urządzeń w Windows, <code>lspci</code>/<code>lsusb</code> w Linuksie, <code>system_profiler</code> w macOS)</td>
+</tr>
+<tr>
+<td><code>H</code></td>
+<td>Edytor pliku hosts — z automatycznymi kopiami zapasowymi</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>Flush DNS — czyszczenie pamięci podręcznej DNS</td>
+</tr>
+<tr>
+<td><code>Z</code></td>
+<td>Zerowanie Sieci — zbiorczy reset/naprawa konfiguracji sieciowej</td>
+</tr>
+<tr>
+<td><code>J</code></td>
+<td>Baza Profili IP — zapisane profile konfiguracji do szybkiego przełączania</td>
+</tr>
+<tr>
+<td><code>K</code></td>
+<td>Baza WOL — zarządzanie urządzeniami i budzenie przez Wake-on-LAN</td>
+</tr>
+<tr>
+<td><code>U</code></td>
+<td>Otwarcie natywnego edytora połączeń systemu (Windows: Edytor Połączeń; Linux: <code>nm-connection-editor</code>; macOS: Ustawienia Systemu → Sieć)</td>
+</tr>
+<tr>
+<td><code>RA</code></td>
+<td>Raporty — przeglądarka wcześniej zapisanych raportów</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="vpn">VPN <a class="anchor" href="#vpn" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VPN</code></td>
+<td>Menedżer VPN — WireGuard, OpenVPN i VPN systemowy: dodawanie, edycja, usuwanie, połączenie/rozłączenie, pełna kopia zapasowa i przywracanie z pliku <code>.zip</code></td>
+</tr>
+<tr>
+<td><code>W</code></td>
+<td>WiFi Vault — podgląd zapisanych haseł sieci Wi-Fi</td>
+</tr>
+</tbody>
+</table></div>
+<p>WireGuard i OpenVPN działają <strong>identycznie na wszystkich trzech platformach</strong> — pełne
+dodawanie/edycja/usuwanie profili, połączenie/rozłączenie, kopia zapasowa i przywracanie.</p>
+<p>VPN systemowy (natywna integracja z mechanizmem VPN wbudowanym w system operacyjny) ma
+<strong>różny zakres możliwości w zależności od platformy</strong> — to nie jest ograniczenie kodu, tylko
+konsekwencja tego, co poszczególne systemy w ogóle udostępniają programom:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Możliwość</th>
+<th>Windows (RAS)</th>
+<th>Linux (NetworkManager/<code>nmcli</code>)</th>
+<th>macOS (<code>scutil --nc</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Typy tuneli</td>
+<td>PPTP, L2TP, SSTP, IKEv2</td>
+<td>L2TP, PPTP</td>
+<td>tylko odczyt istniejących (L2TP/PPP)</td>
+</tr>
+<tr>
+<td>Tworzenie profilu</td>
+<td>✅</td>
+<td>✅ (wymaga wtyczki <code>NetworkManager-l2tp</code>/<code>-pptp</code>)</td>
+<td>❌ niemożliwe</td>
+</tr>
+<tr>
+<td>Edycja profilu</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌ niemożliwe</td>
+</tr>
+<tr>
+<td>Usuwanie profilu</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌ niemożliwe</td>
+</tr>
+<tr>
+<td>Połączenie / rozłączenie</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (tylko profile już istniejące)</td>
+</tr>
+<tr>
+<td>Odczyt zapamiętanego hasła/PSK do kopii zapasowej</td>
+<td>✅ (jeśli się da, patrz §6)</td>
+<td>✅ (z pliku konfiguracyjnego, jako root)</td>
+<td>❌ (Keychain wymaga zgody dla każdego wpisu)</td>
+</tr>
+<tr>
+<td>IKEv2</td>
+<td>✅</td>
+<td>❌ (brak natywnej obsługi)</td>
+<td>❌ (<code>scutil</code> w ogóle go nie widzi)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Na macOS nowe profile VPN trzeba założyć w Ustawieniach Systemu (Sieć → VPN) — program potrafi
+się z nimi tylko łączyć/rozłączać i sprawdzać status. To twarde ograniczenie systemu Apple:
+tworzenie profili VPN programowo wymaga podpisanej aplikacji z uprawnieniem <code>NEVPNManager</code>,
+którego zwykły, niezależny program terminalowy nie może uzyskać.</p>
+<h3 id="monitorowanie">Monitorowanie <a class="anchor" href="#monitorowanie" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E</code></td>
+<td>Ekran Dowodzenia — zbiorczy podgląd stanu sieci na żywo</td>
+</tr>
+<tr>
+<td><code>B</code></td>
+<td>Bandwidth — bieżący monitor obciążenia łącza</td>
+</tr>
+<tr>
+<td><code>O</code></td>
+<td>Monitor WiFi — siła sygnału na żywo</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>Netstat — aktywne porty i połączenia wraz z nazwami procesów</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="zdalny-dostęp">Zdalny dostęp <a class="anchor" href="#zdalny-dostęp" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SSH</code></td>
+<td>Klient SSH/SFTP — zapisane hosty, sesja interaktywna (pełny zdalny terminal), wykonanie pojedynczej komendy, przeglądarka plików (SFTP)</td>
+</tr>
+<tr>
+<td><code>FTP</code></td>
+<td>Klient FTP — zapisane hosty, przeglądarka plików (stary, nieszyfrowany protokół — patrz §7)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Profile SSH obsługują logowanie hasłem i/lub kluczem prywatnym (opcjonalnie zaszyfrowanym
+hasłem). Przy pierwszym połączeniu z danym hostem program pokazuje odcisk palca klucza
+serwera i prosi o potwierdzenie (TOFU — &quot;zaufaj przy pierwszym połączeniu&quot;, ten sam
+mechanizm co <code>known_hosts</code> w OpenSSH) — zmiana klucza przy kolejnym połączeniu jest
+sygnalizowana wprost jako możliwy atak, nie cicho ignorowana.</p>
+<p>W przeglądarkach plików SFTP i FTP dostępna jest opcja <strong>[O] Otwórz w eksploratorze
+systemu</strong> — wysyła bieżący katalog jako adres <code>sftp://</code>/<code>ftp://</code> do systemowego mechanizmu
+skojarzeń protokołów (Finder na macOS, GVFS/KIO przez <code>xdg-open</code> na Linuksie, program
+zarejestrowany w Windows — w Windows natywnie działa to tylko dla <code>ftp://</code>; dla <code>sftp://</code>
+wymaga zainstalowanego zewnętrznego klienta, np. WinSCP). <strong>Ostrzeżenie:</strong> jeśli profil ma
+zapisane hasło, trafia ono jawnie do tego adresu, czyli chwilowo do listy argumentów
+uruchamianego procesu — widocznej innym procesom/użytkownikom tej maszyny (np. w
+Menedżerze Zadań) — to dodatkowe ryzyko ponad samo przechowywanie w pliku, program
+sygnalizuje to przed otwarciem.</p>
+<h3 id="pozostałe">Pozostałe <a class="anchor" href="#pozostałe" aria-label="Link do sekcji">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Funkcja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UP</code></td>
+<td>Aktualizacje — sprawdzenie/instalacja nowej wersji z GitHub Releases. Wydania oznaczone jako krytyczne/obowiązkowe nie dają się trwale pominąć (patrz §7)</td>
+</tr>
+<tr>
+<td><code>US</code></td>
+<td>Ustawienia i informacje o programie, w tym historia przeczytanych komunikatów od twórcy (<code>5</code>)</td>
+</tr>
+<tr>
+<td><code>ADM</code></td>
+<td>(tylko Windows, gdy brak uprawnień) ponowne uruchomienie jako Administrator</td>
+</tr>
+</tbody>
+</table></div>
+<p>Dodatkowo: program przy starcie sam sprawdza, czy twórca opublikował <strong>komunikat</strong> (np.
+ogłoszenie, ostrzeżenie) — każdy nieprzeczytany wymaga potwierdzenia Enterem, zanim program
+przejdzie do menu głównego. Historia potwierdzonych komunikatów jest zawsze dostępna z menu
+Ustawień.</p>
+<h2 id="3-skróty-klawiszowe">3. Skróty klawiszowe <a class="anchor" href="#3-skróty-klawiszowe" aria-label="Link do sekcji">#</a></h2>
+<p>Działają w <strong>każdym</strong> oknie programu:</p>
+<ul>
+<li><strong>Ctrl+C</strong> — cofnij się o jedno okno (do menu, które wywołało bieżące).</li>
+<li><strong>Ctrl+X</strong> — natychmiastowe, całkowite zamknięcie programu, z dowolnego miejsca.</li>
+</ul>
+<h2 id="4-instalacja-i-uruchomienie">4. Instalacja i uruchomienie <a class="anchor" href="#4-instalacja-i-uruchomienie" aria-label="Link do sekcji">#</a></h2>
+<p>Program nie ma instalatora. Wystarczy pobrać plik odpowiadający systemowi i architekturze
+procesora i uruchomić go w terminalu:</p>
+<ul>
+<li><code>NetworkMaster-windows-amd64.exe</code>, <code>NetworkMaster-windows-arm64.exe</code>, <code>NetworkMaster-windows-386.exe</code></li>
+<li><code>NetworkMaster-linux-amd64</code>, <code>NetworkMaster-linux-arm64</code>, <code>NetworkMaster-linux-386</code></li>
+<li><code>NetworkMaster-macos-amd64</code>, <code>NetworkMaster-macos-arm64</code></li>
+</ul>
+<p>(macOS nie ma wariantu 386 — Apple porzuciło 32-bit x86 w 2017 r., a 32-bit w ogóle w 2019 r.)</p>
+<p><strong>Linux i macOS:</strong> pobrany plik nie ma domyślnie uprawnienia do uruchamiania — trzeba je
+nadać przed pierwszym startem:</p>
+<pre><code>chmod +x NetworkMaster-linux-amd64        # (albo nazwa pliku, który pobrałeś)
+./NetworkMaster-linux-amd64</code></pre>
+<p><strong>macOS dodatkowo</strong> zablokuje uruchomienie niepodpisanego pliku komunikatem &quot;nie można
+otworzyć, bo pochodzi od niezidentyfikowanego dewelopera&quot; (Gatekeeper) — trzeba jednorazowo
+zdjąć flagę kwarantanny:</p>
+<pre><code>xattr -d com.apple.quarantine NetworkMaster-macos-amd64</code></pre>
+<p>albo kliknąć plik prawym przyciskiem → Otwórz, i potwierdzić w oknie systemowym.</p>
+<p>Przy pierwszym uruchomieniu program prosi o potwierdzenie i tworzy obok siebie foldery
+<code>core_data/</code> (dane własne) i <code>Reports/</code> (raporty). Przeniesienie/skopiowanie folderu z plikiem
+programu przenosi też cały jego stan.</p>
+<p>Przełączniki wiersza poleceń: <code>--version</code>, <code>--check-update</code>, <code>--help</code>.</p>
+<h2 id="5-budowanie-ze-źródeł">5. Budowanie ze źródeł <a class="anchor" href="#5-budowanie-ze-źródeł" aria-label="Link do sekcji">#</a></h2>
+<p>Wymagany <a href="https://go.dev/dl/" rel="noopener" target="_blank">Go</a> 1.22 lub nowszy. Program nie używa CGO. Korzysta z trzech zależności Go (<code>golang.org/x/crypto</code>,
+<code>golang.org/x/term</code>, <code>github.com/pkg/sftp</code>) — potrzebny jest dostęp do internetu przy
+pierwszym budowaniu (pobranie modułów), zero zależności uruchomieniowych (jeden,
+samodzielny plik wykonywalny jak zawsze — moduły są wkompilowane statycznie).</p>
+<pre><code class="language-powershell">cd source_code
+.\build.ps1 -Version X.Y.Z</code></pre>
+<p>Skrypt uruchamia testy (<code>go vet</code> + <code>go test</code>), a następnie buduje wszystkie 8 wariantów do
+<code>dist/</code> wraz z plikiem <code>checksums.txt</code>. Szybkie zbudowanie tylko dla bieżącego systemu:
+<code>go build -o NetworkMaster .</code> z poziomu <code>source_code/</code>.</p>
+<h2 id="6-architektura-kodu-dla-czytelnika-technicznego">6. Architektura kodu (dla czytelnika technicznego) <a class="anchor" href="#6-architektura-kodu-dla-czytelnika-technicznego" aria-label="Link do sekcji">#</a></h2>
+<p>Cały program to jedna baza kodu w Go, współdzielona przez wszystkie platformy — różnice
+systemowe są odseparowane plikami z odpowiednimi tagami budowania (<code>//go:build windows</code> itd.),
+a nie osobnymi gałęziami kodu.</p>
+<ul>
+<li><strong>Rdzeń i UI terminala</strong> — główna pętla menu i obsługa flag CLI, wspólne funkcje terminala
+(kolory, wejście, paski postępu). Skróty Ctrl+C/Ctrl+X są zaimplementowane jako mechanizm
+współdzielony: każde „okno” (funkcja menu) rejestruje możliwość powrotu przez <code>panic</code>/<code>recover</code>,
+a warstwa terminala (osobna dla Windows, Linuksa i macOS — każdy system inaczej
+obsługuje tryb surowy terminala) przechwytuje kombinacje klawiszy.</li>
+<li><strong>Warstwa systemowa</strong> — cała logika zależna od systemu operacyjnego (karty sieciowe, DHCP/IP
+statyczne, ARP, Wi-Fi, uprawnienia administratora, restart) jest odseparowana w osobnych plikach
+na Windows, Linux i macOS, z jednym plikiem wspólnym dla Linuksa i macOS tam, gdzie mechanizmy
+są analogiczne (np. <code>sudo</code>).</li>
+<li><strong>Parsery</strong> — cała logika parsowania wyjścia poleceń systemowych (np. <code>arp</code>, <code>ip neigh</code>, <code>ss</code>,
+wynik <code>ping</code> w różnych językach systemu) jest wydzielona do czystych, w pełni testowalnych
+funkcji, niezależnie od tego, czy dane narzędzie jest fizycznie dostępne na maszynie, na której
+akurat toczą się testy.</li>
+<li><strong>System aktualizacji</strong> — odpytuje GitHub Releases repozytorium wskazanego w kodzie, dobiera
+właściwy plik dla systemu/architektury, wymaga sumy SHA-256 przed podmianą i potrafi się
+wycofać, jeśli instalacja się nie powiedzie.</li>
+<li><strong>Menedżer VPN</strong> — warstwa wspólna (typy danych, magazyn plików WireGuard/OpenVPN,
+kopia zapasowa i przywracanie, menu) korzysta z jednego, ujednoliconego opisu możliwości danej platformy
+(jaki tunel obsługuje, czy może tworzyć/edytować/usuwać profile), dzięki czemu interfejs
+pokazuje użytkownikowi dokładnie to, co dana platforma naprawdę potrafi, zamiast po prostu
+ukrywać niedostępne opcje. Sama integracja z VPN systemowym jest już w pełni osobna dla
+każdej platformy: Windows przez natywne API RAS, Linux przez <code>nmcli</code>, macOS przez <code>scutil</code>.</li>
+<li><strong>Baza producentów MAC</strong> — osadzona bezpośrednio w pliku programu (skompresowana baza IEEE, ok. 39,7
+tys. wpisów), z zapytaniem do zewnętrznego serwisu jako uzupełnienie tylko wtedy, gdy adres nie
+znajduje się lokalnie.</li>
+<li><strong>Komunikaty od twórcy</strong> — program ściąga <code>announcements.json</code> z publicznego repo przy
+starcie (ten sam mechanizm &quot;GitHub jako lekka baza danych&quot; co system aktualizacji); lokalna
+historia potwierdzeń w <code>core_data/announcements_seen.json</code>.</li>
+<li><strong>Klient SSH/SFTP/FTP</strong> — SSH/SFTP przez <code>golang.org/x/crypto/ssh</code> i <code>github.com/pkg/sftp</code>
+(jedyne zależności, których nie da się bezpiecznie napisać samemu — kryptografia SSH to nie
+miejsce na własne implementacje). FTP jest napisany od zera, bez zależności — to stary,
+czysto tekstowy protokół, więc da się to zrobić poprawnie samemu. Oba dzielą ten sam wzorzec
+magazynu profili (<code>core_data/ssh_hosts.json</code>, <code>core_data/ftp_hosts.json</code>) co reszta programu.</li>
+</ul>
+<h3 id="jakość-kodu-i-testy">Jakość kodu i testy <a class="anchor" href="#jakość-kodu-i-testy" aria-label="Link do sekcji">#</a></h3>
+<p>Cały program to ok. 15 000 linii Go w jednej bazie kodu. Automatyczny pakiet testów (<code>go test</code>)
+obejmuje 108 testów w 13 plikach — parsery (dane z <code>arp</code>, <code>ip neigh</code>, <code>ss</code>, <code>netsh</code>, <code>ping</code> w wielu
+językach systemowych), kalkulator podsieci, system aktualizacji (na atrapie API GitHuba: wybór
+pliku dla danego systemu i architektury, weryfikacja SHA-256, odrzucanie podmienionych plików, podmiana
+z wycofaniem), system komunikatów od twórcy, weryfikację układu struktur Win32 API (RAS,
+Menedżer Poświadczeń) na poziomie bajtów, oraz klienta SSH/SFTP/FTP — uruchamiane są <strong>prawdziwe,
+lokalne serwery SSH i FTP</strong> (nie atrapy wywołań) w ramach testów, żeby sprawdzić faktyczną
+wymianę danych przez sieć, nie tylko logikę. <code>go vet</code> przechodzi czysto na wszystkich 8 kombinacjach
+system/architektura przy każdym wydaniu (wymusza to <code>build.ps1</code>).</p>
+<h2 id="7-znane-ograniczenia">7. Znane ograniczenia <a class="anchor" href="#7-znane-ograniczenia" aria-label="Link do sekcji">#</a></h2>
+<p>Poniższe punkty są świadomie i w pełni ujawnione — żadne z nich nie jest ukryte ani pomniejszone:</p>
+<ol>
+<li>
+<p><strong>Wersja dla macOS nie była uruchamiana na prawdziwym Macu.</strong> Kod dla macOS kompiluje się i przechodzi
+statyczną analizę (<code>go vet</code>), ale był tworzony i weryfikowany wyłącznie na Windows/Linux —
+autor nie miał dostępu do maszyny z macOS do testów na żywo. Zanim zaczniesz używać programu
+na co dzień w macOS, przetestuj podstawowe funkcje.</p>
+<p><strong>Wersja dla Linuksa była natomiast sprawdzona na działającym serwerze (Ubuntu 26.04 LTS):</strong> uruchomienie,
+przełączniki <code>--version</code>/<code>--check-update</code>, pierwsze uruchomienie i ekran zgody, komunikaty od
+twórcy, menu główne, IPConfig, tabela ARP (z rozpoznawaniem producenta po adresie MAC; program sam użył
+<code>ip neigh</code>, bo <code>arp</code> nie był nawet zainstalowany na tym serwerze), kalkulator podsieci i
+menedżer VPN — w tym poprawne, czytelne zgłoszenie braku <code>nmcli</code>/NetworkManager, zamiast
+cichej awarii. Nie zweryfikowano na żywo: rzeczywistego połączenia VPN (WireGuard/OpenVPN
+wymaga drugiego końca tunelu), monitora Wi-Fi (serwer testowy nie ma karty Wi-Fi) i edytora
+pliku hosts/operacji wymagających uprawnień roota (konto testowe miało <code>sudo</code>, ale testy
+uruchamiano bez niego, żeby sprawdzić typowy, nieprzywilejowany przypadek).</p>
+</li>
+<li><strong>macOS: brak programowego tworzenia/edycji/usuwania profili VPN.</strong> To ograniczenie samego
+systemu Apple (wymaga podpisanej aplikacji z uprawnieniem <code>NEVPNManager</code>), nie luka w kodzie.
+Dodatkowo <code>scutil</code> (narzędzie systemowe, na którym opiera się ta funkcja) w ogóle nie pokazuje
+profili typu IKEv2 — to również ograniczenie samego narzędzia Apple.</li>
+<li>
+<p><strong>Linux: VPN systemowy wymaga opcjonalnych wtyczek</strong> <code>NetworkManager-l2tp</code> /
+<code>NetworkManager-pptp</code>, które nie zawsze są domyślnie zainstalowane — program zgłasza ich brak
+wprost zamiast cicho zawodzić. NetworkManager w domyślnej instalacji nie umie tworzyć połączeń
+VPN typu L2TP/PPTP — potrzebuje do tego dodatkowego modułu. Instalacja (nazwy pakietów różnią
+się między dystrybucjami):</p>
+<ul>
+<li>Ubuntu/Debian: <code>sudo apt install network-manager-l2tp network-manager-pptp</code></li>
+<li>Fedora: <code>sudo dnf install NetworkManager-l2tp NetworkManager-pptp</code></li>
+<li>Arch Linux: <code>networkmanager-l2tp</code> / <code>networkmanager-pptp</code> (AUR)</li>
+</ul>
+<p>IKEv2 i SSTP nie są natywnie obsługiwane w Linuksie (żadna wtyczka tego nie zmieni) — do nich
+użyj WireGuard lub OpenVPN.</p>
+</li>
+<li><strong>32-bit Windows (<code>windows-386</code>): odzyskiwanie zapamiętanych haseł/PSK VPN do kopii zapasowej
+prawdopodobnie nie zadziała.</strong> Struktura danych używana przez Windows API do tego celu
+(<code>RASDIALPARAMSW</code>) została zweryfikowana i przetestowana tylko dla 64-bit Windows. Funkcja nie
+zwróci błędu — po prostu nie znajdzie zapisanego hasła, tak samo jak w sytuacji, gdy
+użytkownik nigdy się wcześniej pomyślnie nie połączył. Reszta programu na 32-bit Windows
+działa bez tego ograniczenia.</li>
+<li><strong>Hasła i klucze w kopiach zapasowych VPN są zapisywane jawnie (bez szyfrowania).</strong> To
+świadoma decyzja projektowa, nie błąd — celem jest, żeby jeden plik <code>.zip</code> kopii zapasowej naprawdę
+zawierał wszystko potrzebne do pełnego odtworzenia konfiguracji, łącznie z hasłami, kluczami
+PSK i kluczami prywatnymi WireGuard. Oznacza to, że plik kopii zapasowej wymaga takiej samej ostrożności
+jak plik z hasłami — nie należy go przesyłać ani przechowywać bez dodatkowego zabezpieczenia.</li>
+<li><strong>Pliki programu nie są podpisane cyfrowo (brak certyfikatu Authenticode/Apple Developer ID).</strong>
+System operacyjny lub antywirus może przy pierwszym uruchomieniu/pobraniu pokazać ostrzeżenie
+(&quot;nieznany wydawca&quot;, SmartScreen, Gatekeeper na macOS — patrz §4) — to standardowe zachowanie
+dla każdego niepodpisanego pliku wykonywalnego, nie oznaka realnego zagrożenia. Obfuskacja
+kodu (garble) nie jest stosowana, bo w praktyce powoduje dużo gorszy efekt: Google Chrome
+(Safe Browsing) blokuje pobieranie pliku jako &quot;wirus&quot;.
+Jedyny trwały sposób pozbycia się tych ostrzeżeń to podpis cyfrowy, nie
+wdrożony w tej wersji.</li>
+<li><strong>Windows: strzałki i klawisze funkcyjne (F1-F12, Page Up/Down, Home/End) nie działają w
+interaktywnej sesji SSH.</strong> Windows dostarcza te klawisze do konsoli jako kody wirtualne, nie
+jako sekwencje ANSI — warstwa odczytu klawiatury tego programu (zbudowana pierwotnie do
+prostej edycji linii) je pomija. Zwykłe pisanie, Enter, Backspace i Ctrl+C (przekazywane do
+zdalnego procesu) działają normalnie, tak samo na Linuksie/macOS, gdzie te klawisze w ogóle
+nie sprawiają problemu (surowy strumień bajtów naturalnie przenosi sekwencje ANSI). Pełna
+naprawa w Windows wymagałaby osobnej warstwy parsowania VT, co wykracza poza rozsądny zakres
+tej funkcji — świadomie przyjęte ograniczenie.</li>
+<li><strong>Zwykłe FTP jest protokołem bez szyfrowania</strong> — hasło i transferowane pliki idą jawnym
+tekstem przez sieć. To ograniczenie samego protokołu (RFC 959 z 1985 r.), nie tego programu.
+Jeśli to możliwe, używaj SFTP zamiast FTP.</li>
+</ol>
+<h2 id="8-faq">8. FAQ <a class="anchor" href="#8-faq" aria-label="Link do sekcji">#</a></h2>
+<p><strong>Czy program wysyła moje dane gdziekolwiek?</strong>
+Nie ma telemetrii ani konta użytkownika. Program łączy się z internetem wyłącznie wtedy, gdy
+sam uruchomisz konkretną funkcję, która tego wymaga (sprawdzenie aktualizacji, WHOIS, GeoIP,
+test prędkości, rozpoznawanie producenta po adresie MAC) — i tylko z usługą, której dana funkcja bezpośrednio
+dotyczy. Pełny wykaz w <a href="/networkmaster/polityka-prywatnosci">Polityce Prywatności</a>.</p>
+<p><strong>Czy program wymaga uprawnień administratora?</strong>
+Część funkcji (np. zmiana konfiguracji karty sieciowej, edycja pliku hosts, niektóre operacje
+VPN) tego wymaga — program wykrywa brak uprawnień i wyraźnie to sygnalizuje, oferując w
+Windows opcję ponownego uruchomienia jako Administrator (<code>ADM</code>).</p>
+<p><strong>Czy działa bez internetu?</strong>
+Tak — większość funkcji (konfiguracja sieci, skanowanie LAN, ARP, baza profili IP/WOL, edycja
+hosts, WireGuard/OpenVPN w sieci lokalnej) działa całkowicie offline. Internetu wymagają tylko
+funkcje, które z natury korzystają z usług zewnętrznych (WHOIS, GeoIP, aktualizacje, test prędkości).</p>
+<p><strong>Czy program instaluje coś w systemie?</strong>
+Nie. To pojedynczy plik wykonywalny bez instalatora; jedyne pliki, jakie tworzy, to własne
+foldery danych (<code>core_data/</code>, <code>Reports/</code>) obok siebie.</p>
+<p><strong>Dlaczego Windows/Chrome/antywirus ostrzega przy pobraniu albo uruchomieniu?</strong>
+Bo plik nie jest podpisany cyfrowo (patrz punkt 6 w §7) — to standardowe zachowanie systemu dla
+każdego niepodpisanego programu, niezależnie od tego, co kod faktycznie robi. Jedyny sposób,
+żeby to ostrzeżenie zniknęło na dobre, to podpis cyfrowy (certyfikat Authenticode) — nie
+wdrożony w tej wersji.</p>
+<p><strong>Znalazłeś błąd albo masz sugestię poprawki?</strong>
+Napisz na <strong>pxware@pxware.pl</strong> — opisz, co się stało, i zaznacz w temacie, że chodzi o
+NetworkMaster (ten sam adres obsługuje więcej niż jeden projekt).</p>
+<hr />
+<p>Opis zmian najnowszej wersji: <a href="https://github.com/px-ware/networkmaster/releases/latest" rel="noopener" target="_blank">wydanie na GitHubie</a>.</p>    <p class="doc-source">Źródło dokumentu: <a href="https://github.com/px-ware/networkmaster/blob/main/dokumentacja/Dokumentacja-NetworkMaster.md" rel="noopener" target="_blank">GitHub, px-ware/networkmaster/dokumentacja/Dokumentacja-NetworkMaster.md</a></p>
+  </main>
+  <footer>
+    <p><a href="/networkmaster/">Strona główna</a> · <a href="https://github.com/px-ware/networkmaster/releases/latest">Pobierz</a> · <a href="mailto:pxware@pxware.pl">Kontakt</a> · <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></p>
+    <p>© 2026 PX Paweł Mościbrodzki (NetworkMaster) · <a href="/">pxware.pl</a>. Wszelkie prawa zastrzeżone.</p>
+  </footer>
+</div>
+<script src="/networkmaster/assets/js/site.js" defer></script>
+</body>
+</html>

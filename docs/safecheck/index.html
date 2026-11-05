@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeCheck – alarm SOS na Androida: SMS z lokalizacją do bliskich</title>
+  <meta name="description" content="Aplikacja na Androida, która wysyła bliskim SMS z Twoją lokalizacją, gdy nie potwierdzisz, że wszystko w porządku. Projekt z kodem źródłowym na sprzedaż.">
+  <link rel="canonical" href="https://pxware.pl/safecheck/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2e7d32">
+  <!-- Weryfikacja Google Search Console -->
+  <meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o" />
+
+  <!-- Open Graph / Twitter (podgląd linku w komunikatorach i mediach społecznościowych) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:site_name" content="SafeCheck">
+  <meta property="og:title" content="SafeCheck – ktoś zawsze będzie wiedział, że potrzebujesz pomocy">
+  <meta property="og:description" content="Aplikacja na Androida, która powiadomi bliskich SMS-em z lokalizacją, gdy nie dasz znaku życia. Projekt z kodem źródłowym na sprzedaż.">
+  <meta property="og:url" content="https://pxware.pl/safecheck/">
+  <meta property="og:image" content="https://pxware.pl/safecheck/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/safecheck/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/safecheck/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/safecheck/apple-touch-icon.png">
+  <link rel="manifest" href="/safecheck/site.webmanifest">
+  <link rel="stylesheet" href="/safecheck/assets/css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://pxware.pl/safecheck/#website",
+        "url": "https://pxware.pl/safecheck/",
+        "name": "SafeCheck",
+        "inLanguage": "pl-PL"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "SafeCheck",
+        "operatingSystem": "Android 7.0+",
+        "applicationCategory": "LifestyleApplication",
+        "softwareVersion": "2.5.5",
+        "inLanguage": ["pl", "en", "de", "fr"],
+        "description": "Aplikacja bezpieczeństwa typu dead man's switch: gdy użytkownik nie potwierdzi obecności przed upływem ustawionego czasu, telefon włącza alarm, a następnie wysyła SMS z lokalizacją GPS do wskazanych opiekunów.",
+        "screenshot": "https://pxware.pl/safecheck/assets/img/screens/05-ekran-glowny.webp",
+        "downloadUrl": "https://github.com/px-ware/safecheck/releases/latest/download/SafeCheck.apk",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "PLN" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#tresc">Przejdź do treści</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/safecheck/" aria-label="SafeCheck – strona główna">
+        <img src="/safecheck/assets/img/logo.svg" alt="" width="32" height="32">
+        SafeCheck
+      </a>
+      <nav class="nav" aria-label="Główna nawigacja">
+        <a href="#jak-dziala">Jak działa</a>
+        <a href="#funkcje">Funkcje</a>
+        <a href="#ekrany">Ekrany</a>
+        <a href="#pobierz">Pobierz</a>
+        <a href="#dokumenty">Dokumenty</a>
+      </nav>
+      <a class="btn btn-primary btn-sm header-cta" href="#sprzedaz">
+        <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-sell"/></svg>
+        Kup projekt
+      </a>
+    </div>
+  </header>
+
+  <main id="tresc">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <a class="badge-sale" href="#sprzedaz"><span>Na sprzedaż</span> Kod źródłowy + prawa do aplikacji</a>
+          <h1>Gdy nie dasz znaku życia, <em>bliscy dowiedzą się o tym</em></h1>
+          <p class="lead">
+            SafeCheck to aplikacja na Androida dla osób mieszkających samotnie.
+            Wystarczy co jakiś czas nacisnąć <strong>„ŻYJĘ!”</strong>. Jeśli tego nie zrobisz,
+            telefon włączy alarm, a potem sam wyśle opiekunom <strong>SMS z Twoją lokalizacją</strong>.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#sprzedaz">
+              <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-sell"/></svg>
+              Zapytaj o zakup
+            </a>
+            <a class="btn btn-ghost" href="#pobierz">
+              <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-download"/></svg>
+              Pobierz APK (demo)
+            </a>
+          </div>
+          <ul class="hero-facts">
+            <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-smartphone"/></svg> Android 7.0+</li>
+            <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-wifi_off"/></svg> Bez serwera i konta</li>
+            <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-translate"/></svg> 4 języki</li>
+            <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-code"/></svg> Kotlin + Jetpack Compose</li>
+          </ul>
+        </div>
+        <div class="phones" aria-hidden="true">
+          <div class="phone phone-back"><img src="/safecheck/assets/img/screens/08-alarm.webp" alt="" width="540" height="1200" fetchpriority="high"></div>
+          <div class="phone phone-front"><img src="/safecheck/assets/img/screens/05-ekran-glowny.webp" alt="" width="540" height="1200" fetchpriority="high"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ JAK DZIAŁA ============ -->
+    <section id="jak-dziala" class="section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Jak to działa</p>
+          <h2>Cztery kroki od instalacji do spokoju</h2>
+          <p class="lead">Konfiguracja zajmuje około minuty. Potem SafeCheck czuwa w tle, także gdy aplikacja jest zamknięta i po restarcie telefonu.</p>
+        </div>
+        <ol class="steps">
+          <li class="step"><h3>Wpisz imię i opiekunów</h3><p>Podaj numery osób, które mają zostać powiadomione. Numer jest sprawdzany na bieżąco, a kraj wybierasz z listy.</p></li>
+          <li class="step"><h3>Ustaw licznik</h3><p>Domyślnie 48 godzin. Możesz ustawić dowolny czas: dni, godziny, minuty.</p></li>
+          <li class="step"><h3>Naciskaj „ŻYJĘ!”</h3><p>Jedno dotknięcie, w aplikacji lub prosto z powiadomienia, i licznik liczy od nowa.</p></li>
+          <li class="step"><h3>Brak reakcji = pomoc</h3><p>Alarm na ekranie, także zablokowanym. Bez reakcji po 2,5 minuty opiekunowie dostają SMS z lokalizacją.</p></li>
+        </ol>
+
+        <h3 style="margin-top:56px">Co się dzieje, gdy czas minie</h3>
+        <ol class="timeline" aria-label="Sekwencja alarmowa">
+          <li class="alarm"><time>0:00</time><span>Alarm: „Potwierdź, że żyjesz!”</span></li>
+          <li class="wait"><time>0:30</time><span>Przerwa</span></li>
+          <li class="alarm"><time>1:00</time><span>Drugi alarm</span></li>
+          <li class="wait"><time>1:30</time><span>Ostatnie ostrzeżenie</span></li>
+          <li class="alarm"><time>2:00</time><span>„Za chwilę powiadomimy bliskich”</span></li>
+          <li class="sms"><time>2:30</time><span>SMS z lokalizacją GPS do opiekunów</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ FUNKCJE ============ -->
+    <section id="funkcje">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Funkcje</p>
+          <h2>Zaprojektowana tak, żeby zadziałała wtedy, gdy trzeba</h2>
+        </div>
+        <div class="grid grid-3">
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-location_on"/></svg></div>
+            <h3>SMS z lokalizacją</h3>
+            <p>Opiekun dostaje wiadomość z linkami do Google Maps i Apple Maps. Nie musi mieć zainstalowanej aplikacji.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-notifications_active"/></svg></div>
+            <h3>Alarm na blokadzie</h3>
+            <p>Pełnoekranowy alarm włącza wyświetlacz i gra głośnością budzika, także w trybie cichym.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-wifi_off"/></svg></div>
+            <h3>Bez internetu i serwera</h3>
+            <p>Alarm i SMS działają przez sieć komórkową. Brak serwera oznacza zerowe koszty utrzymania i żadnego ryzyka wycieku danych z serwera.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-restart_alt"/></svg></div>
+            <h3>Odporna na restart i tryb uśpienia</h3>
+            <p>Systemowy alarm typu „budzik” działa w trybie oszczędzania energii i jest przywracany po ponownym uruchomieniu telefonu.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg></div>
+            <h3>Fałszywy alarm? Bez stresu</h3>
+            <p>Gdy potwierdzisz obecność po wysłaniu SMS-a, opiekunowie automatycznie dostaną wiadomość, że wszystko w porządku.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-shield_person"/></svg></div>
+            <h3>Prywatność i RODO</h3>
+            <p>Dane zostają w telefonie. Formularz zgody na reklamy (Google UMP) dla UE, gotowa polityka prywatności i regulamin.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-translate"/></svg></div>
+            <h3>4 języki</h3>
+            <p>Polski, angielski, niemiecki i francuski, z wyborem języka niezależnym od ustawień telefonu.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-smartphone"/></svg></div>
+            <h3>Pomoc z ustawieniami telefonu</h3>
+            <p>Aplikacja prowadzi przez uprawnienia i otwiera ustawienia autostartu na telefonach Xiaomi, Huawei, Oppo i Vivo.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-ads_click"/></svg></div>
+            <h3>Gotowa monetyzacja</h3>
+            <p>Zintegrowany Google AdMob: baner i reklama pełnoekranowa. Identyfikatory zmienia się w jednym pliku konfiguracji. Pełne wyświetlanie reklam wymaga powiązania aplikacji ze sklepem – szczegóły w dokumentacji.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EKRANY ============ -->
+    <section id="ekrany" class="section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Ekrany</p>
+          <h2>Prosta, czytelna, z dużymi przyciskami</h2>
+          <p class="lead">Interfejs w Jetpack Compose (Material 3), zaprojektowany z myślą o seniorach. Przewiń w bok, aby zobaczyć wszystkie ekrany.</p>
+        </div>
+        <div class="gallery" tabindex="0" aria-label="Galeria zrzutów ekranu">
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/05-ekran-glowny.webp" alt="Ekran główny z licznikiem i przyciskiem ŻYJĘ" width="540" height="1200" loading="lazy"></div><figcaption>Ekran główny</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/08-alarm.webp" alt="Pełnoekranowy alarm z odliczaniem" width="540" height="1200" loading="lazy"></div><figcaption>Alarm</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/03-opiekun.webp" alt="Dodawanie opiekuna z wyborem kraju i maską numeru" width="540" height="1200" loading="lazy"></div><figcaption>Dodawanie opiekuna</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/06-menu.webp" alt="Menu boczne aplikacji" width="540" height="1200" loading="lazy"></div><figcaption>Menu</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/07-czas.webp" alt="Ustawianie długości licznika" width="540" height="1200" loading="lazy"></div><figcaption>Długość licznika</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/02-imie.webp" alt="Rejestracja: imię i zgoda na regulamin" width="540" height="1200" loading="lazy"></div><figcaption>Pierwsze uruchomienie</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/04-intro.webp" alt="Ekran wprowadzenia" width="540" height="1200" loading="lazy"></div><figcaption>Wprowadzenie</figcaption></figure>
+          <figure><div class="phone"><img src="/safecheck/assets/img/screens/01-jezyk.webp" alt="Wybór języka" width="540" height="1200" loading="lazy"></div><figcaption>Wybór języka</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPRZEDAŻ ============ -->
+    <section id="sprzedaz" class="sale">
+      <div class="wrap">
+        <div class="sale-box">
+          <p class="eyebrow">
+            <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-sell"/></svg>
+            Projekt na sprzedaż
+          </p>
+          <h2>Gotowa aplikacja, którą możesz wydać pod własną marką</h2>
+          <p class="lead">
+            Sprzedajemy kompletny projekt SafeCheck: kod źródłowy, grafiki, dokumentację i prawa do aplikacji.
+            Kod jest uporządkowany i skomentowany, a wszystkie ustawienia marki są w jednym pliku.
+          </p>
+
+          <div class="sale-grid">
+            <ul class="checklist">
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Pełny kod źródłowy</strong> (Kotlin, Jetpack Compose) w prywatnym repozytorium na GitHubie, kompilujący się bez błędów</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Przeniesienie praw</strong> do kodu, nazwy i grafik na podstawie umowy</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Dokumentacja techniczna</strong> (architektura, diagramy, publikacja w Google Play), instrukcja użytkownika</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Wzory regulaminu i polityki prywatności</strong> zgodne z RODO, do uzupełnienia danymi firmy</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Zmiana marki w jednym miejscu</strong>: identyfikator aplikacji, AdMob i linki w <code>gradle.properties</code></span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Gotowe reklamy AdMob ze zgodą RODO (UMP)</strong>, 4 wersje językowe, przetestowane na Androidzie 15</span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-check_circle"/></svg><span><strong>Ta strona</strong> i dokumenty gotowe do przejęcia</span></li>
+            </ul>
+
+            <div class="contact-card">
+              <h3>Zainteresowany?</h3>
+              <p class="price">Cena: <strong>do negocjacji</strong></p>
+              <p>Napisz, chętnie odpowiemy na pytania techniczne i pokażemy kod na żywo przed zakupem.</p>
+              <a class="btn btn-white" href="/#kontakt" rel="noopener" target="_blank">
+                <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-forum"/></svg>
+                Formularz kontaktowy
+              </a>
+              <a class="btn btn-outline-white" href="mailto:pxware@pxware.pl?subject=SafeCheck%20%E2%80%93%20zapytanie%20o%20zakup">
+                <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-mail"/></svg>
+                Wyślij e-mail
+              </a>
+              <span class="mail">pxware@pxware.pl</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:40px">
+          <div>
+            <h3>Specyfikacja techniczna</h3>
+            <div class="spec-wrap">
+              <table class="spec">
+                <tr><th scope="row">Platforma</th><td>Android 7.0+ (API 24), docelowo Android 15 (API 35)</td></tr>
+                <tr><th scope="row">Język i UI</th><td>Kotlin 1.9, Jetpack Compose, Material 3</td></tr>
+                <tr><th scope="row">Architektura</th><td>Single Activity, usługa pierwszoplanowa, AlarmManager, BroadcastReceivers</td></tr>
+                <tr><th scope="row">Backend</th><td>brak: dane tylko na urządzeniu (SharedPreferences)</td></tr>
+                <tr><th scope="row">Biblioteki</th><td>Google AdMob, UMP, Play Services Location, libphonenumber</td></tr>
+                <tr><th scope="row">Budowanie</th><td>Gradle 8.5 (Kotlin DSL), AGP 8.2</td></tr>
+                <tr><th scope="row">Języki</th><td>PL, EN, DE, FR</td></tr>
+                <tr><th scope="row">Wersja</th><td>2.5.5</td></tr>
+                <tr><th scope="row">Dystrybucja</th><td>plik APK z GitHuba (bez Google Play), gotowy do ewentualnej publikacji w sklepie</td></tr>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3>Dla kogo ten projekt</h3>
+            <div class="card">
+              <p style="margin-bottom:12px">Dla firm i twórców, którzy chcą szybko wejść na rynek aplikacji bezpieczeństwa i teleopieki:</p>
+              <ul class="steps-plain">
+                <li>firmy z branży opieki senioralnej i teleopieki,</li>
+                <li>ubezpieczyciele i operatorzy szukający dodatku do oferty,</li>
+                <li>wydawcy aplikacji i studia mobilne,</li>
+                <li>programiści, którzy chcą rozwinąć gotowy produkt (np. wersja Premium, widżet, przycisk SOS).</li>
+              </ul>
+              <p style="margin-top:12px">Pełna lista znanych ograniczeń i propozycji rozwoju jest w <a href="/safecheck/dokumentacja-techniczna#20-znane-ograniczenia-i-dług-techniczny">dokumentacji technicznej</a>. Bez niespodzianek po zakupie.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ POBIERZ ============ -->
+    <section id="pobierz" class="section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Pobierz</p>
+          <h2>Wypróbuj aplikację na swoim telefonie</h2>
+          <p class="lead">Wersja demonstracyjna do samodzielnej instalacji (plik APK). Pełna funkcjonalność, reklamy testowe.</p>
+        </div>
+        <div class="download">
+          <div class="card">
+            <h3>SafeCheck 2.5.5 (demo)</h3>
+            <p style="margin-bottom:20px">Plik APK, około 14 MB, Android 7.0 lub nowszy.</p>
+            <a class="btn btn-primary" href="https://github.com/px-ware/safecheck/releases/latest/download/SafeCheck.apk">
+              <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-download"/></svg>
+              Pobierz SafeCheck.apk
+            </a>
+            <p style="margin-top:20px"><a href="https://github.com/px-ware/safecheck/releases" rel="noopener" target="_blank">Wszystkie wersje i suma kontrolna SHA-256</a></p>
+            <p class="hash">SHA-256: 7c497aca10d55c6637149c93fde15d1349250c29a8b5e6090b9be3f6419ad416</p>          </div>
+          <div class="card">
+            <h3>Jak zainstalować</h3>
+            <ol class="steps-plain">
+              <li>Pobierz plik na telefon i otwórz go z powiadomienia lub folderu „Pobrane”.</li>
+              <li>Jeśli telefon zapyta, zezwól przeglądarce na instalowanie aplikacji z nieznanych źródeł.</li>
+              <li>Naciśnij „Zainstaluj”, a potem przejdź przez krótką konfigurację.</li>
+            </ol>
+            <div class="notice" style="margin-top:20px">
+              <svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-sms"/></svg>
+              <span><strong>Uwaga:</strong> SMS-y są wysyłane naprawdę, z Twojej karty SIM. Do testów wpisz jako opiekuna własny drugi numer i ustaw krótki licznik (np. 20 sekund).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DOKUMENTY ============ -->
+    <section id="dokumenty">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Dokumenty</p>
+          <h2>Wszystko udokumentowane</h2>
+        </div>
+        <div class="doc-links">
+          <a class="doc-link" href="/safecheck/instrukcja"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-menu_book"/></svg><div><strong>Instrukcja obsługi</strong><span>Konfiguracja, alarm, ustawienia baterii, najczęstsze pytania</span></div></a>
+          <a class="doc-link" href="/safecheck/dokumentacja-techniczna"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-code"/></svg><div><strong>Dokumentacja techniczna</strong><span>Architektura, diagramy, komponenty, publikacja w Google Play</span></div></a>
+          <a class="doc-link" href="/safecheck/regulamin"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-gavel"/></svg><div><strong>Regulamin</strong><span>Zasady korzystania z aplikacji</span></div></a>
+          <a class="doc-link" href="/safecheck/polityka-prywatnosci"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-shield_person"/></svg><div><strong>Polityka prywatności</strong><span>Jakie dane, gdzie są przechowywane, prawa użytkownika (RODO)</span></div></a>
+          <a class="doc-link" href="https://github.com/px-ware/safecheck/releases" rel="noopener" target="_blank"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-history"/></svg><div><strong>Wydania na GitHubie</strong><span>Najnowsza wersja APK i opis zmian</span></div></a>
+          <a class="doc-link" href="/safecheck/licencja"><svg class="icon" aria-hidden="true"><use href="/safecheck/assets/img/icons.svg#i-gavel"/></svg><div><strong>Licencja</strong><span>Prawa autorskie i zasady korzystania z APK oraz strony</span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" class="section-alt">
+      <div class="wrap">
+        <div class="section-head center">
+          <p class="eyebrow">FAQ</p>
+          <h2>Najczęstsze pytania</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Czy SafeCheck zastępuje numer alarmowy 112?</summary>
+            <p>Nie. SafeCheck jest dodatkowym zabezpieczeniem, które powiadamia wskazane przez Ciebie osoby. W sytuacji zagrożenia zawsze dzwoń pod 112.</p>
+          </details>
+          <details>
+            <summary>Czy opiekun musi mieć aplikację?</summary>
+            <p>Nie. Opiekun dostaje zwykłego SMS-a z linkiem do mapy, który otworzy na każdym telefonie.</p>
+          </details>
+          <details>
+            <summary>Ile kosztuje korzystanie z aplikacji?</summary>
+            <p>Aplikacja jest bezpłatna i wyświetla reklamy. SMS-y są wysyłane z Twojej karty SIM według taryfy operatora.</p>
+          </details>
+          <details>
+            <summary>Gdzie są przechowywane moje dane?</summary>
+            <p>W telefonie – aplikacja nie ma serwera ani konta. Jeśli masz włączoną kopię zapasową Google, system Android może przechowywać kopię ustawień (imię, opiekunowie) na Twoim koncie Google. Lokalizacja jest pobierana tylko w chwili alarmu i trafia jedynie w SMS-ie do opiekunów.</p>
+          </details>
+          <details>
+            <summary>Czy SafeCheck jest w Google Play?</summary>
+            <p>Nie. Aplikację pobiera się jako plik APK z tej strony. Nowe wersje instaluje się na poprzedniej, z zachowaniem ustawień. Kod jest przygotowany do publikacji w sklepie, jeśli nabywca zechce to zrobić.</p>
+          </details>
+          <details>
+            <summary>Co się stanie po zmianie telefonu?</summary>
+            <p>Aplikację trzeba zainstalować na nowym telefonie ze strony. Systemowa kopia zapasowa Androida może przenieść ustawienia (imię, opiekunów, długość licznika), ale nie jest to gwarantowane. Licznik zawsze startuje od nowa, a uprawnienia trzeba nadać ponownie. Szczegóły w <a href="/safecheck/instrukcja#10-najczęstsze-pytania-i-problemy">instrukcji</a>.</p>
+          </details>
+          <details>
+            <summary>Co dokładnie dostanę, kupując projekt?</summary>
+            <p>Dostęp do prywatnego repozytorium z pełnym kodem źródłowym, grafiki, dokumentację i przeniesienie praw na podstawie umowy. Szczegóły ustalimy indywidualnie.</p>
+          </details>
+          <details>
+            <summary>Czy mogę zobaczyć kod przed zakupem?</summary>
+            <p>Tak. Po kontakcie możemy pokazać kod i działanie aplikacji, np. podczas rozmowy wideo. Pełna dokumentacja techniczna jest dostępna publicznie na tej stronie.</p>
+          </details>
+          <details>
+            <summary>Czy aplikację można opublikować w Google Play pod własną marką?</summary>
+            <p>Tak. Identyfikator aplikacji, reklamy, linki i podpis zmienia się w jednym pliku konfiguracji. Dokumentacja techniczna zawiera listę kontrolną publikacji, w tym wymagane deklaracje uprawnień SMS w Google Play.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============ WSPARCIE ============ -->
+    <section id="wsparcie">
+      <div class="wrap">
+        <div class="section-head" style="margin-bottom:24px">
+          <p class="eyebrow">Wsparcie</p>
+          <h2>Podoba Ci się ten projekt?</h2>
+          <p class="lead">
+            Aplikacja jest darmowa i taka pozostanie, dopóki projekt nie zostanie sprzedany.
+            Jeśli chcesz wspierać jego dalsze doskonalenie albo powstawanie nowych projektów – możesz postawić kawę.
+          </p>
+        </div>
+        <a class="btn btn-primary" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/safecheck/"><img src="/safecheck/assets/img/logo.svg" alt="" width="32" height="32"> SafeCheck</a>
+          <p style="margin-top:10px">Aplikacja bezpieczeństwa na Androida. Projekt z kodem źródłowym na sprzedaż.</p>
+        </div>
+        <div>
+          <h4>Dokumenty</h4>
+          <ul>
+            <li><a href="/safecheck/instrukcja">Instrukcja obsługi</a></li>
+            <li><a href="/safecheck/dokumentacja-techniczna">Dokumentacja techniczna</a></li>
+            <li><a href="/safecheck/regulamin">Regulamin</a></li>
+            <li><a href="/safecheck/polityka-prywatnosci">Polityka prywatności</a></li>
+            <li><a href="https://github.com/px-ware/safecheck" rel="noopener" target="_blank">Dokumenty na GitHubie</a></li>
+            <li><a href="/safecheck/licencja">Licencja</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kontakt</h4>
+          <ul>
+            <li><a href="/#kontakt" rel="noopener" target="_blank">Formularz kontaktowy</a></li>
+            <li><a href="mailto:pxware@pxware.pl">pxware@pxware.pl</a></li>
+            <li><a href="/" rel="noopener" target="_blank">pxware.pl – autor</a></li>
+            <li><a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="rok">2026</span> SafeCheck. Wszelkie prawa zastrzeżone. <a href="/safecheck/licencja">Licencja</a></span>
+        <span>Android jest znakiem towarowym Google LLC.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/safecheck/assets/js/site.js" defer></script>
+</body>
+</html>

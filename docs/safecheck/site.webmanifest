@@ -1,0 +1,15 @@
+{
+  "name": "SafeCheck",
+  "short_name": "SafeCheck",
+  "description": "Aplikacja bezpieczeństwa na Androida – projekt na sprzedaż.",
+  "start_url": "/safecheck/",
+  "display": "browser",
+  "background_color": "#f6f8f7",
+  "theme_color": "#2e7d32",
+  "lang": "pl",
+  "icons": [
+    { "src": "/safecheck/assets/img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/safecheck/assets/img/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/safecheck/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

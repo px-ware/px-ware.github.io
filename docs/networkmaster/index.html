@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NetworkMaster — diagnostyka sieci, skaner LAN, VPN i SSH</title>
+<meta name="description" content="Narzędzie w terminalu na Windows, Linux i macOS: diagnostyka sieci, skaner LAN, VPN (WireGuard, OpenVPN) i SSH/SFTP. Projekt z kodem źródłowym na sprzedaż.">
+<link rel="canonical" href="https://pxware.pl/networkmaster/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="NetworkMaster">
+<meta property="og:title" content="NetworkMaster — diagnostyka sieci, skaner LAN, VPN i SSH">
+<meta property="og:description" content="Narzędzie w terminalu na Windows, Linux i macOS: diagnostyka sieci, skaner LAN, VPN (WireGuard, OpenVPN) i SSH/SFTP. Projekt z kodem źródłowym na sprzedaż.">
+<meta property="og:url" content="https://pxware.pl/networkmaster/">
+<link rel="icon" href="/networkmaster/favicon.svg" type="image/svg+xml">
+<meta name="google-site-verification" content="nOIxWEDVdMd7fskhsctxTMLB7LUHU5kojC_TMt-a37o" />
+<style>
+  :root{
+    --bg:#0b0f0c; --panel:#11170f; --border:#1f2a1c; --text:#d9e6d6; --muted:#8fa389;
+    --accent:#3ddc6f; --accent2:#6fe3a8; --warn:#e6c25c; --danger:#e65c5c; --link:#7fd4ff;
+    --mono: "SFMono-Regular","Consolas","Liberation Mono",Menlo,Courier,monospace;
+    --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f4f8f3; --panel:#ffffff; --border:#dbe6d7; --text:#16220f; --muted:#51664a;
+           --accent:#1a9e4b; --accent2:#0d7a39; --warn:#9a6b00; --danger:#b23b3b; --link:#0b63b0; }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans)}
+  body{padding:0 16px}
+  .wrap{max-width:860px;margin:0 auto}
+  header.hero{padding:56px 0 28px;text-align:center}
+  .tag{display:inline-block;font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+       color:var(--accent2);border:1px solid var(--border);border-radius:999px;padding:4px 12px;margin-bottom:18px}
+  h1{font-size:clamp(28px,6vw,44px);margin:0 0 10px;line-height:1.15}
+  h1 .brand{color:var(--accent)}
+  .lead{color:var(--muted);font-size:17px;max-width:620px;margin:0 auto 28px;line-height:1.55}
+  .cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;
+       text-decoration:none;font-weight:600;font-size:15px;border:1px solid transparent;transition:transform .08s ease}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--accent);color:#07140a}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--border)}
+  .note{color:var(--muted);font-size:13px;margin-top:10px}
+  section{padding:34px 0;border-top:1px solid var(--border)}
+  h2{font-size:22px;margin:0 0 18px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+  .card h3{margin:0 0 8px;font-size:15px;color:var(--accent2)}
+  .card p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+  .platforms{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .plat{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px}
+  .plat h3{margin:0 0 10px;font-size:16px;display:flex;align-items:center;gap:8px}
+  .plat ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .plat a{color:var(--link);font-family:var(--mono);font-size:13.5px;text-decoration:none}
+  .plat a:hover{text-decoration:underline}
+  .plat .arch-note{color:var(--muted);font-size:12px;margin-top:8px}
+  table.features{width:100%;border-collapse:collapse;font-size:14px}
+  table.features td,table.features th{padding:8px 10px;border-bottom:1px solid var(--border);text-align:left}
+  table.features th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+  .ok{color:var(--accent)} .no{color:var(--danger)} .partial{color:var(--warn)}
+  .warn-box{background:var(--panel);border:1px solid var(--warn);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.55;color:var(--text)}
+  .warn-box b{color:var(--warn)}
+  footer{padding:30px 0 60px;color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--link);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  .kbd{font-family:var(--mono);background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:13px}
+  code{font-family:var(--mono);font-size:.95em}
+  .sale-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;
+       letter-spacing:.06em;color:#1a140a;background:var(--warn);border-radius:999px;padding:4px 14px;margin-bottom:18px;font-weight:700}
+  .sale-box{background:var(--panel);border:1px solid var(--warn);border-radius:14px;padding:22px}
+  .checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5}
+  .checklist li::before{content:"✓";color:var(--accent);font-weight:700;flex-shrink:0}
+  .sale-grid,.spec-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-top:18px}
+  @media (max-width:640px){.sale-grid,.spec-grid{grid-template-columns:1fr}}
+  .contact-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+  .contact-card .price{font-size:15px;margin:6px 0 14px}
+  .contact-card .price strong{color:var(--accent2)}
+  table.spec{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.spec th,table.spec td{padding:7px 10px;border-bottom:1px solid var(--border);text-align:left}
+  table.spec th{color:var(--muted);font-weight:600;width:38%}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <a class="sale-tag" href="#sprzedaz">🏷️ Projekt na sprzedaż — kod źródłowy + prawa</a>
+    <br>
+    <span class="tag">v2.5.3 · WINDOWS · LINUX · MACOS</span>
+    <h1><span class="brand">Network</span>Master</h1>
+    <p class="lead">Jedno narzędzie w terminalu do diagnostyki sieci, skanowania LAN, zarządzania
+      VPN (systemowym, WireGuard, OpenVPN), klienta SSH/SFTP/FTP i monitorowania połączenia.
+      Bez instalatora: jeden plik dla Twojego systemu.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#sprzedaz">Kup projekt</a>
+      <a class="btn btn-ghost" href="#pobieranie">Pobierz (darmowe)</a>
+      <a class="btn btn-ghost" href="/networkmaster/dokumentacja">Dokumentacja</a>
+    </div>
+    <p class="note">Program jest obecnie udostępniany bezpłatnie, w pełnej wersji. Kod źródłowy
+      jest zamknięty — szczegóły w <a href="/networkmaster/licencja" style="color:var(--link)">licencji</a>.</p>
+  </header>
+
+  <section id="pobieranie">
+    <h2>Pobieranie</h2>
+    <div class="platforms">
+      <div class="plat">
+        <h3>🪟 Windows</h3>
+        <ul>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-windows-amd64.exe">NetworkMaster-windows-amd64.exe</a></li>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-windows-arm64.exe">NetworkMaster-windows-arm64.exe</a> <span style="color:var(--muted)">(ARM, np. Surface Pro X)</span></li>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-windows-386.exe">NetworkMaster-windows-386.exe</a> <span style="color:var(--muted)">(32-bit)</span></li>
+        </ul>
+      </div>
+      <div class="plat">
+        <h3>🐧 Linux</h3>
+        <ul>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-linux-amd64">NetworkMaster-linux-amd64</a></li>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-linux-arm64">NetworkMaster-linux-arm64</a> <span style="color:var(--muted)">(np. Raspberry Pi)</span></li>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-linux-386">NetworkMaster-linux-386</a> <span style="color:var(--muted)">(32-bit)</span></li>
+        </ul>
+        <p class="arch-note">Po pobraniu: <span class="kbd">chmod +x NetworkMaster-linux-*</span> i uruchom w terminalu.</p>
+      </div>
+      <div class="plat">
+        <h3>🍎 macOS</h3>
+        <ul>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-macos-amd64">NetworkMaster-macos-amd64</a> <span style="color:var(--muted)">(Intel)</span></li>
+          <li><a href="https://github.com/px-ware/networkmaster/releases/latest/download/NetworkMaster-macos-arm64">NetworkMaster-macos-arm64</a> <span style="color:var(--muted)">(Apple Silicon)</span></li>
+        </ul>
+        <p class="arch-note">Wersja dla macOS nie była uruchamiana na prawdziwym Macu — patrz <a href="/networkmaster/dokumentacja" style="color:var(--link)">dokumentacja</a>.</p>
+      </div>
+    </div>
+    <p class="note">Linki prowadzą do najnowszego wydania na GitHubie. Suma SHA-256 każdego pliku:
+      <a href="https://github.com/px-ware/networkmaster/releases/latest" style="color:var(--link)">checksums.txt w wydaniu</a>.</p>
+  </section>
+
+  <section>
+    <h2>Funkcje programu</h2>
+    <div class="grid">
+      <div class="card"><h3>Diagnostyka</h3><p>Ping, traceroute, DNS (rekordy, propagacja, porównanie szybkości serwerów), test prędkości łącza, SSL/TLS, WHOIS, GeoIP.</p></div>
+      <div class="card"><h3>Skanowanie</h3><p>Wielowątkowe skanowanie portów i podsieci, wykrywanie urządzeń w LAN, tabela ARP, rozpoznawanie producenta po adresie MAC.</p></div>
+      <div class="card"><h3>Zarządzanie</h3><p>Konfiguracja kart sieciowych, profile IP, Wake-on-LAN, edycja pliku hosts z kopią zapasową, raporty.</p></div>
+      <div class="card"><h3>VPN</h3><p>WireGuard i OpenVPN działające tak samo w każdym systemie, a także VPN systemowy (RAS / NetworkManager / scutil): dodawanie profili, kopia zapasowa i przywracanie.</p></div>
+      <div class="card"><h3>SSH / SFTP / FTP</h3><p>Klient SSH z pełną sesją interaktywną i przeglądarką plików (SFTP), logowanie hasłem lub kluczem, weryfikacja klucza hosta. Do tego klasyczny klient FTP. Obie przeglądarki plików otworzysz też w systemowym menedżerze plików — FTP zawsze, SFTP w Windows wymaga dodatkowo zainstalowanego zewnętrznego klienta (np. WinSCP).</p></div>
+      <div class="card"><h3>Monitorowanie</h3><p>Panel na żywo: wykorzystanie łącza, siła sygnału Wi-Fi, aktywne połączenia z nazwami procesów.</p></div>
+      <div class="card"><h3>Aktualizacje</h3><p>Program sam sprawdza nowe wersje, pokazuje listę zmian i pyta o zgodę — oprócz poprawek krytycznych.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>VPN systemowy na Windows, Linuksie i macOS</h2>
+    <table class="features">
+      <tr><th>Możliwość</th><th>Windows</th><th>Linux</th><th>macOS</th></tr>
+      <tr><td>Tworzenie / edycja / usuwanie profilu</td><td class="ok">✓</td><td class="ok">✓ *</td><td class="no">✗ **</td></tr>
+      <tr><td>Połączenie / rozłączenie</td><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓ (istniejące profile)</td></tr>
+      <tr><td>IKEv2</td><td class="ok">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Kopia zapasowa haseł/PSK</td><td class="partial">częściowo</td><td class="ok">✓ (jako root)</td><td class="no">✗ (Keychain)</td></tr>
+    </table>
+    <p class="note">* wymaga wtyczki NetworkManager-l2tp/-pptp. ** ograniczenie samego macOS, nie tego programu —
+      szczegóły w <a href="/networkmaster/dokumentacja" style="color:var(--link)">dokumentacji</a>.</p>
+  </section>
+
+  <section>
+    <h2>Uczciwie o ograniczeniach</h2>
+    <div class="warn-box">
+      <b>Wersja dla macOS nie była uruchamiana na prawdziwym Macu</b> — kod kompiluje się i przechodzi
+      testy statyczne, ale był tworzony i sprawdzany tylko w Windows i Linuksie. <b>Wersję dla Linuksa
+      sprawdziliśmy natomiast na działającym serwerze</b> (menu, diagnostyka, ARP, kalkulator podsieci, menedżer
+      VPN — poprawnie zgłasza brak NetworkManagera, zamiast cicho zawodzić). Dodatkowo: zwykłe
+      FTP nie szyfruje hasła ani transferu (użyj SFTP, gdy to możliwe), w Windows strzałki i
+      klawisze funkcyjne nie działają w interaktywnej sesji SSH, a wersja 32-bitowa dla Windows
+      (<code>windows-386</code>) ma jedno znane ograniczenie: automatyczne odzyskiwanie
+      zapamiętanych haseł VPN do kopii zapasowej prawdopodobnie nie zadziała. Pełna, szczegółowa lista —
+      w <a href="/networkmaster/dokumentacja" style="color:var(--link)">dokumentacji</a>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Znalazłeś błąd?</h2>
+    <p class="lead" style="margin:0;text-align:left">
+      Napisz na <a href="mailto:pxware@pxware.pl?subject=NetworkMaster%20%E2%80%93%20zg%C5%82oszenie%20b%C5%82%C4%99du" style="color:var(--link)">pxware@pxware.pl</a>
+      — opisz, co się stało, i koniecznie zaznacz w temacie, że chodzi o NetworkMaster
+      (link powyżej robi to już automatycznie). Dotyczy to samego działania programu;
+      pytania o zakup projektu — patrz sekcja wyżej.
+    </p>
+  </section>
+
+  <section>
+    <h2>Podoba Ci się ten projekt?</h2>
+    <p class="lead" style="margin:0 0 16px;text-align:left">
+      Program jest darmowy i taki pozostanie, dopóki nie zostanie sprzedany. Jeśli chcesz
+      wspierać jego dalsze doskonalenie albo powstawanie nowych projektów — możesz postawić kawę.
+    </p>
+    <a class="btn btn-primary" href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+  </section>
+
+  <section id="sprzedaz">
+    <div class="sale-box">
+      <h2 style="margin-top:0">🏷️ Projekt na sprzedaż</h2>
+      <p class="lead" style="margin:0 0 4px;text-align:left">
+        Sprzedajemy kompletny projekt NetworkMaster: kod źródłowy, dokumentację i prawa do programu.
+        Program jest obecnie darmowy w pełnej wersji — kod jest zamknięty (patrz
+        <a href="/networkmaster/licencja" style="color:var(--link)">licencja</a>),
+        a jego sprzedaż jest odrębną transakcją opisaną w
+        <a href="/networkmaster/regulamin" style="color:var(--link)">Regulaminie §8</a>.
+      </p>
+
+      <div class="sale-grid">
+        <ul class="checklist">
+          <li><span><strong>Pełny kod źródłowy</strong> (Go, ok. 15 000 linii) w prywatnym repozytorium na GitHubie, kompilujący się bez błędów na 8 platformach</span></li>
+          <li><span><strong>Przeniesienie praw</strong> do kodu, nazwy i dokumentacji na podstawie odrębnej umowy</span></li>
+          <li><span><strong>Pełna <a href="/networkmaster/dokumentacja-techniczna" style="color:var(--link)">dokumentacja techniczna</a> i użytkownika</strong> — architektura, opis każdego modułu, model danych, znane ograniczenia i dług techniczny, bez niespodzianek po zakupie</span></li>
+          <li><span><strong>Wzory Regulaminu i Polityki Prywatności</strong> (RODO), gotowe do uzupełnienia danymi nabywcy</span></li>
+          <li><span><strong>Automatyczny pakiet testów</strong> (108 testów) i skrypt budowania (<code>build.ps1</code>) dla wszystkich platform</span></li>
+          <li><span><strong>Ta strona oraz system aktualizacji i komunikatów</strong> gotowe do przejęcia i zmiany marki</span></li>
+        </ul>
+
+        <div class="contact-card">
+          <h3 style="margin-top:0">Zainteresowany?</h3>
+          <p class="price">Cena: <strong>do negocjacji</strong></p>
+          <p style="color:var(--muted);font-size:13.5px">Napisz, chętnie odpowiemy na pytania techniczne i pokażemy kod na żywo przed zakupem.</p>
+          <a class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" href="mailto:pxware@pxware.pl?subject=NetworkMaster%20%E2%80%93%20zapytanie%20o%20zakup">
+            Napisz e-mail
+          </a>
+          <p class="note" style="margin-top:10px">pxware@pxware.pl</p>
+        </div>
+      </div>
+
+      <div class="spec-grid" style="margin-top:28px">
+        <div>
+          <h3 style="color:var(--accent2);font-size:15px">Specyfikacja techniczna</h3>
+          <table class="spec">
+            <tr><th>Platformy</th><td>Windows, Linux, macOS — amd64 i arm64 (oraz 32-bitowe 386 dla Windows i Linuksa)</td></tr>
+            <tr><th>Język</th><td>Go 1.22+, bez CGO, 3 zależności (SSH/SFTP: golang.org/x/crypto, x/term, pkg/sftp)</td></tr>
+            <tr><th>Architektura</th><td>Jedna baza kodu; części zależne od systemu oddzielone znacznikami kompilacji (build tags), bez osobnych gałęzi</td></tr>
+            <tr><th>Backend</th><td>brak — program w pełni lokalny; jedyne połączenia sieciowe to te, które inicjuje sam użytkownik: zapytania do publicznych API (GitHub do aktualizacji, WHOIS, GeoIP) oraz sesje SSH/SFTP/FTP do hostów podanych przez użytkownika</td></tr>
+            <tr><th>Testy</th><td>108 testów automatycznych w 13 plikach, czysty wynik <code>go vet</code> na 8 platformach</td></tr>
+            <tr><th>Dystrybucja</th><td>pojedynczy plik wykonywalny, GitHub Releases, wbudowany system aktualizacji</td></tr>
+          </table>
+        </div>
+        <div>
+          <h3 style="color:var(--accent2);font-size:15px">Dla kogo ten projekt</h3>
+          <div class="card">
+            <p style="margin:0 0 10px">Dla firm i twórców, którzy chcą mieć gotowe narzędzie sieciowe pod własną marką:</p>
+            <ul class="checklist" style="gap:6px">
+              <li><span>firmy IT i hostingowe potrzebujące narzędzia diagnostycznego do obsługi klientów,</span></li>
+              <li><span>dostawcy VPN szukający gotowego klienta wieloplatformowego,</span></li>
+              <li><span>programiści chcący rozwinąć gotowy produkt (np. wersja z interfejsem graficznym, wersja chmurowa, obsługa kolejnych protokołów VPN),</span></li>
+              <li><span>każdy, kto chce przejąć produkt z kompletną dokumentacją zamiast zaczynać od zera.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <a href="#sprzedaz">Projekt na sprzedaż</a> ·
+      <a href="https://github.com/px-ware/networkmaster">Wydania i dokumentacja</a> ·
+      <a href="https://github.com/px-ware/networkmaster/releases/latest">Najnowsze wydanie</a> ·
+      <a href="/networkmaster/regulamin">Regulamin</a> ·
+      <a href="/networkmaster/polityka-prywatnosci">Polityka prywatności</a> ·
+      <a href="mailto:pxware@pxware.pl">Kontakt</a> ·
+      <a href="https://buycoffee.to/pxware" target="_blank" rel="noopener">☕ Postaw kawę</a>
+    </p>
+    <p>© 2026 PX Paweł Mościbrodzki (NetworkMaster) · <a href="/">pxware.pl</a>. Wszelkie prawa zastrzeżone.</p>
+  </footer>
+
+</div>
+<script src="/networkmaster/assets/js/site.js" defer></script>
+</body>
+</html>
